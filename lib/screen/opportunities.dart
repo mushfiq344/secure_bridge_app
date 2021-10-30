@@ -19,7 +19,6 @@ class Opportunities extends StatefulWidget {
 }
 
 class _OpportunitiesState extends State<Opportunities> {
-  String name;
   List<Opportunity> opportunities = <Opportunity>[];
   List<Opportunity> opportunitiesAll = <Opportunity>[];
   static List<Opportunity> searchedOpportunities = [];

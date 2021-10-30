@@ -1,4 +1,5 @@
 const kLoading = "Loading...";
+const kComingSoon = "Coming Soon";
 const kAppName = "Secure Bridges";
 const kOpportunities = "Opportunities";
 const kDescription = "Description";
