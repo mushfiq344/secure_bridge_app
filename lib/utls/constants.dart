@@ -1,0 +1,14 @@
+const kLoading = "Loading...";
+const kAppName = "Secure Bridges";
+const kOpportunities = "Opportunities";
+const kDescription = "Description";
+const kStatus = "Status";
+const kDrafted = "Drafted";
+const kSubmitted = "Submitted";
+const kApproved = "Approved";
+const kRejected = "Rejected";
+const kReward = "Reward";
+const kTrashIconPath = "images/trash.png";
+const kEditIconPath = "images/ic_edit.png";
+const kPreviewIconPath = "images/ic_preview.png";
+const kPlaceholderImagePath = "images/place_holder.jpeg";
