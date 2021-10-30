@@ -13,3 +13,7 @@ const kTrashIconPath = "images/trash.png";
 const kEditIconPath = "images/ic_edit.png";
 const kPreviewIconPath = "images/ic_preview.png";
 const kPlaceholderImagePath = "images/place_holder.jpeg";
+const kIconBackgroundPath = "images/ic_background.png";
+const kIconCalenderPath = "images/ic_calender.png";
+const kIconLocationPath = "images/ic_location.png";
+const kIconRewardPath = "images/ic_reward.png";

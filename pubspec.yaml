@@ -61,6 +61,10 @@ flutter:
     - images/ic_preview.png
     - images/ic_edit.png
     - images/place_holder.jpeg
+    - images/ic_background.png
+    - images/ic_calender.png
+    - images/ic_location.png
+    - images/ic_reward.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

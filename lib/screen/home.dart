@@ -4,9 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
 import 'package:secure_bridges_app/screen/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
-import 'package:secure_bridges_app/screen/opportunities.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunities.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -431,50 +432,13 @@ class _HomeState extends State<Home> {
                                         flex: 1,
                                         child: GestureDetector(
                                           onTap: () async {
-                                            // bool callApi =
-                                            //     await shouldMakeApiCall(
-                                            //         context);
-                                            // if (!callApi) return;
-                                            // try {
-                                            //   EasyLoading.show(
-                                            //       status: AppLocalizations.of(
-                                            //               context)
-                                            //           .kLoading);
-                                            //   final response =
-                                            //       await Provider.of<ApiService>(
-                                            //               context,
-                                            //               listen: false)
-                                            //           .getInvoice(item.id);
-                                            //   // print("invoices  ${response.body}");
-                                            //
-                                            //   if (response.isSuccessful &&
-                                            //       response.statusCode == 200) {
-                                            //     EasyLoading.dismiss();
-                                            //     Invoice invoice =
-                                            //         Invoice.fromJson(
-                                            //             response.body);
-                                            //
-                                            //     Navigator.push(
-                                            //       context,
-                                            //       MaterialPageRoute(
-                                            //           builder: (context) =>
-                                            //               InvoiceShow(invoice)),
-                                            //     );
-                                            //   } else {
-                                            //     EasyLoading.dismiss();
-                                            //     var errors = response.error;
-                                            //
-                                            //     final message =
-                                            //         json.decode(errors);
-                                            //
-                                            //     Utils.showToast(context,
-                                            //         message["error"], true);
-                                            //   }
-                                            // } catch (e) {
-                                            //   EasyLoading.dismiss();
-                                            //   EasyLoading.showError(
-                                            //       jsonEncode(e.toString()));
-                                            // }
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OpportunityDetail(item,
+                                                          opportunityUploadPath)),
+                                            );
                                           },
                                           child: Center(
                                             child: Image(

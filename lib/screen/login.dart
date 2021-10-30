@@ -178,7 +178,7 @@ class _LoginState extends State<Login> {
       setState(() {
         _isLoading = true;
       });
-      var data = {'email': 'user@itsolutionstuff.com', 'password': '123456'};
+      var data = {'email': email, 'password': password};
       EasyLoading.show(status: kLoading);
       var res = await Network().authData(data, SIGN_IN_URL);
       var body = json.decode(res.body);
