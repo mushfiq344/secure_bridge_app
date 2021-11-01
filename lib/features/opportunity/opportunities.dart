@@ -651,7 +651,7 @@ class _OpportunitiesState extends State<Opportunities> {
     return Scaffold(
       appBar: AppBar(
         title: Text(kOpportunities),
-        backgroundColor: PURPLE_COLOR,
+        backgroundColor: kPurpleColor,
       ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),

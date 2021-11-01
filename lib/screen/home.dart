@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
@@ -186,336 +187,112 @@ class _HomeState extends State<Home> {
         });
       },
       child: Padding(
-        padding:
-            EdgeInsets.symmetric(vertical: kMargin12, horizontal: kMargin16),
-        child: Container(
-          decoration: BoxDecoration(
-              color: kLiteBackgroundColor,
-              borderRadius: BorderRadius.circular(kRadius10)),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Column(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.only(
+            left: kMargin20, right: kMargin20, bottom: kMargin20),
+        child: Card(
+          elevation: 4.0,
+          color: Colors.white,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                children: [
+                  Expanded(
+                      child: AspectRatio(
+                    aspectRatio: 1 / .5,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(kRadius10),
+                        topRight: Radius.circular(kRadius10),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: coverUrl,
+                        placeholder: (context, url) =>
+                            Image(image: AssetImage(kPlaceholderImagePath)),
+                        errorWidget: (context, url, error) =>
+                            Image(image: AssetImage(kPlaceholderImagePath)),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ))
+                ],
+              ),
+              Text(item.title,
+                  style: TextStyle(
+                      fontSize: kMargin18,
+                      fontWeight: FontWeight.w400,
+                      color: kPurpleColor)),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      margin:
-                          EdgeInsets.only(left: kMargin24, right: kMargin12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              width:
-                                  (2 * (MediaQuery.of(context).size.width)) / 5,
-                              child: AspectRatio(
-                                aspectRatio: 1 / 1,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(kRadius10),
-                                      bottomLeft: Radius.circular(kRadius10)),
-                                  child: CachedNetworkImage(
-                                    imageUrl: coverUrl,
-                                    placeholder: (context, url) => Image(
-                                        image:
-                                            AssetImage(kPlaceholderImagePath)),
-                                    errorWidget: (context, url, error) => Image(
-                                        image:
-                                            AssetImage(kPlaceholderImagePath)),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Offered By Jet Constellations",
+                          style: TextStyle(
+                              color: kPurpleColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: kMargin12),
+                        ),
+                        Text("Start on ${item.opportunityDate}",
+                            style: TextStyle(
+                                color: kInactiveColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: kMargin12))
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(kIconBackgroundPath),
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          ), // image
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Align(
-                                    alignment: Alignment.topRight,
-                                    child: item.show
-                                        ? Icon(Icons.keyboard_arrow_up,
-                                            size: 30)
-                                        : Icon(Icons.keyboard_arrow_down,
-                                            size: 30),
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      left: kMargin24, right: kMargin12),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      "Title",
-                                      style: labelStyle,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: kMargin12),
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      left: kMargin24, right: kMargin12),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: RichText(
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      strutStyle: StrutStyle(fontSize: 12.0),
-                                      text: TextSpan(
-                                          style: valueStyle, text: item.title),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  color: Colors.white,
-                                  height: 1.0,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: kMargin16,
-                                      horizontal: kMargin24),
-                                ),
-                                SizedBox(height: kMargin20)
-                              ],
-                            ),
-                          ), // detail info
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin:
-                          EdgeInsets.only(left: kMargin24, right: kMargin12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Sub Title",
-                              style: smallLabel,
+                            child: Image(
+                              width: 32,
+                              height: 32,
+                              image: AssetImage(kIconLovePath),
                             ),
                           ),
-                          Expanded(
-                            child: Container(
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: RichText(
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  strutStyle: StrutStyle(fontSize: 12.0),
-                                  text: TextSpan(
-                                      style: valueStyle,
-                                      text: item.subTitle == null
-                                          ? ''
-                                          : item.subTitle),
-                                ), /*Text(
-                                    item.problem == null ? " " : item.problem,
-                                    style: valueStyle,
-                                  ),*/
+                          onTap: () {
+                            EasyLoading.showToast(kComingSoon);
+                          },
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(kIconBackgroundPath),
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: kMargin12),
-                    Container(
-                      color: Colors.white,
-                      height: 1.0,
-                      margin: EdgeInsets.symmetric(vertical: 0),
-                    ),
-                    SizedBox(height: kMargin12),
-                    Container(
-                      margin:
-                          EdgeInsets.only(left: kMargin24, right: kMargin12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Duration",
-                              style: smallLabel,
+                            child: Image(
+                              width: 32,
+                              height: 32,
+                              image: AssetImage(kIconAdditionPath),
                             ),
                           ),
-                          Expanded(
-                            child: Container(
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: RichText(
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  strutStyle: StrutStyle(fontSize: 12.0),
-                                  text: TextSpan(
-                                    text: "${item.duration.toString()} Days",
-                                    style: valueStyle,
-                                  ),
-                                ), /*Text(
-                                    item.problem == null ? " " : item.problem,
-
-                                  ),*/
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                          onTap: () {
+                            EasyLoading.showToast(kComingSoon);
+                          },
+                        )
+                      ],
                     ),
-                    SizedBox(height: kMargin12),
-                    Container(
-                      color: Colors.white,
-                      height: 1.0,
-                      margin: EdgeInsets.symmetric(vertical: 0),
-                    ),
-                    SizedBox(height: kMargin12),
-                    Container(
-                      margin:
-                          EdgeInsets.only(left: kMargin24, right: kMargin12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Reward",
-                              style: smallLabel,
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: RichText(
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  strutStyle: StrutStyle(fontSize: 12.0),
-                                  text: TextSpan(
-                                    text: "${item.reward} \$",
-                                    style: valueStyle,
-                                  ),
-                                ), /*Text(
-                                    item.problem == null ? " " : item.problem,
-
-                                  ),*/
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: kMargin12),
                   ],
                 ),
-                item.show
-                    ? Column(
-                        children: [
-                          SizedBox(height: kMargin12),
-                          Container(
-                            color: Colors.white,
-                            height: 1.0,
-                            margin: EdgeInsets.symmetric(vertical: 0),
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: kMargin24),
-                                  child: Text(
-                                    "Action",
-                                    style: labelStyle,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                  flex: 3,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: GestureDetector(
-                                          onTap: () async {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OpportunityDetail(item,
-                                                          opportunityUploadPath)),
-                                            );
-                                          },
-                                          child: Center(
-                                            child: Image(
-                                              width: 32,
-                                              height: 32,
-                                              image:
-                                                  AssetImage(kPreviewIconPath),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: GestureDetector(
-                                          onTap: () async {
-                                            EasyLoading.showToast(kComingSoon);
-                                          },
-                                          child: Center(
-                                            child: Image(
-                                              image: AssetImage(
-                                                kEditIconPath,
-                                              ),
-                                              height: kMargin32,
-                                              width: kMargin32,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: GestureDetector(
-                                          onTap: () async {
-                                            EasyLoading.showToast(kComingSoon);
-                                          },
-                                          child: Center(
-                                            child: Image(
-                                              height: 32,
-                                              width: 32,
-                                              image: AssetImage(kTrashIconPath),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                              Expanded(
-                                flex: 0,
-                                child: GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: kMargin18),
-                                    alignment: Alignment.topLeft,
-                                    child: Container(),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 0,
-                                child: GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: kMargin18),
-                                    alignment: Alignment.topLeft,
-                                    child: Container(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: kMargin16)
-                        ],
-                      )
-                    : SizedBox()
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),
@@ -527,7 +304,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text(kAppName),
-        backgroundColor: PURPLE_COLOR,
+        backgroundColor: kPurpleColor,
       ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),

@@ -65,6 +65,9 @@ flutter:
     - images/ic_calender.png
     - images/ic_location.png
     - images/ic_reward.png
+    - images/ic_love.png
+    - images/ic_addition.png
+    - images/logo.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
