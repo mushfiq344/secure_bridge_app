@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
+import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
 import 'package:secure_bridges_app/screen/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunities.dart';
@@ -182,9 +183,11 @@ class _HomeState extends State<Home> {
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          item.show = !item.show;
-        });
+        Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (context) =>
+                    OpportunityDetail(item, opportunityUploadPath)));
       },
       child: Padding(
         padding: const EdgeInsets.only(
@@ -381,6 +384,28 @@ class _HomeState extends State<Home> {
               title: Text('Settings', style: TextStyle(fontSize: 18)),
               onTap: () {
                 EasyLoading.showToast("Coming Soon!");
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Chatting', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) =>
+                            SecureBridgeWebView(email, 'chatting')));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Forum', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) =>
+                            SecureBridgeWebView(email, 'forum')));
               },
             ),
             ListTile(
