@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
 import 'package:secure_bridges_app/screen/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
@@ -26,6 +27,7 @@ class _HomeState extends State<Home> {
   String name;
   String email;
   String profilePictureUrl;
+  int userType;
   List<Opportunity> opportunities = <Opportunity>[];
   List<Opportunity> opportunitiesAll = <Opportunity>[];
   static List<Opportunity> searchedOpportunities = [];
@@ -48,6 +50,8 @@ class _HomeState extends State<Home> {
         name = user['name'];
         email = user['email'];
         profilePictureUrl = user['profile_image'];
+        print("user type ${user['user_type']}");
+        userType = user['user_type'];
       });
     }
   }
@@ -379,6 +383,21 @@ class _HomeState extends State<Home> {
               },
             ),
             Divider(height: 3.0),
+            userType == 1
+                ? ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text('Create Opportunity',
+                        style: TextStyle(fontSize: 18)),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => OpportunityForm()));
+                      // Here you can give your route to navigate
+                    },
+                  )
+                : SizedBox(),
+
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings', style: TextStyle(fontSize: 18)),

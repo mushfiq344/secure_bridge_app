@@ -20,7 +20,11 @@ const kIconRewardPath = "images/ic_reward.png";
 const kIconLovePath = "images/ic_love.png";
 const kIconAdditionPath = "images/ic_addition.png";
 const kAppLogoPath = "images/logo.jpg";
-
+const kImageNameWithExtension = "Image name with extension";
+const kImage = "Image";
+const IMAGE_URL_PREFIX = "data:image/jpeg;base64,";
+const kUploadPicture = "Upload picture";
+const kAvatarIconPath = "images/ic_avatar.png";
 const String kNavigationExamplePage = '''
 <!DOCTYPE html><html>
 <head><title>Navigation Delegate Example</title></head>
