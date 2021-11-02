@@ -32,6 +32,20 @@ class Network {
         body: jsonEncode(data), headers: _setHeaders());
   }
 
+  putData(data, apiUrl) async {
+    var fullUrl = BASE_URL + apiUrl;
+    await _getToken();
+    return await http.put(fullUrl,
+        body: jsonEncode(data), headers: _setHeaders());
+  }
+
+  deleteData(data, apiUrl) async {
+    var fullUrl = BASE_URL + apiUrl;
+    print("full uril : $fullUrl");
+    await _getToken();
+    return await http.delete(fullUrl,
+         headers: _setHeaders());
+  }
   _setHeaders() => {
         'Content-type': 'application/json',
         'Accept': 'application/json',

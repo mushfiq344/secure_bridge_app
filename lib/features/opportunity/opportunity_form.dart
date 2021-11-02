@@ -454,7 +454,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                 Row(
                   children: <Widget>[
                     Expanded(
-                      child: PAButton(
+                      child: widget.oppotunity==null? PAButton(
                         "Submit",
                         true,
                         () {
@@ -463,8 +463,24 @@ class _OpportunityFormState extends State<OpportunityForm> {
                           _formKey.currentState.save();
                           if (_formKey.currentState.validate()) {
                             print(_formKey.currentState.value);
-                            return;
+
                             _createOpportunity();
+                          } else {
+                            EasyLoading.showError("validation failed");
+                          }
+                        },
+                        fillColor: kPurpleColor,
+                      ):PAButton(
+                        "Update",
+                        true,
+                            () {
+
+
+                          _formKey.currentState.save();
+                          if (_formKey.currentState.validate()) {
+                            print(_formKey.currentState.value);
+
+                            _updateOpportunity();
                           } else {
                             EasyLoading.showError("validation failed");
                           }
@@ -472,17 +488,8 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         fillColor: kPurpleColor,
                       ),
                     ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: PAButton(
-                        "Reset",
-                        true,
-                        () {
-                          _formKey.currentState.reset();
-                        },
-                        fillColor: kPurpleColor,
-                      ),
-                    ),
+
+
                   ],
                 )
               ],
@@ -580,6 +587,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         print("success");
         EasyLoading.dismiss();
         EasyLoading.showSuccess(body["message"]);
+        Navigator.of(context).pop(true);
 
       } else {
         EasyLoading.dismiss();
@@ -597,7 +605,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
     try {
 
       var data = {
-        'cover_image': _coverImageAreaMap[kImage], 'icon_image': _iconImageAreaMap[kImage],
+        'id':widget.oppotunity.id,
         'title':titleController.text,
         'subtitle':subTitleController.text,
         'description':descriptionController.text,
@@ -606,15 +614,23 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'reward':rewardController.text,
         'type':typeController.text
       };
+      if(_coverImageAreaMap[kImage]!=null){
+        data['cover_image']=_coverImageAreaMap[kImage];
+      }
+      if(_iconImageAreaMap[kImage]!=null){
+        data['icon_image']=_iconImageAreaMap[kImage];
+      }
+      log("data $data");
+
       EasyLoading.show(status: kLoading);
-      var res = await Network().postData(data, OPPORTUNITIES_URL);
+      var res = await Network().putData(data, "$OPPORTUNITIES_URL/${widget.oppotunity.id}");
       var body = json.decode(res.body);
       // log("res ${res.statusCode}");
       log("body : ${body}");
-      if (res.statusCode == 201) {
+      if (res.statusCode == 200) {
         EasyLoading.dismiss();
         EasyLoading.showSuccess(body["message"]);
-
+        Navigator.of(context).pop(true);
 
       } else {
         EasyLoading.dismiss();
