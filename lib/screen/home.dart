@@ -26,6 +26,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String name;
   String email;
+  int userId;
   String profilePictureUrl;
   int userType;
   List<Opportunity> opportunities = <Opportunity>[];
@@ -47,6 +48,7 @@ class _HomeState extends State<Home> {
     print("user $user");
     if (user != null) {
       setState(() {
+        userId=user['id'];
         name = user['name'];
         email = user['email'];
         profilePictureUrl = user['profile_image'];
@@ -253,7 +255,7 @@ class _HomeState extends State<Home> {
                                 fontSize: kMargin12))
                       ],
                     ),
-                    Row(
+                    userId!=item.createdBy?Row(
                       children: [
                         GestureDetector(
                           child: Container(
@@ -294,6 +296,33 @@ class _HomeState extends State<Home> {
                             EasyLoading.showToast(kComingSoon);
                           },
                         )
+                      ],
+                    ):Row(
+                      children: [
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(kIconBackgroundPath),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Image(
+                              width: 32,
+                              height: 32,
+                              image: AssetImage(kIconWhiteEditPath),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) =>
+                                        OpportunityForm(item,opportunityUploadPath)));
+                          },
+                        ),
+
+
                       ],
                     ),
                   ],
@@ -392,7 +421,7 @@ class _HomeState extends State<Home> {
                       Navigator.push(
                           context,
                           new MaterialPageRoute(
-                              builder: (context) => OpportunityForm()));
+                              builder: (context) => OpportunityForm(null,null)));
                       // Here you can give your route to navigate
                     },
                   )

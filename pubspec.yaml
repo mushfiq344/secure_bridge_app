@@ -34,6 +34,7 @@ dependencies:
   webview_flutter: any
   flutter_webview_plugin: ^0.4.0
   image_picker: any
+  intl: ^0.17.0
 
 
 
@@ -73,6 +74,7 @@ flutter:
     - images/ic_addition.png
     - images/logo.jpg
     - images/ic_avatar.png
+    - images/ic_edit_white.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
