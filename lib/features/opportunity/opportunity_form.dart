@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
+import 'package:secure_bridges_app/widgets/PAButton.dart';
 
 class OpportunityForm extends StatefulWidget {
   @override
@@ -22,8 +24,10 @@ class _OpportunityFormState extends State<OpportunityForm> {
   final TextEditingController opportunityDateController =
       TextEditingController();
   Map<String, dynamic> _coverImageAreaMap = Map();
-  var _coverImageNameWithExtension;
+  Map<String, dynamic> _iconImageAreaMap = Map();
+  var _imageNameWithExtension;
   var _coverImageBase64String;
+  var _iconImageBase64String;
 
   PickedFile _coverImage;
   PickedFile _iconImage;
@@ -62,27 +66,25 @@ class _OpportunityFormState extends State<OpportunityForm> {
   _getImageNameAndString(String type) {
     if (type == 'cover') {
       if (_coverImage != null) {
-        _coverImageNameWithExtension =
+        _imageNameWithExtension =
             _coverImage.path.substring(_coverImage.path.lastIndexOf("/") + 1);
 
         var fileContent = File(_coverImage.path).readAsBytesSync();
         _coverImageBase64String = base64Encode(fileContent);
 
-        _coverImageAreaMap[kImageNameWithExtension] =
-            _coverImageNameWithExtension;
+        _coverImageAreaMap[kImageNameWithExtension] = _imageNameWithExtension;
         _coverImageAreaMap[kImage] =
             IMAGE_URL_PREFIX + base64Encode(fileContent);
       } else {
         if (_iconImage != null) {
-          _coverImageNameWithExtension =
-              _coverImage.path.substring(_coverImage.path.lastIndexOf("/") + 1);
+          _imageNameWithExtension =
+              _iconImage.path.substring(_iconImage.path.lastIndexOf("/") + 1);
 
           var fileContent = File(_iconImage.path).readAsBytesSync();
-          _coverImageBase64String = base64Encode(fileContent);
+          _iconImageBase64String = base64Encode(fileContent);
 
-          _coverImageAreaMap[kImageNameWithExtension] =
-              _coverImageNameWithExtension;
-          _coverImageAreaMap[kImage] =
+          _iconImageAreaMap[kImageNameWithExtension] = _imageNameWithExtension;
+          _iconImageAreaMap[kImage] =
               IMAGE_URL_PREFIX + base64Encode(fileContent);
         }
       }
@@ -147,7 +149,20 @@ class _OpportunityFormState extends State<OpportunityForm> {
                 FormBuilder(
                   key: _formKey,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      RichText(
+                        text: TextSpan(
+                          text: "Title",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '*', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: _inputDecoration('Title'),
                         controller: titleController,
@@ -156,6 +171,18 @@ class _OpportunityFormState extends State<OpportunityForm> {
                           FormBuilderValidators.required(context),
                         ]),
                         keyboardType: TextInputType.text,
+                      ),
+                      SizedBox(height: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: "Sub Title",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '*', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
@@ -167,6 +194,19 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ]),
                         keyboardType: TextInputType.text,
                       ),
+                      SizedBox(height: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: "Description",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '*', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: _inputDecoration('Description'),
                         controller: subTitleController,
@@ -176,6 +216,19 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ]),
                         keyboardType: TextInputType.text,
                       ),
+                      SizedBox(height: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: "Opportunity Date",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '*', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       FormBuilderDateTimePicker(
                         controller: opportunityDateController,
                         name: 'opportunity_date',
@@ -186,6 +239,19 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         // initialValue: DateTime.now(),
                         // enabled: true,
                       ),
+                      SizedBox(height: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: "Duration In Days",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '*', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: _inputDecoration('Duration In Days'),
                         controller: subTitleController,
@@ -196,6 +262,19 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ]),
                         keyboardType: TextInputType.number,
                       ),
+                      SizedBox(height: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: "Reward",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '*', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: _inputDecoration('Reward'),
                         controller: subTitleController,
@@ -206,6 +285,19 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ]),
                         keyboardType: TextInputType.number,
                       ),
+                      SizedBox(height: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: "Type",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '*', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       FormBuilderTextField(
                         decoration: _inputDecoration('Type'),
                         controller: subTitleController,
@@ -229,7 +321,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                             ),
                             child: GestureDetector(
                               onTap: () {
-                                _showPicker(context);
+                                _showCoverPicker(context);
                               },
                               child: _coverImage != null
                                   ? Image.file(
@@ -251,7 +343,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                           Expanded(
                             flex: 1,
                             child: Text(
-                              kUploadPicture,
+                              kUploadCover,
                               style: TextStyle(
                                 color: kLabelColor,
                                 fontSize: kMargin14,
@@ -261,131 +353,81 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ],
                       ),
                       SizedBox(height: kMargin16),
-                      FormBuilderFilterChip(
-                        name: 'filter_chip',
-                        decoration: InputDecoration(
-                          labelText: 'Select many options',
-                        ),
-                        options: [
-                          FormBuilderFieldOption(
-                              value: 'Test', child: Text('Test')),
-                          FormBuilderFieldOption(
-                              value: 'Test 1', child: Text('Test 1')),
-                          FormBuilderFieldOption(
-                              value: 'Test 2', child: Text('Test 2')),
-                          FormBuilderFieldOption(
-                              value: 'Test 3', child: Text('Test 3')),
-                          FormBuilderFieldOption(
-                              value: 'Test 4', child: Text('Test 4')),
-                        ],
-                      ),
-                      FormBuilderChoiceChip(
-                        name: 'choice_chip',
-                        decoration: InputDecoration(
-                          labelText: 'Select an option',
-                        ),
-                        options: [
-                          FormBuilderFieldOption(
-                              value: 'Test', child: Text('Test')),
-                          FormBuilderFieldOption(
-                              value: 'Test 1', child: Text('Test 1')),
-                          FormBuilderFieldOption(
-                              value: 'Test 2', child: Text('Test 2')),
-                          FormBuilderFieldOption(
-                              value: 'Test 3', child: Text('Test 3')),
-                          FormBuilderFieldOption(
-                              value: 'Test 4', child: Text('Test 4')),
-                        ],
-                      ),
-                      FormBuilderSlider(
-                        name: 'slider',
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.min(context, 6),
-                        ]),
-                        min: 0.0,
-                        max: 10.0,
-                        initialValue: 7.0,
-                        divisions: 20,
-                        activeColor: Colors.red,
-                        inactiveColor: Colors.pink[100],
-                        decoration: InputDecoration(
-                          labelText: 'Number of things',
-                        ),
-                      ),
-                      FormBuilderCheckbox(
-                        name: 'accept_terms',
-                        initialValue: false,
-                        title: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'I have read and agree to the ',
-                                style: TextStyle(color: Colors.black),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(kMargin14),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: kBorderColor,
+                                width: 1.0,
                               ),
-                              TextSpan(
-                                text: 'Terms and Conditions',
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ],
+                              borderRadius: BorderRadius.circular(kRadius10),
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                _showIconPicker(context);
+                              },
+                              child: _iconImage != null
+                                  ? Image.file(
+                                      File(_iconImage.path),
+                                      height: 100,
+                                      width: 100,
+                                      fit: BoxFit.fitHeight,
+                                    )
+                                  : Container(
+                                      child: Image(
+                                        image: AssetImage(kAvatarIconPath),
+                                        width: 100,
+                                        height: 100,
+                                      ),
+                                    ),
+                            ),
                           ),
-                        ),
-                        validator: FormBuilderValidators.equal(
-                          context,
-                          true,
-                          errorText:
-                              'You must accept terms and conditions to continue',
-                        ),
+                          SizedBox(width: kMargin24),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              kUploadIcon,
+                              style: TextStyle(
+                                color: kLabelColor,
+                                fontSize: kMargin14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      FormBuilderDropdown(
-                        name: 'gender',
-                        decoration: InputDecoration(
-                          labelText: 'Gender',
-                        ),
-                        // initialValue: 'Male',
-                        allowClear: true,
-                        hint: Text('Select Gender'),
-                        validator: FormBuilderValidators.compose(
-                            [FormBuilderValidators.required(context)]),
-                        items: ['male', 'female']
-                            .map((gender) => DropdownMenuItem(
-                                  value: gender,
-                                  child: Text('$gender'),
-                                ))
-                            .toList(),
-                      ),
+                      SizedBox(height: kMargin16),
                     ],
                   ),
                 ),
                 Row(
                   children: <Widget>[
                     Expanded(
-                      child: MaterialButton(
-                        color: Theme.of(context).colorScheme.secondary,
-                        child: Text(
-                          "Submit",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
+                      child: PAButton(
+                        "Submit",
+                        true,
+                        () {
                           _formKey.currentState.save();
                           if (_formKey.currentState.validate()) {
                             print(_formKey.currentState.value);
+                            log("cover : ${_coverImageAreaMap}");
                           } else {
                             print("validation failed");
                           }
                         },
+                        fillColor: kPurpleColor,
                       ),
                     ),
                     SizedBox(width: 20),
                     Expanded(
-                      child: MaterialButton(
-                        color: Theme.of(context).colorScheme.secondary,
-                        child: Text(
-                          "Reset",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
+                      child: PAButton(
+                        "Reset",
+                        true,
+                        () {
                           _formKey.currentState.reset();
                         },
+                        fillColor: kPurpleColor,
                       ),
                     ),
                   ],
@@ -396,7 +438,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         ));
   }
 
-  void _showPicker(context) {
+  void _showCoverPicker(context) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -416,6 +458,36 @@ class _OpportunityFormState extends State<OpportunityForm> {
                     title: new Text('Camera'),
                     onTap: () {
                       _imgFromCamera('cover');
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void _showIconPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Gallery'),
+                      onTap: () {
+                        _imgFromGallery('icon');
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera('icon');
                       Navigator.of(context).pop();
                     },
                   ),
