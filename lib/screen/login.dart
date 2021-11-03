@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -16,6 +17,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  GoogleSignInAccount _userObj;
+  GoogleSignIn _googleSignIn = GoogleSignIn();
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   var email;
@@ -145,7 +148,8 @@ class _LoginState extends State<Login> {
                                               new BorderRadius.circular(20.0)),
                                       onPressed: () {
                                         if (_formKey.currentState.validate()) {
-                                          _login();
+                                          // _login();
+                                          _handleSignIn();
                                         }
                                       },
                                     ),
@@ -186,7 +190,24 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+  Future<void> _handleSignIn() async {
+    try {
+      GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+      if (googleSignInAccount == null) {
+        print('Google Signin ERROR! googleAccount: null!');
+        return null;
+      }
+      GoogleSignInAuthentication googleSignInAuthentication =
+      await googleSignInAccount.authentication;
 
+      //this is user access token from google that is retrieved with the plugin
+      print("User Access Token: ${googleSignInAuthentication.accessToken}");
+      String accessToken = googleSignInAuthentication.accessToken;
+    } catch (error) {
+      print("errorsss");
+      print(error);
+    }
+  }
   void _login() async {
     try {
       setState(() {
