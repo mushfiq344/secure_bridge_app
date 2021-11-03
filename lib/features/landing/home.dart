@@ -507,14 +507,14 @@ class _HomeState extends State<Home> {
                             SecureBridgeWebView(email, 'forum')));
               },
             ),
-            ListTile(
-              leading: Icon(Icons.close),
-              title: Text('Close Drawer', style: TextStyle(fontSize: 18)),
-              onTap: () {
-                // to close drawer programatically..
-                Navigator.of(context).pop();
-              },
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.close),
+            //   title: Text('Close Drawer', style: TextStyle(fontSize: 18)),
+            //   onTap: () {
+            //     // to close drawer programatically..
+            //     Navigator.of(context).pop();
+            //   },
+            // ),
             ListTile(
               leading: Icon(IconData(0xe3b3, fontFamily: 'MaterialIcons')),
               title: Text('Logout', style: TextStyle(fontSize: 18)),
