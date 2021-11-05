@@ -418,36 +418,45 @@ class _HomeState extends State<Home> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  CachedNetworkImage(
-                    imageUrl: "${BASE_URL}${profilePictureUrl}",
-                    placeholder: (context, url) =>
-                        Image(image: AssetImage(kPlaceholderImagePath)),
-                    errorWidget: (context, url, error) =>
-                        Image(image: AssetImage(kPlaceholderImagePath)),
-                    fit: BoxFit.fill,
-                    width: 60,
-                    height: 60,
+                  Expanded(
+                    flex:1,
+                    child: CachedNetworkImage(
+                      imageUrl: "${BASE_URL}${profilePictureUrl}",
+                      placeholder: (context, url) =>
+                          Image(image: AssetImage(kPlaceholderImagePath)),
+                      errorWidget: (context, url, error) =>
+                          Image(image: AssetImage(kPlaceholderImagePath)),
+                      fit: BoxFit.fill,
+                      width: 60,
+                      height: 60,
+                    ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        '${name}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 25.0),
+                  Expanded(
+                    flex:3,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: kMargin8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            '${name}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 25.0),
+                          ),
+                          SizedBox(height: 10.0),
+                          Text(
+                            '${email}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 14.0),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 10.0),
-                      Text(
-                        '${email}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 14.0),
-                      ),
-                    ],
+                    ),
                   )
                 ],
               ),

@@ -8,9 +8,10 @@ import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
+import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:secure_bridges_app/screen/register.dart';
-
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -148,12 +149,20 @@ class _LoginState extends State<Login> {
                                               new BorderRadius.circular(20.0)),
                                       onPressed: () {
                                         if (_formKey.currentState.validate()) {
-                                          // _login();
-                                          _handleSignIn();
+                                          _login();
+
                                         }
                                       },
                                     ),
                                   ),
+                                  SignInButton(
+                                    Buttons.Google,
+                                    text: "Sign up with Google",
+                                    onPressed: () {
+                                      _handleSignIn();
+                                    },
+                                  )
+
                                 ],
                               ),
                             ),
@@ -203,9 +212,9 @@ class _LoginState extends State<Login> {
       //this is user access token from google that is retrieved with the plugin
       print("User Access Token: ${googleSignInAuthentication.accessToken}");
       String accessToken = googleSignInAuthentication.accessToken;
+      googleAuth(accessToken);
     } catch (error) {
-      print("errorsss");
-      print(error);
+      EasyLoading.showError(error);
     }
   }
   void _login() async {
@@ -238,6 +247,40 @@ class _LoginState extends State<Login> {
       setState(() {
         _isLoading = false;
       });
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.toString());
+    }
+  }
+
+  void googleAuth(String token)async{
+    try {
+      EasyLoading.show(status: kLoading);
+      var data={
+        "google_token":token
+      };
+      // EasyLoading.show(status: kLoading);
+      var res = await Network().postData(data, GOOGLE_AUTH_URL);
+      var body = json.decode(res.body);
+      // log("res ${res.statusCode}");
+      log("body : ${body}");
+      if (res.statusCode == 200) {
+        print("get token : ${body['data']['token']}");
+        SharedPreferences localStorage = await SharedPreferences.getInstance();
+        localStorage.setString('token', body['data']['token']);
+        localStorage.setString('user', json.encode(body['data']['user']));
+        EasyLoading.dismiss();
+        await Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Home()),
+              (route) => false,
+        );
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showError(body['message']);
+      }
+
+
     } catch (e) {
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());
