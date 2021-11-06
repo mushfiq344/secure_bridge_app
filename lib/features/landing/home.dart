@@ -204,7 +204,7 @@ class _HomeState extends State<Home> {
             context,
             new MaterialPageRoute(
                 builder: (context) =>
-                    OpportunityDetail(item, opportunityUploadPath)));
+                    OpportunityDetail(item, opportunityUploadPath,userId)));
       },
       child: Padding(
         padding: const EdgeInsets.only(

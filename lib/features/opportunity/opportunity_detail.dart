@@ -13,19 +13,52 @@ import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/utls/styles.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter/services.dart';
 class OpportunityDetail extends StatefulWidget {
   final Opportunity opportunity;
   final String uploadPath;
-  OpportunityDetail(this.opportunity, this.uploadPath);
+  final userId;
+
+  OpportunityDetail(this.opportunity, this.uploadPath,this.userId);
   @override
   _OpportunityDetailState createState() => _OpportunityDetailState();
 }
 
 class _OpportunityDetailState extends State<OpportunityDetail> {
+  bool userEnrolled=false;
+  int userCode;
   @override
   void initState() {
     super.initState();
+    getOpportunityDetail(widget.opportunity.id);
+  }
+
+  void getOpportunityDetail(int oppurtunityId) async{
+    try {
+      EasyLoading.show(status: kLoading);
+
+      // EasyLoading.show(status: kLoading);
+      var res = await Network().getData( "${OPPORTUNITIES_URL}/${oppurtunityId}");
+      var body = json.decode(res.body);
+      // log("res ${res.statusCode}");
+      log("body : ${body}");
+      if (res.statusCode == 200) {
+       setState(() {
+         userEnrolled=body['data']['is_user_enrolled'];
+         userCode=body['data']['user_code'];
+       });
+        EasyLoading.dismiss();
+
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showError(body['message']);
+      }
+
+
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.toString());
+    }
   }
 
   @override
@@ -247,6 +280,72 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                           textColor: Colors.orange,
                           capitalText: false),
                     ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: kMargin24,
+              ),
+              Container(
+                child: Row(
+                  children: [
+                    userEnrolled?Expanded(
+                      flex: 1,
+                      child: PAButton("View your Code", true, () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Container(
+                                  child: Row(
+                                    children: [
+                                      Expanded(child: Text("Your validation code for this opportunity is $userCode")),
+                                      GestureDetector(
+                                        child: Icon(Icons.copy),
+                                        onTap: (){
+                                          Clipboard.setData(ClipboardData(text: "$userCode"));
+
+                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                            content: Text("Copied to clipboard!"),
+                                          ));
+
+                                        },
+                                      )
+
+                                    ],
+                                  ),
+                                ));
+
+                            });
+
+                      },
+                          fillColor: kGreyBackgroundColor,
+                          textColor: Colors.orange,
+                          capitalText: false),
+                    ):SizedBox(),
+
+                  ],
+                ),
+              ),
+              Container(
+                child: Row(
+                  children: [
+                    widget.userId==widget.opportunity.createdBy?Expanded(
+                      flex: 1,
+                      child: PAButton("View Enrolled User", true, () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Text("gell"),
+                              );
+                            });
+                      },
+                          fillColor: kGreyBackgroundColor,
+                          textColor: Colors.orange,
+                          capitalText: false),
+                    ):SizedBox(),
+
                   ],
                 ),
               )

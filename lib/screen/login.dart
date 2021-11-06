@@ -73,8 +73,8 @@ class _LoginState extends State<Login> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   TextFormField(
-                               /* initialValue:
-                                        'user@itsolutionstuff.com',*/
+                              initialValue:
+                                        'user@itsolutionstuff.com',
                                     style: TextStyle(color: Color(0xFF000000)),
                                     cursorColor: Color(0xFF9b9b9b),
                                     keyboardType: TextInputType.text,
@@ -98,7 +98,7 @@ class _LoginState extends State<Login> {
                                     },
                                   ),
                                   TextFormField(
-                                  /*  initialValue: '123456',*/
+                                  initialValue: '123456',
                                     style: TextStyle(color: Color(0xFF000000)),
                                     cursorColor: Color(0xFF9b9b9b),
                                     keyboardType: TextInputType.text,

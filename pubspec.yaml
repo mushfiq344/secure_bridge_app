@@ -37,6 +37,7 @@ dependencies:
   intl: ^0.17.0
   google_sign_in: any
   flutter_signin_button: ^2.0.0
+  flash: ^2.0.3
 
 
 
