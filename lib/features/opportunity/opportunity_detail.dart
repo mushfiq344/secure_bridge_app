@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/features/opportunity/enrolled_user.dart';
 import 'package:secure_bridges_app/screen/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -27,6 +28,9 @@ class OpportunityDetail extends StatefulWidget {
 class _OpportunityDetailState extends State<OpportunityDetail> {
   bool userEnrolled=false;
   int userCode;
+  final TextEditingController codeController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String code;
   @override
   void initState() {
     super.initState();
@@ -327,32 +331,123 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                   ],
                 ),
               ),
-              Container(
-                child: Row(
-                  children: [
-                    widget.userId==widget.opportunity.createdBy?Expanded(
-                      flex: 1,
-                      child: PAButton("View Enrolled User", true, () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                content: Text("gell"),
-                              );
-                            });
-                      },
-                          fillColor: kGreyBackgroundColor,
-                          textColor: Colors.orange,
-                          capitalText: false),
-                    ):SizedBox(),
+              if (widget.userId==widget.opportunity.createdBy) Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: PAButton("View Enrolled User", true, () {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) =>
+                                      EnrolledOpportunityUser(this.widget.opportunity)));
+                        },
+                            fillColor: kGreyBackgroundColor,
+                            textColor: Colors.orange,
+                            capitalText: false),
+                      ),
 
-                  ],
-                ),
-              )
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: PAButton("Test Code", true, () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                                  child: Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(
+
+                                            style: TextStyle(color: Color(0xFF000000)),
+                                            cursorColor: Color(0xFF9b9b9b),
+                                            keyboardType: TextInputType.text,
+                                            decoration: InputDecoration(
+                                              prefixIcon: Icon(
+                                                Icons.approval,
+                                                color: Colors.grey,
+                                              ),
+                                              hintText: "Code",
+                                              hintStyle: TextStyle(
+                                                  color: Color(0xFF9b9b9b),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                            validator: (codeValue) {
+                                              if (codeValue.isEmpty) {
+                                                return 'Please enter code';
+                                              }
+                                              code = codeValue;
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                        PAButton('Check', true, (){
+                                          if (_formKey.currentState.validate()) {
+
+                                            _confirmUser(widget.opportunity.id,code);
+                                          }
+                                        },fillColor: kGreyBackgroundColor,textColor: Colors.orange,capitalText: false,)
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                            fillColor: kGreyBackgroundColor,
+                            textColor: Colors.orange,
+                            capitalText: false),
+                      ),
+
+                    ],
+                  ),
+                ],
+              ) else SizedBox()
             ],
           ),
         ),
       ),
     );
+  }
+
+  _confirmUser(int opportunityId, String code) async{
+    try {
+
+      var data = {'opportunity_id': opportunityId, 'code': code};
+      EasyLoading.show(status: kLoading);
+      var res = await Network().postData(data, 'api/check-enrollment');
+      var body = json.decode(res.body);
+      // log("res ${res.statusCode}");
+      log("body : ${body}");
+      if (res.statusCode == 200) {
+        EasyLoading.dismiss();
+        if(body['data']['user_is_enrolled']){
+          EasyLoading.showSuccess("This Code Is Valid");
+        }else{
+          EasyLoading.showError("This Code Is invalid");
+        }
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showError(body['message']);
+      }
+
+
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.toString());
+    }
   }
 }
