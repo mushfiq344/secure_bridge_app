@@ -8,7 +8,7 @@ const kDrafted = "Drafted";
 const kSubmitted = "Submitted";
 const kApproved = "Approved";
 const kRejected = "Rejected";
-const kReward = "Reward";
+const kRewarded = "Rewarded";
 const kEnrolledUsers="Enrolled Users";
 const kTrashIconPath = "images/trash.png";
 const kEditIconPath = "images/ic_edit.png";
@@ -42,3 +42,6 @@ The navigation delegate is set to block navigation to the youtube website.
 </body>
 </html>
 ''';
+
+const kRequested="Requested";
+const kParticipated="Participated";

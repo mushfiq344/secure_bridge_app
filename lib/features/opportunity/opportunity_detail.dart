@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/features/opportunity/enrolled_user.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/screen/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -26,45 +27,27 @@ class OpportunityDetail extends StatefulWidget {
 }
 
 class _OpportunityDetailState extends State<OpportunityDetail> {
+  OpportunityViewModel _opportunityViewModel=OpportunityViewModel();
   bool userEnrolled=false;
+  String userEnrollmentStatus;
   int userCode;
   final TextEditingController codeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String code;
   @override
-  void initState() {
+initState() {
     super.initState();
-    getOpportunityDetail(widget.opportunity.id);
+    _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,(Map<String,dynamic> body){
+      log("body model $body");
+           setState(() {
+             userEnrolled=body['data']['is_user_enrolled'];
+             userCode=body['data']['user_code'];
+             userEnrollmentStatus=body['data']['enrollment_status'];
+           });
+    },(error){
+      EasyLoading.showError(error);
+    });
   }
-
-  void getOpportunityDetail(int oppurtunityId) async{
-    try {
-      EasyLoading.show(status: kLoading);
-
-      // EasyLoading.show(status: kLoading);
-      var res = await Network().getData( "${OPPORTUNITIES_URL}/${oppurtunityId}");
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body : ${body}");
-      if (res.statusCode == 200) {
-       setState(() {
-         userEnrolled=body['data']['is_user_enrolled'];
-         userCode=body['data']['user_code'];
-       });
-        EasyLoading.dismiss();
-
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-
-
-    } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -295,7 +278,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                   children: [
                     userEnrolled?Expanded(
                       flex: 1,
-                      child: PAButton("View your Code", true, () {
+                      child: userEnrollmentStatus==kApproved?PAButton("View your Code", true, () {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -325,7 +308,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       },
                           fillColor: kGreyBackgroundColor,
                           textColor: Colors.orange,
-                          capitalText: false),
+                          capitalText: false):
+                      Center(child: Text(showStatus(userEnrollmentStatus))),
                     ):SizedBox(),
 
                   ],
@@ -449,5 +433,19 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());
     }
+  }
+
+String showStatus(String status){
+    String response=" ";
+    if(status==kRequested){
+      response="Your request is being processed";
+    }
+    if(status==kParticipated){
+      response="You participated in this event";
+    }
+    if(status==kRewarded){
+      response="You were rewarded in this event";
+    }
+    return response;
   }
 }
