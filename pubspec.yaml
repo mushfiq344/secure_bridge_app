@@ -31,12 +31,20 @@ dependencies:
   json_serializable: ^3.3.0
   flutter_easyloading: ^3.0.3
   cached_network_image: any
+  webview_flutter: any
+  flutter_webview_plugin: ^0.4.0
+  image_picker: any
+  intl: ^0.17.0
+  google_sign_in: any
+  flutter_signin_button: ^2.0.0
+  flash: ^2.0.3
 
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  flutter_form_builder: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +69,15 @@ flutter:
     - images/ic_preview.png
     - images/ic_edit.png
     - images/place_holder.jpeg
+    - images/ic_background.png
+    - images/ic_calender.png
+    - images/ic_location.png
+    - images/ic_reward.png
+    - images/ic_love.png
+    - images/ic_addition.png
+    - images/logo.jpg
+    - images/ic_avatar.png
+    - images/ic_edit_white.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

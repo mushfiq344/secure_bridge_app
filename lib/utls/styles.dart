@@ -110,3 +110,46 @@ const smallLabel = TextStyle(
   color: Color(0xFF5F5F5F),
   fontWeight: FontWeight.w500,
 );
+
+InputDecoration _inputDecoration(String hintText, {bool showIcon = false}) {
+  return InputDecoration(
+    hintText: hintText,
+    hintStyle: TextStyle(color: kBorderColor),
+    fillColor: Colors.transparent,
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(kRadius10),
+      borderSide: BorderSide(
+        color: kAccentColor,
+      ),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(kRadius10),
+      borderSide: BorderSide(
+        color: kBorderColor,
+        width: 1.0,
+      ),
+    ),
+    disabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(kRadius10),
+      borderSide: BorderSide(
+        color: kBorderColor,
+        width: 1.0,
+      ),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(kRadius10),
+      borderSide: BorderSide(
+        color: kBorderColor,
+        width: 1.0,
+      ),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(kRadius10),
+      borderSide: BorderSide(
+        color: kBorderColor,
+        width: 1.0,
+      ),
+    ),
+    suffixIcon: showIcon ? Image.asset(kIconLocationPath) : null,
+  );
+}
