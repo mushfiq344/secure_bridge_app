@@ -41,6 +41,7 @@ const kGoogleIconPath = "images/ic_google.png";
 const kFacebookIconPath = "images/ic_facebook.png";
 const kAppleIconPath = "images/ic_apple.png";
 const kTextShowIconPath = "images/ic_text_show.png";
+const kOpportunityIconPath = "images/ic_opportunity.png";
 const String kNavigationExamplePage = '''
 <!DOCTYPE html><html>
 <head><title>Navigation Delegate Example</title></head>

@@ -85,9 +85,14 @@ class CustomDrawer extends StatelessWidget {
 
             userType == 1
                 ? ListTile(
-                    leading: Icon(Icons.home),
+                    leading: Image(
+                      height: 25,
+                      width: 25,
+                      image: AssetImage(kOpportunityIconPath),
+                    ),
                     title: Text('Create Opportunity',
-                        style: TextStyle(fontSize: 18)),
+                        style: TextStyle(
+                            fontSize: kMargin22, fontWeight: FontWeight.w400)),
                     onTap: () {
                       Navigator.push(
                           context,
