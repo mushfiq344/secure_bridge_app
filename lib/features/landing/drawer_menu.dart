@@ -15,140 +15,157 @@ class CustomDrawer extends StatelessWidget {
   final String name;
   final String email;
   final int userType;
-  CustomDrawer(this.profilePictureUrl,this.name,this.email,this.userType);
-  LandingViewModel _landingViewModel=LandingViewModel();
+  CustomDrawer(this.profilePictureUrl, this.name, this.email, this.userType);
+  LandingViewModel _landingViewModel = LandingViewModel();
   @override
   Widget build(BuildContext context) {
-return Drawer(
-  elevation: 10.0,
-  child: ListView(
-    children: <Widget>[
-      DrawerHeader(
-        decoration: BoxDecoration(color: Colors.grey.shade500),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Drawer(
+      elevation: 10.0,
+      child: Container(
+        color: Colors.white,
+        child: ListView(
           children: <Widget>[
-            Expanded(
-              flex:1,
-              child: CachedNetworkImage(
-                imageUrl: "${BASE_URL}${profilePictureUrl}",
-                placeholder: (context, url) =>
-                    Image(image: AssetImage(kPlaceholderImagePath)),
-                errorWidget: (context, url, error) =>
-                    Image(image: AssetImage(kPlaceholderImagePath)),
-                fit: BoxFit.fill,
-                width: 60,
-                height: 60,
+            DrawerHeader(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: AspectRatio(
+                      aspectRatio: 1 / 1,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          imageUrl: "${BASE_URL}${profilePictureUrl}",
+                          placeholder: (context, url) =>
+                              Image(image: AssetImage(kPlaceholderImagePath)),
+                          errorWidget: (context, url, error) =>
+                              Image(image: AssetImage(kPlaceholderImagePath)),
+                          fit: BoxFit.fill,
+                          width: 88,
+                          height: 88,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: kMargin8),
+                      child: Text(
+                        '${name}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: kMargin18),
+                      ),
+                    ),
+                  ),
+                  Image(
+                      width: 19,
+                      height: 27,
+                      image: AssetImage(kRightArrowIconPath))
+                ],
               ),
             ),
-            Expanded(
-              flex:3,
-              child: Padding(
-                padding: const EdgeInsets.only(left: kMargin8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '${name}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 25.0),
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                      '${email}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 14.0),
-                    ),
-                  ],
-                ),
+
+            //Here you place your menu items
+            ListTile(
+              leading: Image(
+                height: 25,
+                width: 25,
+                image: AssetImage(kProfileIconPath),
               ),
-            )
+              title: Text('Profile',
+                  style: TextStyle(
+                      fontSize: kMargin22, fontWeight: FontWeight.w400)),
+              onTap: () {
+                EasyLoading.showToast(kComingSoon);
+                // Here you can give your route to navigate
+              },
+            ),
+
+            userType == 1
+                ? ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text('Create Opportunity',
+                        style: TextStyle(fontSize: 18)),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) =>
+                                  OpportunityForm(null, null)));
+                      // Here you can give your route to navigate
+                    },
+                  )
+                : SizedBox(),
+
+            ListTile(
+              leading: Image(
+                height: kMargin25,
+                width: kMargin25,
+                image: AssetImage(kSettingsIconPath),
+              ),
+              title: Text('Settings',
+                  style: TextStyle(
+                      fontSize: kMargin22, fontWeight: FontWeight.w400)),
+              onTap: () {
+                EasyLoading.showToast("Coming Soon!");
+              },
+            ),
+            // ListTile(
+            //   leading: Icon(Icons.settings),
+            //   title: Text('Chatting', style: TextStyle(fontSize: 18)),
+            //   onTap: () {
+            //     Navigator.push(
+            //         context,
+            //         new MaterialPageRoute(
+            //             builder: (context) =>
+            //                 SecureBridgeWebView(email, 'chatting')));
+            //   },
+            // ),
+            ListTile(
+              leading: Image(image: AssetImage(kCommunityIconPath)),
+              title: Text('Forum',
+                  style: TextStyle(
+                      fontSize: kMargin22, fontWeight: FontWeight.w400)),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) =>
+                            SecureBridgeWebView(email, 'forum')));
+              },
+            ),
+            // ListTile(
+            //   leading: Icon(Icons.close),
+            //   title: Text('Close Drawer', style: TextStyle(fontSize: 18)),
+            //   onTap: () {
+            //     // to close drawer programatically..
+            //     Navigator.of(context).pop();
+            //   },
+            // ),
+            ListTile(
+              leading: Icon(
+                IconData(0xe3b3, fontFamily: 'MaterialIcons'),
+                color: Colors.black,
+                size: kMargin25,
+              ),
+              title: Text('Logout',
+                  style: TextStyle(
+                      fontSize: kMargin22, fontWeight: FontWeight.w400)),
+              onTap: () {
+                _landingViewModel.logout(() async {
+                  await Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                    (route) => false,
+                  );
+                }, () {});
+              },
+            ),
           ],
         ),
       ),
-
-      //Here you place your menu items
-      ListTile(
-        leading: Icon(Icons.home),
-        title: Text('Profile', style: TextStyle(fontSize: 18)),
-        onTap: () {
-          EasyLoading.showToast("Coming Soon!");
-          // Here you can give your route to navigate
-        },
-      ),
-      Divider(height: 3.0),
-      userType == 1
-          ? ListTile(
-        leading: Icon(Icons.home),
-        title: Text('Create Opportunity',
-            style: TextStyle(fontSize: 18)),
-        onTap: () {
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) => OpportunityForm(null,null)));
-          // Here you can give your route to navigate
-        },
-      )
-          : SizedBox(),
-
-      ListTile(
-        leading: Icon(Icons.settings),
-        title: Text('Settings', style: TextStyle(fontSize: 18)),
-        onTap: () {
-          EasyLoading.showToast("Coming Soon!");
-        },
-      ),
-      ListTile(
-        leading: Icon(Icons.settings),
-        title: Text('Chatting', style: TextStyle(fontSize: 18)),
-        onTap: () {
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) =>
-                      SecureBridgeWebView(email, 'chatting')));
-        },
-      ),
-      ListTile(
-        leading: Icon(Icons.settings),
-        title: Text('Forum', style: TextStyle(fontSize: 18)),
-        onTap: () {
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) =>
-                      SecureBridgeWebView(email, 'forum')));
-        },
-      ),
-      // ListTile(
-      //   leading: Icon(Icons.close),
-      //   title: Text('Close Drawer', style: TextStyle(fontSize: 18)),
-      //   onTap: () {
-      //     // to close drawer programatically..
-      //     Navigator.of(context).pop();
-      //   },
-      // ),
-      ListTile(
-        leading: Icon(IconData(0xe3b3, fontFamily: 'MaterialIcons')),
-        title: Text('Logout', style: TextStyle(fontSize: 18)),
-        onTap: () {
-          _landingViewModel.logout(()async {
-            await Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Login()),
-                  (route) => false,
-            );
-          }, () {});
-        },
-      ),
-    ],
-  ),
-);
+    );
   }
 }

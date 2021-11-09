@@ -78,6 +78,13 @@ flutter:
     - images/logo.jpg
     - images/ic_avatar.png
     - images/ic_edit_white.png
+    - images/ic_right_arrow.png
+    - images/ic_profile.png
+    - images/ic_opportunity.png
+    - images/ic_home.png
+    - images/ic_heart.png
+    - images/ic_settings.png
+    - images/ic_community.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
