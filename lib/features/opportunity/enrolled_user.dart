@@ -9,6 +9,9 @@ import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
+import 'package:secure_bridges_app/widgets/PAButton.dart';
+
+import 'opportunity_view_model.dart';
 
 class EnrolledOpportunityUser extends StatefulWidget {
 
@@ -20,6 +23,11 @@ class EnrolledOpportunityUser extends StatefulWidget {
 
 class _EnrolledOpportunityUserState extends State<EnrolledOpportunityUser> {
   List<User> enrolledUsers=[];
+  OpportunityViewModel _opportunityViewModel=OpportunityViewModel();
+
+  bool userEnrolled=false;
+  String userEnrollmentStatus;
+
   @override
   void initState() {
     super.initState();
@@ -74,7 +82,57 @@ class _EnrolledOpportunityUserState extends State<EnrolledOpportunityUser> {
                       trailing: GestureDetector(
                         child: Icon(Icons.remove_red_eye),
                         onTap: (){
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
 
+                                return FutureBuilder<Map<String,dynamic>>(
+                                  future: _opportunityViewModel.getUserOpportunityRelatedDetail(widget.opportunity.id, e.id), // async work
+                                  builder: (BuildContext context, AsyncSnapshot<Map<String,dynamic>> snapshot) {
+                                    switch (snapshot.connectionState) {
+                                      case ConnectionState.waiting: return Text('Loading....');
+                                      default:
+                                        if (snapshot.hasError)
+                                          return Text('Error: ${snapshot.error}');
+                                        else
+
+
+                                          if(snapshot.data==null){
+                                            return  AlertDialog(
+
+                                                content: Row(
+                                                  children: [
+                                                    Expanded(child: Center(child: Text("Something went wrong!"))),
+
+
+                                                  ],
+                                                ));
+                                          }else{
+                                            print("snapshot data ${snapshot.data}");
+                                            bool userEnrolled=snapshot.data['data']['is_user_enrolled'];
+                                            int userCode=snapshot.data['data']['user_code'];
+                                            String userEnrollmentStatus=snapshot.data['data']['enrollment_status'];
+                                            return  AlertDialog(
+
+                                                content: userEnrolled?Container(
+                                                  child: _opportunityViewModel.getUserEnrollOption(context,userEnrollmentStatus, userCode,widget.opportunity.id,e.id),
+                                                ):Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: Text("User is not enrolled any more")),
+                                                    ],
+                                                  ),
+                                                ));
+                                          }
+
+                                    }
+                                  },
+                                );
+
+
+                              }).then((value){
+                            fetchOpportunityUsers(widget.opportunity.id);
+                          });
                         },
                       ),
                     ),
