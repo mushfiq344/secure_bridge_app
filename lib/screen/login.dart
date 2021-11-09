@@ -11,7 +11,7 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:secure_bridges_app/screen/register.dart';
+import 'package:secure_bridges_app/features/authentication/register.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class Login extends StatefulWidget {

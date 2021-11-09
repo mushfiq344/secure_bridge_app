@@ -94,6 +94,7 @@ flutter:
     - images/ic_apple.png
     - images/ic_facebook.png
     - images/ic_text_show.png
+    - images/im_add_user.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
