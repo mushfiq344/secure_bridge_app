@@ -32,6 +32,15 @@ const kRightArrowIconPath = "images/ic_right_arrow.png";
 const kProfileIconPath = "images/ic_profile.png";
 const kSettingsIconPath = "images/ic_settings.png";
 const kCommunityIconPath = "images/ic_community.png";
+const kPadlockImagePath = "images/im_padlock.png";
+const kHelpingHandImagePath = "images/im_helping_hand.png";
+const kImageBackgroundPath = "images/im_image_background.png";
+const kEmailIconPath = "images/ic_email.png";
+const kLockIconPath = "images/ic_lock.png";
+const kGoogleIconPath = "images/ic_google.png";
+const kFacebookIconPath = "images/ic_facebook.png";
+const kAppleIconPath = "images/ic_apple.png";
+const kTextShowIconPath = "images/ic_text_show.png";
 const String kNavigationExamplePage = '''
 <!DOCTYPE html><html>
 <head><title>Navigation Delegate Example</title></head>

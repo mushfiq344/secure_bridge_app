@@ -85,6 +85,15 @@ flutter:
     - images/ic_heart.png
     - images/ic_settings.png
     - images/ic_community.png
+    - images/im_padlock.png
+    - images/im_helping_hand.png
+    - images/im_image_background.png
+    - images/ic_email.png
+    - images/ic_lock.png
+    - images/ic_google.png
+    - images/ic_apple.png
+    - images/ic_facebook.png
+    - images/ic_text_show.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
