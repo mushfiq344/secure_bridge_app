@@ -8,10 +8,12 @@ import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
+import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:secure_bridges_app/screen/register.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -25,6 +27,7 @@ class _LoginState extends State<Login> {
   var email;
   var password;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool showPassword = false;
   _showMsg(msg) {
     final snackBar = SnackBar(
       content: Text(msg),
@@ -38,167 +41,302 @@ class _LoginState extends State<Login> {
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
+  InputDecoration _inputDecoration(String hintText,
+      {bool showPrefixIcon = false,
+      showSuffixIcon = false,
+      String prefixIconPath,
+      String suffixIconPath}) {
+    return InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(color: kBorderColor),
+        fillColor: kLightPurpleBackgroundColor,
+        filled: true,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(kRadius10),
+          borderSide: BorderSide(
+            color: kPurpleColor,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(kRadius10),
+          borderSide: BorderSide(
+            color: Colors.transparent,
+            width: 1.0,
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(kRadius10),
+          borderSide: BorderSide(
+            color: kBorderColor,
+            width: 1.0,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(kRadius10),
+          borderSide: BorderSide(
+            color: kBorderColor,
+            width: 1.0,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(kRadius10),
+          borderSide: BorderSide(
+            color: kBorderColor,
+            width: 1.0,
+          ),
+        ),
+        prefixIcon: showPrefixIcon ? Image.asset(prefixIconPath) : null,
+        suffixIcon: showSuffixIcon
+            ? GestureDetector(
+                child: Image.asset(suffixIconPath),
+                onTap: () {
+                  setState(() {
+                    showPassword = !showPassword;
+                  });
+                },
+              )
+            : null);
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
-        color: kPurpleColor,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            stops: [0.3, 0.5, 0.7, .9],
+            colors: [
+              Color(0xFFDDDCFE),
+              Color(0xFFF7F6FF),
+              Color(0xFFFFFFFF),
+              Color(0xFFDDDCFE),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(kImageBackgroundPath),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Image(
+                  height: 200,
+                  image: AssetImage(kHelpingHandImagePath),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: kMargin32, vertical: kMargin18),
+                child: Text(
+                  "WELCOME TO SECURE BRIDGES",
+                  style: TextStyle(
+                      fontSize: kMargin32, fontWeight: FontWeight.w400),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kMargin20),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Card(
-                      elevation: 4.0,
-                      color: Colors.white,
-                      margin: EdgeInsets.only(left: 20, right: 20),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                  children: [
+                    GestureDetector(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(kMargin12)),
+                        child: ListTile(
+                          leading: Image(
+                            image: AssetImage(kGoogleIconPath),
+                          ),
+                          title: Text("Continue With Google",
+                              style: TextStyle(
+                                  fontSize: kMargin14,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      onTap: () {
+                        _handleSignIn();
+                      },
+                    ),
+                    SizedBox(
+                      height: kMargin4,
+                    ),
+                    GestureDetector(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(kMargin12)),
+                        child: ListTile(
+                          leading: Image(
+                            image: AssetImage(kFacebookIconPath),
+                          ),
+                          title: Text("Continue With Facebook",
+                              style: TextStyle(
+                                  fontSize: kMargin14,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      onTap: () {
+                        EasyLoading.showToast(kComingSoon);
+                      },
+                    ),
+                    SizedBox(
+                      height: kMargin4,
+                    ),
+                    GestureDetector(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(kMargin12)),
+                        child: ListTile(
+                          leading: Image(
+                            image: AssetImage(kAppleIconPath),
+                          ),
+                          title: Text("Continue With Apple ID",
+                              style: TextStyle(
+                                  fontSize: kMargin14,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      onTap: () {
+                        EasyLoading.showToast(kComingSoon);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Card(
+                elevation: 4.0,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kMargin20),
+                  child: Column(
+                    children: [
+                      Form(
+                        key: _formKey,
                         child: Column(
-                          children: [
-                            Image(
-                              height: 200,
-                              image: AssetImage(kAppLogoPath),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: kMargin12),
+                              child: Text(
+                                "Log In with email",
+                                style: TextStyle(
+                                    fontSize: kMargin14,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                            Form(
-                              key: _formKey,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  TextFormField(
-                              initialValue:
-                                        'user@itsolutionstuff.com',
-                                    style: TextStyle(color: Color(0xFF000000)),
-                                    cursorColor: Color(0xFF9b9b9b),
-                                    keyboardType: TextInputType.text,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.email,
-                                        color: Colors.grey,
-                                      ),
-                                      hintText: "Email",
-                                      hintStyle: TextStyle(
-                                          color: Color(0xFF9b9b9b),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                    validator: (emailValue) {
-                                      if (emailValue.isEmpty) {
-                                        return 'Please enter email';
-                                      }
-                                      email = emailValue;
-                                      return null;
-                                    },
+                            TextFormField(
+                              initialValue: 'user@itsolutionstuff.com',
+                              style: TextStyle(color: kPurpleColor),
+                              cursorColor: kPurpleColor,
+                              keyboardType: TextInputType.text,
+                              decoration: _inputDecoration('Email',
+                                  showPrefixIcon: true,
+                                  prefixIconPath: kEmailIconPath),
+                              validator: (emailValue) {
+                                if (emailValue.isEmpty) {
+                                  return 'Please enter email';
+                                }
+                                email = emailValue;
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: kMargin10,
+                            ),
+                            TextFormField(
+                              initialValue: '123456',
+                              style: TextStyle(color: kPurpleColor),
+                              cursorColor: kPurpleColor,
+                              keyboardType: TextInputType.text,
+                              obscureText: showPassword ? false : true,
+                              decoration: _inputDecoration('Password',
+                                  showPrefixIcon: true,
+                                  prefixIconPath: kLockIconPath,
+                                  showSuffixIcon: true,
+                                  suffixIconPath: kTextShowIconPath),
+                              validator: (passwordValue) {
+                                if (passwordValue.isEmpty) {
+                                  return 'Please enter some text';
+                                }
+                                password = passwordValue;
+                                return null;
+                              },
+                            ),
+                            Container(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: kMargin20),
+                                child: PAButton(
+                                  "Login",
+                                  true,
+                                  () {
+                                    if (_formKey.currentState.validate()) {
+                                      _login();
+                                    }
+                                  },
+                                  fillColor: kPurpleColor,
+                                  hMargin: 0,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "Forgot Password?",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                              onTap: () {
+                                EasyLoading.showToast(kComingSoon);
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: kMargin28, top: 6),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      new MaterialPageRoute(
+                                          builder: (context) => Register()));
+                                },
+                                child: Text(
+                                  'Don’t have an account? Sign up',
+                                  style: TextStyle(
+                                    color: kPurpleColor,
+                                    fontSize: 15.0,
+                                    decoration: TextDecoration.none,
+                                    fontWeight: FontWeight.normal,
                                   ),
-                                  TextFormField(
-                                  initialValue: '123456',
-                                    style: TextStyle(color: Color(0xFF000000)),
-                                    cursorColor: Color(0xFF9b9b9b),
-                                    keyboardType: TextInputType.text,
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.vpn_key,
-                                        color: Colors.grey,
-                                      ),
-                                      hintText: "Password",
-                                      hintStyle: TextStyle(
-                                          color: Color(0xFF9b9b9b),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                    validator: (passwordValue) {
-                                      if (passwordValue.isEmpty) {
-                                        return 'Please enter some text';
-                                      }
-                                      password = passwordValue;
-                                      return null;
-                                    },
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: FlatButton(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 8,
-                                            bottom: 8,
-                                            left: 10,
-                                            right: 10),
-                                        child: Text(
-                                          'Login',
-                                          textDirection: TextDirection.ltr,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15.0,
-                                            decoration: TextDecoration.none,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      color: kPurpleColor,
-                                      disabledColor: Colors.grey,
-                                      shape: new RoundedRectangleBorder(
-                                          borderRadius:
-                                              new BorderRadius.circular(20.0)),
-                                      onPressed: () {
-                                        if (_formKey.currentState.validate()) {
-                                          _login();
-
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  SignInButton(
-                                    Buttons.Google,
-                                    text: "Sign up with Google",
-                                    onPressed: () {
-                                      _handleSignIn();
-                                    },
-                                  )
-
-                                ],
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => Register()));
-                        },
-                        child: Text(
-                          'Create new Account',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15.0,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
+
   Future<void> _handleSignIn() async {
     try {
       GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
@@ -207,7 +345,7 @@ class _LoginState extends State<Login> {
         return null;
       }
       GoogleSignInAuthentication googleSignInAuthentication =
-      await googleSignInAccount.authentication;
+          await googleSignInAccount.authentication;
 
       //this is user access token from google that is retrieved with the plugin
       print("User Access Token: ${googleSignInAuthentication.accessToken}");
@@ -217,6 +355,7 @@ class _LoginState extends State<Login> {
       EasyLoading.showError(error);
     }
   }
+
   void _login() async {
     try {
       setState(() {
@@ -253,12 +392,10 @@ class _LoginState extends State<Login> {
     }
   }
 
-  void googleAuth(String token)async{
+  void googleAuth(String token) async {
     try {
       EasyLoading.show(status: kLoading);
-      var data={
-        "google_token":token
-      };
+      var data = {"google_token": token};
       // EasyLoading.show(status: kLoading);
       var res = await Network().postData(data, GOOGLE_AUTH_URL);
       var body = json.decode(res.body);
@@ -273,14 +410,12 @@ class _LoginState extends State<Login> {
         await Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => Home()),
-              (route) => false,
+          (route) => false,
         );
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);
       }
-
-
     } catch (e) {
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());
