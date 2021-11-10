@@ -82,7 +82,7 @@ class _RegisterState extends State<Register> {
                             keyboardType: TextInputType.text,
                             decoration: _inputDecoration('Name',
                                 showPrefixIcon: true,
-                                prefixIconPath: kEmailIconPath),
+                                prefixIconPath: kUserIconPath),
                             validator: (nameValue) {
                               if (nameValue.isEmpty) {
                                 return 'Please enter your first name';
