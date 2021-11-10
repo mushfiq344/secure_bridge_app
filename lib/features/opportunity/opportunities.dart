@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
-import 'package:secure_bridges_app/screen/login.dart';
+import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
