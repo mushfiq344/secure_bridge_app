@@ -329,7 +329,13 @@ class _HomeState extends State<Home> {
                                 ),
                                 onTap: () {
                                   if (userEnrollments.contains(item.id)) {
-                                    _removeFromEnrollments(item);
+                                    _opportunityViewModel.removeFromEnrollments(
+                                        context, item, (success) {
+                                      _loadUserData();
+                                      _loadOpportunitiesStats();
+                                    }, (error) {
+                                      EasyLoading.showError(error);
+                                    });
                                   } else {
                                     _opportunityViewModel
                                         .enrollUser(context, item, () {
@@ -613,50 +619,6 @@ class _HomeState extends State<Home> {
       }
     } catch (e) {
       print("error here");
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
-  }
-
-  _enroll(Opportunity opportunity) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var res = await Network()
-          .postData({'opportunity_id': opportunity.id}, CHOICE_LIST_URL);
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body : ${body}");
-      if (res.statusCode == 201) {
-        EasyLoading.dismiss();
-        _loadOpportunitiesStats();
-        EasyLoading.showSuccess(body["message"]);
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
-  }
-
-  _removeFromEnrollments(Opportunity opportunity) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var res = await Network().deleteData({'opportunity_id': opportunity.id},
-          "${CHOICE_LIST_URL}/${opportunity.id}");
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body remove : ${body}");
-      if (res.statusCode == 200) {
-        EasyLoading.dismiss();
-        _loadOpportunitiesStats();
-        EasyLoading.showSuccess(body["message"]);
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());
     }
