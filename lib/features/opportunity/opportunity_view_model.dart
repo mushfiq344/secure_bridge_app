@@ -181,4 +181,26 @@ class OpportunityViewModel {
       _error(e.toString());
     }
   }
+
+  removeFromWithList(
+      BuildContext context, Opportunity opportunity, _success, _error) async {
+    try {
+      EasyLoading.show(status: kLoading);
+      var res =
+          await Network().deleteData({}, "${WISH_LIST_URL}/${opportunity.id}");
+      var body = json.decode(res.body);
+
+      if (res.statusCode == 200) {
+        print(body);
+        EasyLoading.dismiss();
+        _success(body["message"]);
+      } else {
+        EasyLoading.dismiss();
+        _error(body['message']);
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      _error(e.toString());
+    }
+  }
 }

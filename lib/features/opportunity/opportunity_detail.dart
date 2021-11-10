@@ -499,7 +499,14 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                               }, (error) {
                                 EasyLoading.showError(error);
                               });
-                            } else {}
+                            } else {
+                              _opportunityViewModel.removeFromWithList(
+                                  context, widget.opportunity, (success) {
+                                loadOpportunityDetail();
+                              }, (error) {
+                                EasyLoading.showError(error);
+                              });
+                            }
                           },
                         )
                       : SizedBox(),
