@@ -159,4 +159,26 @@ class OpportunityViewModel {
       _error(e.toString());
     }
   }
+
+  void addToWishList(
+      BuildContext context, Opportunity opportunity, _success, _error) async {
+    try {
+      EasyLoading.show(status: kLoading);
+      var res = await Network()
+          .postData({'opportunity_id': opportunity.id}, WISH_LIST_URL);
+      var body = json.decode(res.body);
+      // log("res ${res.statusCode}");
+      log("body : ${body}");
+      if (res.statusCode == 201) {
+        EasyLoading.dismiss();
+        _success();
+      } else {
+        EasyLoading.dismiss();
+        _error(body['message']);
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      _error(e.toString());
+    }
+  }
 }
