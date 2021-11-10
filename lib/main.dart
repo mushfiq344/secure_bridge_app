@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:secure_bridges_app/screen/login.dart';
+import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -6,7 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/features/opportunity/enrolled_user.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
-import 'package:secure_bridges_app/screen/login.dart';
+import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';

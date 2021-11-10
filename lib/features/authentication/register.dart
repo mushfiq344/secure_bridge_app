@@ -11,7 +11,7 @@ import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:secure_bridges_app/screen/login.dart';
+import 'package:secure_bridges_app/features/authentication/login.dart';
 
 class Register extends StatefulWidget {
   @override

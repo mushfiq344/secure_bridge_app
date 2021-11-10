@@ -10,6 +10,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:secure_bridges_app/features/authentication/register.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -27,7 +28,7 @@ class _LoginState extends State<Login> {
   var email;
   var password;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool showPassword = false;
+  bool hidePassword = false;
   _showMsg(msg) {
     final snackBar = SnackBar(
       content: Text(msg),
@@ -39,63 +40,6 @@ class _LoginState extends State<Login> {
       ),
     );
     _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-  InputDecoration _inputDecoration(String hintText,
-      {bool showPrefixIcon = false,
-      showSuffixIcon = false,
-      String prefixIconPath,
-      String suffixIconPath}) {
-    return InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(color: kBorderColor),
-        fillColor: kLightPurpleBackgroundColor,
-        filled: true,
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: kPurpleColor,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: Colors.transparent,
-            width: 1.0,
-          ),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: kBorderColor,
-            width: 1.0,
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: kBorderColor,
-            width: 1.0,
-          ),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: kBorderColor,
-            width: 1.0,
-          ),
-        ),
-        prefixIcon: showPrefixIcon ? Image.asset(prefixIconPath) : null,
-        suffixIcon: showSuffixIcon
-            ? GestureDetector(
-                child: Image.asset(suffixIconPath),
-                onTap: () {
-                  setState(() {
-                    showPassword = !showPassword;
-                  });
-                },
-              )
-            : null);
   }
 
   @override
@@ -240,7 +184,8 @@ class _LoginState extends State<Login> {
                               style: TextStyle(color: kPurpleColor),
                               cursorColor: kPurpleColor,
                               keyboardType: TextInputType.text,
-                              decoration: _inputDecoration('Email',
+                              decoration: customInputDecoration('Email',
+                                  fillColor: kLightPurpleBackgroundColor,
                                   showPrefixIcon: true,
                                   prefixIconPath: kEmailIconPath),
                               validator: (emailValue) {
@@ -259,12 +204,19 @@ class _LoginState extends State<Login> {
                               style: TextStyle(color: kPurpleColor),
                               cursorColor: kPurpleColor,
                               keyboardType: TextInputType.text,
-                              obscureText: showPassword ? false : true,
-                              decoration: _inputDecoration('Password',
+                              obscureText: hidePassword,
+                              decoration: customInputDecoration('Password',
+                                  fillColor: kLightPurpleBackgroundColor,
                                   showPrefixIcon: true,
                                   prefixIconPath: kLockIconPath,
                                   showSuffixIcon: true,
-                                  suffixIconPath: kTextShowIconPath),
+                                  suffixIconPath: kTextShowIconPath,
+                                  hasSuffixIconCallback: true,
+                                  suffixIconCallback: () {
+                                setState(() {
+                                  hidePassword = !hidePassword;
+                                });
+                              }),
                               validator: (passwordValue) {
                                 if (passwordValue.isEmpty) {
                                   return 'Please enter some text';

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/features/landing/landing_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
-import 'package:secure_bridges_app/screen/login.dart';
+import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/constants.dart';

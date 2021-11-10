@@ -10,7 +10,7 @@ import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart'
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
-import 'package:secure_bridges_app/screen/login.dart';
+import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunities.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
