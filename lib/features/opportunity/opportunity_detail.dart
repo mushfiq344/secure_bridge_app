@@ -41,6 +41,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   @override
   initState() {
     super.initState();
+    loadOpportunityDetail();
+  }
+
+  void loadOpportunityDetail() {
     _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,
         (Map<String, dynamic> body) {
       log("body model $body");
@@ -427,90 +431,99 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                               ),
                                             )),
                                         onTap: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) => new AlertDialog(
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    contentPadding:
-                                                        EdgeInsets.zero,
-                                                    content: Builder(
-                                                      builder: (context) {
-                                                        // Get available height and width of the build area of this widget. Make a choice depending on the size.
-                                                        var height =
-                                                            MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height;
-                                                        var width =
-                                                            MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width;
+                                          _opportunityViewModel.enrollUser(
+                                              context, widget.opportunity, () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) => new AlertDialog(
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      content: Builder(
+                                                        builder: (context) {
+                                                          // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                                          var height =
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height;
+                                                          var width =
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width;
 
-                                                        return Container(
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  kAlertDialogBackgroundColor,
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          20.0))),
-                                                          height: height * .5,
-                                                          width: width * .75,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    vertical:
-                                                                        50,
-                                                                    horizontal:
-                                                                        30),
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  "ENROLLMENT CONFIRMATION",
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          kMargin24,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color:
-                                                                          kPurpleColor),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 33,
-                                                                ),
-                                                                Text(
-                                                                  "Your request to enroll to the oppoertunity is pending for admin review. You’ll get notification once the request is approved",
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 33,
-                                                                ),
-                                                                PAButton(
-                                                                  "Ok",
-                                                                  true,
-                                                                  () {},
-                                                                  fillColor:
-                                                                      kPurpleColor,
-                                                                )
-                                                              ],
+                                                          return Container(
+                                                            decoration: BoxDecoration(
+                                                                color:
+                                                                    kAlertDialogBackgroundColor,
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            20.0))),
+                                                            height: height * .5,
+                                                            width: width * .75,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical: 50,
+                                                                  horizontal:
+                                                                      30),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    "ENROLLMENT CONFIRMATION",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            kMargin24,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color:
+                                                                            kPurpleColor),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 33,
+                                                                  ),
+                                                                  Text(
+                                                                    "Your request to enroll to the oppoertunity is pending for admin review. You’ll get notification once the request is approved",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 33,
+                                                                  ),
+                                                                  PAButton(
+                                                                    "Ok",
+                                                                    true,
+                                                                    () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                    fillColor:
+                                                                        kPurpleColor,
+                                                                  )
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ));
+                                                          );
+                                                        },
+                                                      ),
+                                                    )).then((value) {
+                                              loadOpportunityDetail();
+                                            });
+                                          }, (error) {
+                                            EasyLoading.showError(error);
+                                          });
                                         },
                                       )
                                     : SizedBox()),
@@ -659,24 +672,33 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   Widget showStatus(String status) {
     Widget response = Text(" ");
     if (status == kRequested) {
-      response = Card(
-          color: kInactiveColor,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: kMargin16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(image: AssetImage(kIconAdditionWhitePath)),
-                SizedBox(
-                  width: kMargin10,
-                ),
-                Text(
-                  "pending approval",
-                  style: TextStyle(color: Colors.white, fontSize: kMargin14),
-                ),
-              ],
-            ),
-          ));
+      response = GestureDetector(
+        child: Card(
+            color: kInactiveColor,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: kMargin16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(image: AssetImage(kIconAdditionWhitePath)),
+                  SizedBox(
+                    width: kMargin10,
+                  ),
+                  Text(
+                    "pending approval",
+                    style: TextStyle(color: Colors.white, fontSize: kMargin14),
+                  ),
+                ],
+              ),
+            )),
+        onTap: () {
+          _opportunityViewModel.removeFromEnrollments(widget.opportunity, () {
+            loadOpportunityDetail();
+          }, (error) {
+            EasyLoading.showError(error);
+          });
+        },
+      );
     }
     if (status == kParticipated) {
       response = Text("You participated in this event");

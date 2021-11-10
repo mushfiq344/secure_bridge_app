@@ -200,10 +200,14 @@ class _HomeState extends State<Home> {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            new MaterialPageRoute(
-                builder: (context) => OpportunityDetail(
-                    item, opportunityUploadPath, userId, userType)));
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => OpportunityDetail(
+                        item, opportunityUploadPath, userId, userType)))
+            .then((value) {
+          _loadUserData();
+          _loadOpportunitiesStats();
+        });
       },
       child: Padding(
         padding: const EdgeInsets.only(
