@@ -138,7 +138,8 @@ class OpportunityViewModel {
     }
   }
 
-  void removeFromEnrollments(Opportunity opportunity, _success, _error) async {
+  void removeFromEnrollments(
+      BuildContext context, Opportunity opportunity, _success, _error) async {
     try {
       EasyLoading.show(status: kLoading);
       var res = await Network().deleteData({'opportunity_id': opportunity.id},
@@ -148,8 +149,7 @@ class OpportunityViewModel {
       log("body remove : ${body}");
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
-        _success();
-        EasyLoading.showSuccess(body["message"]);
+        _success(body["message"]);
       } else {
         EasyLoading.dismiss();
         _error(body['message']);

@@ -8,6 +8,7 @@ import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/features/landing/drawer_menu.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
 import 'package:secure_bridges_app/screen/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
@@ -17,6 +18,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/utls/styles.dart';
+import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
@@ -37,6 +39,7 @@ class _HomeState extends State<Home> {
   List<Opportunity> opportunitiesAll = <Opportunity>[];
   static List<Opportunity> searchedOpportunities = [];
   TextEditingController _searchController = TextEditingController();
+  OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
   String opportunityUploadPath;
   @override
   void initState() {
@@ -281,11 +284,10 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   child: userWishes.contains(item.id)
-                                      ? IconButton(
-                                          constraints: BoxConstraints(
-                                              maxHeight: 34, maxWidth: 34),
-                                          icon: new Icon(
-                                              Icons.bookmark_remove_sharp),
+                                      ? Image(
+                                          width: 32,
+                                          height: 32,
+                                          image: AssetImage(kIconLoveWhitePath),
                                         )
                                       : Image(
                                           width: 32,
@@ -313,10 +315,11 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   child: userEnrollments.contains(item.id)
-                                      ? IconButton(
-                                          constraints: BoxConstraints(
-                                              maxHeight: 34, maxWidth: 34),
-                                          icon: new Icon(Icons.delete_outline),
+                                      ? Image(
+                                          width: 32,
+                                          height: 32,
+                                          image: AssetImage(
+                                              kIconAdditionWhitePath),
                                         )
                                       : Image(
                                           width: 32,
@@ -326,9 +329,105 @@ class _HomeState extends State<Home> {
                                 ),
                                 onTap: () {
                                   if (userEnrollments.contains(item.id)) {
-                                    _removeFromEnrollments(item);
+                                    _opportunityViewModel.removeFromEnrollments(
+                                        context, item, (success) {
+                                      _loadUserData();
+                                      _loadOpportunitiesStats();
+                                    }, (error) {
+                                      EasyLoading.showError(error);
+                                    });
                                   } else {
-                                    _enroll(item);
+                                    _opportunityViewModel
+                                        .enrollUser(context, item, () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => new AlertDialog(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                contentPadding: EdgeInsets.zero,
+                                                content: Builder(
+                                                  builder: (context) {
+                                                    // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                                    var height =
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height;
+                                                    var width =
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width;
+
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              kAlertDialogBackgroundColor,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      20.0))),
+                                                      height: height * .5,
+                                                      width: width * .75,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 50,
+                                                                horizontal: 30),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              "ENROLLMENT CONFIRMATION",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      kMargin24,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color:
+                                                                      kPurpleColor),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 33,
+                                                            ),
+                                                            Text(
+                                                              "Your request to enroll to the oppoertunity is pending for admin review. You’ll get notification once the request is approved",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 33,
+                                                            ),
+                                                            PAButton(
+                                                              "Ok",
+                                                              true,
+                                                              () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              fillColor:
+                                                                  kPurpleColor,
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              )).then((value) {
+                                        _loadUserData();
+                                        _loadOpportunitiesStats();
+                                      });
+                                    }, (error) {
+                                      EasyLoading.showError(error);
+                                    });
                                   }
                                 },
                               )
@@ -520,50 +619,6 @@ class _HomeState extends State<Home> {
       }
     } catch (e) {
       print("error here");
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
-  }
-
-  _enroll(Opportunity opportunity) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var res = await Network()
-          .postData({'opportunity_id': opportunity.id}, CHOICE_LIST_URL);
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body : ${body}");
-      if (res.statusCode == 201) {
-        EasyLoading.dismiss();
-        _loadOpportunitiesStats();
-        EasyLoading.showSuccess(body["message"]);
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
-  }
-
-  _removeFromEnrollments(Opportunity opportunity) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var res = await Network().deleteData({'opportunity_id': opportunity.id},
-          "${CHOICE_LIST_URL}/${opportunity.id}");
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body remove : ${body}");
-      if (res.statusCode == 200) {
-        EasyLoading.dismiss();
-        _loadOpportunitiesStats();
-        EasyLoading.showSuccess(body["message"]);
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());
     }

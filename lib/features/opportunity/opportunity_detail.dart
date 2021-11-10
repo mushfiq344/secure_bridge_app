@@ -398,7 +398,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                 flex: 1,
                                 child: userEnrollmentStatus != kApproved
                                     ? Center(
-                                        child: showStatus(userEnrollmentStatus))
+                                        child: showStatus(
+                                            context, userEnrollmentStatus))
                                     : SizedBox(),
                               )
                             : Expanded(
@@ -669,7 +670,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
     }
   }
 
-  Widget showStatus(String status) {
+  Widget showStatus(BuildContext context, String status) {
     Widget response = Text(" ");
     if (status == kRequested) {
       response = GestureDetector(
@@ -692,7 +693,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
               ),
             )),
         onTap: () {
-          _opportunityViewModel.removeFromEnrollments(widget.opportunity, () {
+          _opportunityViewModel
+              .removeFromEnrollments(context, widget.opportunity, (success) {
             loadOpportunityDetail();
           }, (error) {
             EasyLoading.showError(error);
