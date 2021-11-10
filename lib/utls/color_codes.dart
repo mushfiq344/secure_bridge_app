@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 const kPurpleColor = Color(0xFF573353);
 const kPurpleBackGround = Color(0xFF5A189A);
-const kLightPurpleBackgroundColor = Color(0xFFDDDCFE);
+const kLightPurpleBackgroundColor = Color(0xFFB1AFE9);
 
 const kGradiantBackground = [Color(0xFFDDDCFE), Color(0xFFDDDCFE)];
 const kPrimaryColor = Color(0xFF0A409A);
@@ -19,3 +19,4 @@ const kApprovedColor = Color(0xFF1BB057);
 const kRejectedColor = Color(0xFFCA0707);
 const kWaitingForReviewColor = Color(0xFFFFA500);
 const kSubmitToReviewColor = Color(0xFF2FA5B8);
+const kOrangeBackgroundColor = Color(0xFFF9B566);

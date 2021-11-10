@@ -30,6 +30,7 @@ class OpportunityDetail extends StatefulWidget {
 class _OpportunityDetailState extends State<OpportunityDetail> {
   OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
   bool userEnrolled = false;
+  bool inUserWithList = false;
   String userEnrollmentStatus;
   int userCode;
   final TextEditingController codeController = TextEditingController();
@@ -43,6 +44,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
       log("body model $body");
       setState(() {
         userEnrolled = body['data']['is_user_enrolled'];
+        inUserWithList = body['data']['in_user_wish_list'];
         userCode = body['data']['user_code'];
         userEnrollmentStatus = body['data']['enrollment_status'];
       });
@@ -257,6 +259,55 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                     ],
                   ),
                   SizedBox(
+                    height: kMargin12,
+                  ),
+                  userEnrolled && userEnrollmentStatus == kApproved
+                      ? Container(
+                          child: Card(
+                          color: kOrangeBackgroundColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(17),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    text: "PARTICIPATION CODE:",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: kMargin14,
+                                    ),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: " ${userCode}",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: kMargin14,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                  child: Icon(
+                                    Icons.copy,
+                                    color: Colors.white,
+                                  ),
+                                  onTap: () {
+                                    Clipboard.setData(
+                                        ClipboardData(text: "$userCode"));
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text("Copied to clipboard!"),
+                                    ));
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ))
+                      : SizedBox(),
+                  SizedBox(
                     height: kMargin24,
                   ),
                   Container(
@@ -307,52 +358,42 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                   SizedBox(
                     height: kMargin24,
                   ),
+                  inUserWithList
+                      ? Container(
+                          child: Card(
+                              color: kLightPurpleBackgroundColor,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: kMargin16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image(
+                                      image: AssetImage(kIconLoveWhitePath),
+                                    ),
+                                    SizedBox(
+                                      width: kMargin10,
+                                    ),
+                                    Text(
+                                      "add to favourite",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: kMargin14),
+                                    ),
+                                  ],
+                                ),
+                              )))
+                      : SizedBox(),
                   Container(
                     child: Row(
                       children: [
                         userEnrolled
                             ? Expanded(
                                 flex: 1,
-                                child: userEnrollmentStatus == kApproved
-                                    ? PAButton("View your Code", true, () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                  content: Container(
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                        child: Text(
-                                                            "Your validation code for this opportunity is $userCode")),
-                                                    GestureDetector(
-                                                      child: Icon(Icons.copy),
-                                                      onTap: () {
-                                                        Clipboard.setData(
-                                                            ClipboardData(
-                                                                text:
-                                                                    "$userCode"));
-
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                                SnackBar(
-                                                          content: Text(
-                                                              "Copied to clipboard!"),
-                                                        ));
-                                                      },
-                                                    )
-                                                  ],
-                                                ),
-                                              ));
-                                            });
-                                      },
-                                        fillColor: kGreyBackgroundColor,
-                                        textColor: Colors.orange,
-                                        capitalText: false)
-                                    : Center(
-                                        child:
-                                            showStatus(userEnrollmentStatus)),
+                                child: userEnrollmentStatus != kApproved
+                                    ? Center(
+                                        child: showStatus(userEnrollmentStatus))
+                                    : SizedBox(),
                               )
                             : SizedBox(),
                       ],
@@ -479,7 +520,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
       var res = await Network().postData(data, 'api/check-enrollment');
       var body = json.decode(res.body);
       // log("res ${res.statusCode}");
-      log("body : ${body}");
+      // log("body : ${body}");
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
         if (body['data']['user_is_enrolled']) {
