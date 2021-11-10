@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 const kPurpleColor = Color(0xFF573353);
+const kPurpleBackGround = Color(0xFF5A189A);
 const kLightPurpleBackgroundColor = Color(0xFFDDDCFE);
 
 const kGradiantBackground = [Color(0xFFDDDCFE), Color(0xFFDDDCFE)];

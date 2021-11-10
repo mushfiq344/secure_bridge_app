@@ -106,69 +106,75 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                     children: [
                       Expanded(
                           flex: 1,
-                          child: Row(
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(kIconBackgroundPath),
-                                      fit: BoxFit.cover,
-                                    ),
+                          child: Card(
+                            color: kPurpleBackGround,
+                            child: Row(
+                              children: [
+                                Container(
+                                    child: Image(
+                                  width: 50,
+                                  height: 50,
+                                  image: AssetImage(kIconRewardPath),
+                                )),
+                                Padding(
+                                  padding: EdgeInsets.only(left: kMargin4),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Offered By",
+                                        style: TextStyle(
+                                            fontSize: kMargin12,
+                                            color: Colors.white),
+                                      ),
+                                      Text(
+                                        "Jet Constellations",
+                                        style: TextStyle(
+                                            fontSize: kMargin12,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
                                   ),
-                                  child: Image(
-                                    width: 50,
-                                    height: 50,
-                                    image: AssetImage(kIconRewardPath),
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.only(left: kMargin4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Offered By",
-                                      style: TextStyle(
-                                          fontSize: kMargin12,
-                                          color: kInactiveColor),
-                                    ),
-                                    Text("Jet Constellations")
-                                  ],
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           )),
                       Expanded(
                           flex: 1,
-                          child: Row(
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(kIconBackgroundPath),
-                                      fit: BoxFit.cover,
-                                    ),
+                          child: Card(
+                            color: kPurpleBackGround,
+                            child: Row(
+                              children: [
+                                Container(
+                                    child: Image(
+                                  width: 50,
+                                  height: 50,
+                                  image: AssetImage(kIconRewardPath),
+                                )),
+                                Padding(
+                                  padding: EdgeInsets.only(left: kMargin4),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Reward",
+                                        style: TextStyle(
+                                            fontSize: kMargin12,
+                                            color: Colors.white),
+                                      ),
+                                      Text("${widget.opportunity.reward}\$",
+                                          style: TextStyle(
+                                              fontSize: kMargin12,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold))
+                                    ],
                                   ),
-                                  child: Image(
-                                    width: 50,
-                                    height: 50,
-                                    image: AssetImage(kIconRewardPath),
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.only(left: kMargin4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Reward",
-                                      style: TextStyle(
-                                          fontSize: kMargin12,
-                                          color: kInactiveColor),
-                                    ),
-                                    Text("${widget.opportunity.reward}\$")
-                                  ],
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           )),
                     ],
                   ),
@@ -179,70 +185,74 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                     children: [
                       Expanded(
                           flex: 1,
-                          child: Row(
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(kIconBackgroundPath),
-                                      fit: BoxFit.cover,
-                                    ),
+                          child: Card(
+                            color: kPurpleBackGround,
+                            child: Row(
+                              children: [
+                                Container(
+                                    child: Image(
+                                  width: 50,
+                                  height: 50,
+                                  image: AssetImage(kIconCalenderPath),
+                                )),
+                                Padding(
+                                  padding: EdgeInsets.only(left: kMargin4),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Date",
+                                        style: TextStyle(
+                                            fontSize: kMargin12,
+                                            color: Colors.white),
+                                      ),
+                                      Text(
+                                          "${widget.opportunity.opportunityDate}",
+                                          style: TextStyle(
+                                              fontSize: kMargin12,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold))
+                                    ],
                                   ),
-                                  child: Image(
-                                    width: 50,
-                                    height: 50,
-                                    image: AssetImage(kIconRewardPath),
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.only(left: kMargin4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Date",
-                                      style: TextStyle(
-                                          fontSize: kMargin12,
-                                          color: kInactiveColor),
-                                    ),
-                                    Text(
-                                        "${widget.opportunity.opportunityDate}")
-                                  ],
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           )),
                       Expanded(
                           flex: 1,
-                          child: Row(
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(kIconBackgroundPath),
-                                      fit: BoxFit.cover,
-                                    ),
+                          child: Card(
+                            color: kPurpleBackGround,
+                            child: Row(
+                              children: [
+                                Container(
+                                    child: Image(
+                                  width: 50,
+                                  height: 50,
+                                  image: AssetImage(kIconLocationPath),
+                                )),
+                                Padding(
+                                  padding: EdgeInsets.only(left: kMargin4),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Location",
+                                        style: TextStyle(
+                                            fontSize: kMargin12,
+                                            color: Colors.white),
+                                      ),
+                                      Text("Milwaukee, WI",
+                                          style: TextStyle(
+                                              fontSize: kMargin12,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold))
+                                    ],
                                   ),
-                                  child: Image(
-                                    width: 50,
-                                    height: 50,
-                                    image: AssetImage(kIconLocationPath),
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.only(left: kMargin4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Location",
-                                      style: TextStyle(
-                                          fontSize: kMargin12,
-                                          color: kInactiveColor),
-                                    ),
-                                    Text("Milwaukee, WI")
-                                  ],
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           )),
                     ],
                   ),
@@ -253,23 +263,44 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                     child: Row(
                       children: [
                         Expanded(
-                          flex: 1,
-                          child: PAButton("habits", true, () {
-                            EasyLoading.showToast(kComingSoon);
-                          },
-                              fillColor: kGreyBackgroundColor,
-                              textColor: Colors.orange,
-                              capitalText: false),
+                          flex: 3,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: PAButton(
+                                  "habits",
+                                  true,
+                                  () {
+                                    EasyLoading.showToast(kComingSoon);
+                                  },
+                                  fillColor: kGreyBackgroundColor,
+                                  textColor: kLabelColor,
+                                  capitalText: false,
+                                  hMargin: 5,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: PAButton(
+                                  "productivity",
+                                  true,
+                                  () {
+                                    EasyLoading.showToast(kComingSoon);
+                                  },
+                                  fillColor: kGreyBackgroundColor,
+                                  textColor: kLabelColor,
+                                  capitalText: false,
+                                  hMargin: 5,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         Expanded(
+                          child: SizedBox(),
                           flex: 1,
-                          child: PAButton("productivity", true, () {
-                            EasyLoading.showToast(kComingSoon);
-                          },
-                              fillColor: kGreyBackgroundColor,
-                              textColor: Colors.orange,
-                              capitalText: false),
-                        ),
+                        )
                       ],
                     ),
                   ),
