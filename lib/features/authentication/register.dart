@@ -9,6 +9,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:secure_bridges_app/screen/login.dart';
 
@@ -25,7 +26,8 @@ class _RegisterState extends State<Register> {
   var name;
   var confirmPassword;
   AuthenticationViewModel _authenticationViewModel = AuthenticationViewModel();
-  bool showPassword = false;
+  bool hidePassword = true;
+  bool hideConfirmPassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class _RegisterState extends State<Register> {
                             style: TextStyle(color: Color(0xFF000000)),
                             cursorColor: Color(0xFF9b9b9b),
                             keyboardType: TextInputType.text,
-                            decoration: _inputDecoration('Email',
+                            decoration: customInputDecoration('Email',
                                 showPrefixIcon: true,
                                 prefixIconPath: kEmailIconPath),
                             validator: (emailValue) {
@@ -80,7 +82,7 @@ class _RegisterState extends State<Register> {
                             style: TextStyle(color: Color(0xFF000000)),
                             cursorColor: Color(0xFF9b9b9b),
                             keyboardType: TextInputType.text,
-                            decoration: _inputDecoration('Name',
+                            decoration: customInputDecoration('Name',
                                 showPrefixIcon: true,
                                 prefixIconPath: kUserIconPath),
                             validator: (nameValue) {
@@ -98,10 +100,18 @@ class _RegisterState extends State<Register> {
                             style: TextStyle(color: Color(0xFF000000)),
                             cursorColor: Color(0xFF9b9b9b),
                             keyboardType: TextInputType.text,
-                            obscureText: true,
-                            decoration: _inputDecoration('Password',
+                            obscureText: hidePassword,
+                            decoration: customInputDecoration('Password',
                                 showPrefixIcon: true,
-                                prefixIconPath: kLockIconPath),
+                                prefixIconPath: kLockIconPath,
+                                showSuffixIcon: true,
+                                suffixIconPath: kTextShowIconPath,
+                                hasSuffixIconCallback: true,
+                                suffixIconCallback: () {
+                              setState(() {
+                                hidePassword = !hidePassword;
+                              });
+                            }),
                             validator: (passwordValue) {
                               if (passwordValue.isEmpty) {
                                 return 'Please enter some text';
@@ -117,12 +127,19 @@ class _RegisterState extends State<Register> {
                             style: TextStyle(color: Color(0xFF000000)),
                             cursorColor: Color(0xFF9b9b9b),
                             keyboardType: TextInputType.text,
-                            obscureText: true,
-                            decoration: _inputDecoration(
-                              'Confirm Password',
-                              showPrefixIcon: true,
-                              prefixIconPath: kLockIconPath,
-                            ),
+                            obscureText: hideConfirmPassword,
+                            decoration: customInputDecoration(
+                                'Confirm Password',
+                                showPrefixIcon: true,
+                                prefixIconPath: kLockIconPath,
+                                showSuffixIcon: true,
+                                suffixIconPath: kTextShowIconPath,
+                                hasSuffixIconCallback: true,
+                                suffixIconCallback: () {
+                              setState(() {
+                                hideConfirmPassword = !hideConfirmPassword;
+                              });
+                            }),
                             validator: (confirmPasswordValue) {
                               if (confirmPasswordValue.isEmpty) {
                                 return 'Please enter some text';
@@ -347,60 +364,60 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  InputDecoration _inputDecoration(String hintText,
-      {bool showPrefixIcon = false,
-      showSuffixIcon = false,
-      String prefixIconPath,
-      String suffixIconPath}) {
-    return InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(color: kBorderColor),
-        fillColor: Colors.white,
-        filled: true,
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: kPurpleColor,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: Colors.transparent,
-            width: 1.0,
-          ),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: kBorderColor,
-            width: 1.0,
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: kBorderColor,
-            width: 1.0,
-          ),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(kRadius10),
-          borderSide: BorderSide(
-            color: kBorderColor,
-            width: 1.0,
-          ),
-        ),
-        prefixIcon: showPrefixIcon ? Image.asset(prefixIconPath) : null,
-        suffixIcon: showSuffixIcon
-            ? GestureDetector(
-                child: Image.asset(suffixIconPath),
-                onTap: () {
-                  setState(() {
-                    showPassword = !showPassword;
-                  });
-                },
-              )
-            : null);
-  }
+  // InputDecoration _inputDecoration(String hintText,
+  //     {bool showPrefixIcon = false,
+  //     showSuffixIcon = false,
+  //     String prefixIconPath,
+  //     String suffixIconPath}) {
+  //   return InputDecoration(
+  //       hintText: hintText,
+  //       hintStyle: TextStyle(color: kBorderColor),
+  //       fillColor: Colors.white,
+  //       filled: true,
+  //       focusedBorder: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(kRadius10),
+  //         borderSide: BorderSide(
+  //           color: kPurpleColor,
+  //         ),
+  //       ),
+  //       enabledBorder: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(kRadius10),
+  //         borderSide: BorderSide(
+  //           color: Colors.transparent,
+  //           width: 1.0,
+  //         ),
+  //       ),
+  //       disabledBorder: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(kRadius10),
+  //         borderSide: BorderSide(
+  //           color: kBorderColor,
+  //           width: 1.0,
+  //         ),
+  //       ),
+  //       errorBorder: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(kRadius10),
+  //         borderSide: BorderSide(
+  //           color: kBorderColor,
+  //           width: 1.0,
+  //         ),
+  //       ),
+  //       focusedErrorBorder: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(kRadius10),
+  //         borderSide: BorderSide(
+  //           color: kBorderColor,
+  //           width: 1.0,
+  //         ),
+  //       ),
+  //       prefixIcon: showPrefixIcon ? Image.asset(prefixIconPath) : null,
+  //       suffixIcon: showSuffixIcon
+  //           ? GestureDetector(
+  //               child: Image.asset(suffixIconPath),
+  //               onTap: () {
+  //                 setState(() {
+  //                   showPassword = !showPassword;
+  //                 });
+  //               },
+  //             )
+  //           : null);
+  // }
 }
