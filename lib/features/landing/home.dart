@@ -281,11 +281,10 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   child: userWishes.contains(item.id)
-                                      ? IconButton(
-                                          constraints: BoxConstraints(
-                                              maxHeight: 34, maxWidth: 34),
-                                          icon: new Icon(
-                                              Icons.bookmark_remove_sharp),
+                                      ? Image(
+                                          width: 32,
+                                          height: 32,
+                                          image: AssetImage(kIconLoveWhitePath),
                                         )
                                       : Image(
                                           width: 32,
@@ -313,10 +312,11 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   child: userEnrollments.contains(item.id)
-                                      ? IconButton(
-                                          constraints: BoxConstraints(
-                                              maxHeight: 34, maxWidth: 34),
-                                          icon: new Icon(Icons.delete_outline),
+                                      ? Image(
+                                          width: 32,
+                                          height: 32,
+                                          image: AssetImage(
+                                              kIconAdditionWhitePath),
                                         )
                                       : Image(
                                           width: 32,
