@@ -351,8 +351,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                         textColor: Colors.orange,
                                         capitalText: false)
                                     : Center(
-                                        child: Text(
-                                            showStatus(userEnrollmentStatus))),
+                                        child:
+                                            showStatus(userEnrollmentStatus)),
                               )
                             : SizedBox(),
                       ],
@@ -497,16 +497,33 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
     }
   }
 
-  String showStatus(String status) {
-    String response = " ";
+  Widget showStatus(String status) {
+    Widget response = Text(" ");
     if (status == kRequested) {
-      response = "Your request is being processed";
+      response = Card(
+          color: kInactiveColor,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: kMargin16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(image: AssetImage(kIconAdditionWhitePath)),
+                SizedBox(
+                  width: kMargin10,
+                ),
+                Text(
+                  "pending approval",
+                  style: TextStyle(color: Colors.white, fontSize: kMargin14),
+                ),
+              ],
+            ),
+          ));
     }
     if (status == kParticipated) {
-      response = "You participated in this event";
+      response = Text("You participated in this event");
     }
     if (status == kRewarded) {
-      response = "You were rewarded in this event";
+      response = Text("You were rewarded in this event");
     }
     return response;
   }

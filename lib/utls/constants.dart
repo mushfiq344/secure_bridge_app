@@ -21,6 +21,7 @@ const kIconLocationPath = "images/ic_location.png";
 const kIconRewardPath = "images/ic_reward.png";
 const kIconLovePath = "images/ic_love.png";
 const kIconAdditionPath = "images/ic_addition.png";
+const kIconAdditionWhitePath = "images/ic_addition_white.png";
 const kAppLogoPath = "images/logo.jpg";
 const kImageNameWithExtension = "Image name with extension";
 const kImage = "Image";
