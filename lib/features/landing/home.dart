@@ -30,9 +30,9 @@ class _HomeState extends State<Home> {
   int userId;
   String profilePictureUrl;
   int userType;
-  List<int> userWishes=[];
-  List<int> userEnrollments=[];
-  List<int> usersEnrollment=[];
+  List<int> userWishes = [];
+  List<int> userEnrollments = [];
+  List<int> usersEnrollment = [];
   List<Opportunity> opportunities = <Opportunity>[];
   List<Opportunity> opportunitiesAll = <Opportunity>[];
   static List<Opportunity> searchedOpportunities = [];
@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
     print("user $user");
     if (user != null) {
       setState(() {
-        userId=user['id'];
+        userId = user['id'];
         name = user['name'];
         email = user['email'];
         profilePictureUrl = user['profile_image'];
@@ -94,11 +94,9 @@ class _HomeState extends State<Home> {
           opportunitiesAll = _opportunities;
           searchedOpportunities = _opportunities;
           opportunityUploadPath = body["data"]["upload_path"];
-          userWishes=body['data']['user_wishes'].cast<int>();
-          userEnrollments=body['data']['user_enrollments'].cast<int>();
+          userWishes = body['data']['user_wishes'].cast<int>();
+          userEnrollments = body['data']['user_enrollments'].cast<int>();
         });
-
-
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body["message"]);
@@ -204,8 +202,8 @@ class _HomeState extends State<Home> {
         Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (context) =>
-                    OpportunityDetail(item, opportunityUploadPath,userId)));
+                builder: (context) => OpportunityDetail(
+                    item, opportunityUploadPath, userId, userType)));
       },
       child: Padding(
         padding: const EdgeInsets.only(
@@ -267,116 +265,124 @@ class _HomeState extends State<Home> {
                                 fontSize: kMargin12))
                       ],
                     ),
-                    userId!=item.createdBy?Row(
-                      children: [
-                        GestureDetector(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(kIconBackgroundPath),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: userWishes.contains(item.id)?IconButton(
-                              constraints: BoxConstraints(maxHeight: 34,maxWidth: 34),
-                              icon: new Icon(Icons.bookmark_remove_sharp),
-                            ):Image(
-                              width: 32,
-                              height: 32,
-                              image: AssetImage(kIconLovePath),
-                            ),
-                          ),
-                          onTap: () {
-                            if(userWishes.contains(item.id)){
-                              _removeFromWithList(item);
-                            }else{
-                              _addToWishList(item);
-                            }
-
-
-                          },
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        GestureDetector(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(kIconBackgroundPath),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: userEnrollments.contains(item.id)?IconButton(
-                              constraints: BoxConstraints(maxHeight: 34,maxWidth: 34),
-                              icon: new Icon(Icons.delete_outline),
-                            ):Image(
-                              width: 32,
-                              height: 32,
-                              image: AssetImage(kIconAdditionPath),
-                            ),
-                          ),
-                          onTap: () {
-                            if(userEnrollments.contains(item.id)) {
-                              _removeFromEnrollments(item);
-                            }else{
-                              _enroll(item);
-                            }
-                          },
-                        )
-                      ],
-                    ):Row(
-                      children: [
-                        GestureDetector(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(kIconBackgroundPath),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: Image(
-                              width: 32,
-                              height: 32,
-                              image: AssetImage(kIconWhiteEditPath),
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) =>
-                                        OpportunityForm(item,opportunityUploadPath))).then((value){
-                                          if(value){
-                                            _loadOpportunitiesStats();
-                                          }
-                            });
-                          },
-                        ),
-
-                        GestureDetector(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left:10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(kIconBackgroundPath),
-                                  fit: BoxFit.cover,
+                    userId != item.createdBy
+                        ? Row(
+                            children: [
+                              GestureDetector(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(kIconBackgroundPath),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  child: userWishes.contains(item.id)
+                                      ? IconButton(
+                                          constraints: BoxConstraints(
+                                              maxHeight: 34, maxWidth: 34),
+                                          icon: new Icon(
+                                              Icons.bookmark_remove_sharp),
+                                        )
+                                      : Image(
+                                          width: 32,
+                                          height: 32,
+                                          image: AssetImage(kIconLovePath),
+                                        ),
                                 ),
+                                onTap: () {
+                                  if (userWishes.contains(item.id)) {
+                                    _removeFromWithList(item);
+                                  } else {
+                                    _addToWishList(item);
+                                  }
+                                },
                               ),
-                              child: Image(
-                                width: 32,
-                                height: 32,
-                                image: AssetImage(kTrashIconPath),
+                              SizedBox(
+                                width: 5,
                               ),
-                            ),
+                              GestureDetector(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(kIconBackgroundPath),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  child: userEnrollments.contains(item.id)
+                                      ? IconButton(
+                                          constraints: BoxConstraints(
+                                              maxHeight: 34, maxWidth: 34),
+                                          icon: new Icon(Icons.delete_outline),
+                                        )
+                                      : Image(
+                                          width: 32,
+                                          height: 32,
+                                          image: AssetImage(kIconAdditionPath),
+                                        ),
+                                ),
+                                onTap: () {
+                                  if (userEnrollments.contains(item.id)) {
+                                    _removeFromEnrollments(item);
+                                  } else {
+                                    _enroll(item);
+                                  }
+                                },
+                              )
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              GestureDetector(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(kIconBackgroundPath),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  child: Image(
+                                    width: 32,
+                                    height: 32,
+                                    image: AssetImage(kIconWhiteEditPath),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      new MaterialPageRoute(
+                                          builder: (context) => OpportunityForm(
+                                              item,
+                                              opportunityUploadPath))).then(
+                                      (value) {
+                                    if (value) {
+                                      _loadOpportunitiesStats();
+                                    }
+                                  });
+                                },
+                              ),
+                              GestureDetector(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(kIconBackgroundPath),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    child: Image(
+                                      width: 32,
+                                      height: 32,
+                                      image: AssetImage(kTrashIconPath),
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  showAlertDialog(context, item.id);
+                                },
+                              ),
+                            ],
                           ),
-                          onTap: () {
-                            showAlertDialog(context,item.id);
-                          },
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               )
@@ -390,44 +396,42 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(kAppName),
-        backgroundColor: kPurpleColor,
-      ),
-      body: SingleChildScrollView(
-        physics: ScrollPhysics(),
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: Column(
-            children: [
-              _setUpSearchBar(),
-              SizedBox(height: kMargin12),
-              _buildOpportunityList(context),
-              SizedBox(height: kMargin300),
-            ],
+        appBar: AppBar(
+          title: Text(kAppName),
+          backgroundColor: kPurpleColor,
+        ),
+        body: SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: Column(
+              children: [
+                _setUpSearchBar(),
+                SizedBox(height: kMargin12),
+                _buildOpportunityList(context),
+                SizedBox(height: kMargin300),
+              ],
+            ),
           ),
         ),
-      ),
-      drawer:CustomDrawer(profilePictureUrl,name,email,userType)
-    );
+        drawer: CustomDrawer(profilePictureUrl, name, email, userType));
   }
 
-  showAlertDialog(BuildContext context,id) {
-
+  showAlertDialog(BuildContext context, id) {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continueButton = TextButton(
       child: Text("Continue"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
-          _deleteOpportunity(id);
+        _deleteOpportunity(id);
       },
     );
 
@@ -450,9 +454,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-
-
-
   void _deleteOpportunity(int id) async {
     try {
       EasyLoading.show(status: kLoading);
@@ -465,7 +466,6 @@ class _HomeState extends State<Home> {
         EasyLoading.dismiss();
         EasyLoading.showSuccess(body["message"]);
         _loadOpportunitiesStats();
-
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);
@@ -479,7 +479,8 @@ class _HomeState extends State<Home> {
   _addToWishList(Opportunity opportunity) async {
     try {
       EasyLoading.show(status: kLoading);
-      var res = await Network().postData({'opportunity_id':opportunity.id},WISH_LIST_URL);
+      var res = await Network()
+          .postData({'opportunity_id': opportunity.id}, WISH_LIST_URL);
       var body = json.decode(res.body);
       // log("res ${res.statusCode}");
       log("body : ${body}");
@@ -487,8 +488,6 @@ class _HomeState extends State<Home> {
         EasyLoading.dismiss();
         _loadOpportunitiesStats();
         EasyLoading.showSuccess(body["message"]);
-
-
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);
@@ -502,17 +501,15 @@ class _HomeState extends State<Home> {
   _removeFromWithList(Opportunity opportunity) async {
     try {
       EasyLoading.show(status: kLoading);
-      var res = await Network().deleteData({},"${WISH_LIST_URL}/${opportunity.id}");
+      var res =
+          await Network().deleteData({}, "${WISH_LIST_URL}/${opportunity.id}");
       var body = json.decode(res.body);
-
 
       if (res.statusCode == 200) {
         print(body);
         EasyLoading.dismiss();
         _loadOpportunitiesStats();
         EasyLoading.showSuccess(body["message"]);
-
-
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);
@@ -527,7 +524,8 @@ class _HomeState extends State<Home> {
   _enroll(Opportunity opportunity) async {
     try {
       EasyLoading.show(status: kLoading);
-      var res = await Network().postData({'opportunity_id':opportunity.id},CHOICE_LIST_URL);
+      var res = await Network()
+          .postData({'opportunity_id': opportunity.id}, CHOICE_LIST_URL);
       var body = json.decode(res.body);
       // log("res ${res.statusCode}");
       log("body : ${body}");
@@ -535,8 +533,6 @@ class _HomeState extends State<Home> {
         EasyLoading.dismiss();
         _loadOpportunitiesStats();
         EasyLoading.showSuccess(body["message"]);
-
-
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);
@@ -550,7 +546,8 @@ class _HomeState extends State<Home> {
   _removeFromEnrollments(Opportunity opportunity) async {
     try {
       EasyLoading.show(status: kLoading);
-      var res = await Network().deleteData({'opportunity_id':opportunity.id},"${CHOICE_LIST_URL}/${opportunity.id}");
+      var res = await Network().deleteData({'opportunity_id': opportunity.id},
+          "${CHOICE_LIST_URL}/${opportunity.id}");
       var body = json.decode(res.body);
       // log("res ${res.statusCode}");
       log("body remove : ${body}");
@@ -558,8 +555,6 @@ class _HomeState extends State<Home> {
         EasyLoading.dismiss();
         _loadOpportunitiesStats();
         EasyLoading.showSuccess(body["message"]);
-
-
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);

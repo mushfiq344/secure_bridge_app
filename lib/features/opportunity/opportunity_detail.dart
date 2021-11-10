@@ -21,8 +21,10 @@ class OpportunityDetail extends StatefulWidget {
   final Opportunity opportunity;
   final String uploadPath;
   final userId;
+  final int userType;
 
-  OpportunityDetail(this.opportunity, this.uploadPath, this.userId);
+  OpportunityDetail(
+      this.opportunity, this.uploadPath, this.userId, this.userType);
   @override
   _OpportunityDetailState createState() => _OpportunityDetailState();
 }
@@ -395,7 +397,123 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                         child: showStatus(userEnrollmentStatus))
                                     : SizedBox(),
                               )
-                            : SizedBox(),
+                            : Expanded(
+                                flex: 1,
+                                child: widget.userType == 0
+                                    ? GestureDetector(
+                                        child: Card(
+                                            color: kPurpleColor,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: kMargin16),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image(
+                                                      image: AssetImage(
+                                                          kIconAdditionWhitePath)),
+                                                  SizedBox(
+                                                    width: kMargin10,
+                                                  ),
+                                                  Text(
+                                                    "Enroll",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: kMargin14),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) => new AlertDialog(
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    content: Builder(
+                                                      builder: (context) {
+                                                        // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                                        var height =
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height;
+                                                        var width =
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width;
+
+                                                        return Container(
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  kAlertDialogBackgroundColor,
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          20.0))),
+                                                          height: height * .5,
+                                                          width: width * .75,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        50,
+                                                                    horizontal:
+                                                                        30),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  "ENROLLMENT CONFIRMATION",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          kMargin24,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color:
+                                                                          kPurpleColor),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 33,
+                                                                ),
+                                                                Text(
+                                                                  "Your request to enroll to the oppoertunity is pending for admin review. You’ll get notification once the request is approved",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 33,
+                                                                ),
+                                                                PAButton(
+                                                                  "Ok",
+                                                                  true,
+                                                                  () {},
+                                                                  fillColor:
+                                                                      kPurpleColor,
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ));
+                                        },
+                                      )
+                                    : SizedBox()),
                       ],
                     ),
                   ),
