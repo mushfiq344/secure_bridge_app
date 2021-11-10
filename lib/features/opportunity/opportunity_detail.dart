@@ -313,6 +313,27 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                           ),
                         ))
                       : SizedBox(),
+                  userEnrolled && userEnrollmentStatus == kParticipated
+                      ? Container(
+                          child: Card(
+                          color: kOrangeBackgroundColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(17),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  "Event Is Over: Processing Reward",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: kMargin14,
+                                      color: Colors.white),
+                                )
+                              ],
+                            ),
+                          ),
+                        ))
+                      : SizedBox(),
                   SizedBox(
                     height: kMargin24,
                   ),
@@ -364,31 +385,130 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                   SizedBox(
                     height: kMargin24,
                   ),
-                  inUserWithList
-                      ? Container(
-                          child: Card(
-                              color: kLightPurpleBackgroundColor,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: kMargin16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image(
-                                      image: AssetImage(kIconLoveWhitePath),
+                  widget.userType == 0
+                      ? GestureDetector(
+                          child: Container(
+                              child: Card(
+                                  color: inUserWithList
+                                      ? kLightPurpleBackgroundColor
+                                      : kPurpleBackGround,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: kMargin16),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image(
+                                          image: AssetImage(kIconLoveWhitePath),
+                                        ),
+                                        SizedBox(
+                                          width: kMargin10,
+                                        ),
+                                        Text(
+                                          inUserWithList
+                                              ? "remove from favourites"
+                                              : "add to favourite",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: kMargin14),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: kMargin10,
-                                    ),
-                                    Text(
-                                      "add to favourite",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: kMargin14),
-                                    ),
-                                  ],
-                                ),
-                              )))
+                                  ))),
+                          onTap: () {
+                            if (!inUserWithList) {
+                              _opportunityViewModel.addToWishList(
+                                  context, widget.opportunity, () {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => new AlertDialog(
+                                          backgroundColor: Colors.transparent,
+                                          contentPadding: EdgeInsets.zero,
+                                          content: Builder(
+                                            builder: (context) {
+                                              // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                              var height =
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .height;
+                                              var width = MediaQuery.of(context)
+                                                  .size
+                                                  .width;
+
+                                              return Container(
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        kAlertDialogBackgroundColor,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0))),
+                                                height: height * .5,
+                                                width: width * .75,
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 50,
+                                                      horizontal: 30),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "ADDED TO FAVOURITES",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: kMargin24,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                kPurpleColor),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 33,
+                                                      ),
+                                                      Text(
+                                                        "Opportunity has been added to your favourties",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 33,
+                                                      ),
+                                                      PAButton(
+                                                        "Ok",
+                                                        true,
+                                                        () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        fillColor: kPurpleColor,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        )).then((value) {
+                                  loadOpportunityDetail();
+                                });
+                              }, (error) {
+                                EasyLoading.showError(error);
+                              });
+                            } else {
+                              _opportunityViewModel.removeFromWithList(
+                                  context, widget.opportunity, (success) {
+                                loadOpportunityDetail();
+                              }, (error) {
+                                EasyLoading.showError(error);
+                              });
+                            }
+                          },
+                        )
                       : SizedBox(),
                   Container(
                     child: Row(
@@ -703,10 +823,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
       );
     }
     if (status == kParticipated) {
-      response = Text("You participated in this event");
+      return SizedBox();
     }
     if (status == kRewarded) {
-      response = Text("You were rewarded in this event");
+      return SizedBox();
     }
     return response;
   }

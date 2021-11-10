@@ -297,9 +297,103 @@ class _HomeState extends State<Home> {
                                 ),
                                 onTap: () {
                                   if (userWishes.contains(item.id)) {
-                                    _removeFromWithList(item);
+                                    _opportunityViewModel.removeFromWithList(
+                                        context, item, (success) {
+                                      _loadOpportunitiesStats();
+                                    }, (error) {
+                                      EasyLoading.showError(error);
+                                    });
                                   } else {
-                                    _addToWishList(item);
+                                    _opportunityViewModel
+                                        .addToWishList(context, item, () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => new AlertDialog(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                contentPadding: EdgeInsets.zero,
+                                                content: Builder(
+                                                  builder: (context) {
+                                                    // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                                    var height =
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height;
+                                                    var width =
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width;
+
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              kAlertDialogBackgroundColor,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      20.0))),
+                                                      height: height * .5,
+                                                      width: width * .75,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 50,
+                                                                horizontal: 30),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              "ADDED TO FAVOURITES",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      kMargin24,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color:
+                                                                      kPurpleColor),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 33,
+                                                            ),
+                                                            Text(
+                                                              "Opportunity has been added to your favourties",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 33,
+                                                            ),
+                                                            PAButton(
+                                                              "Ok",
+                                                              true,
+                                                              () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              fillColor:
+                                                                  kPurpleColor,
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              )).then((value) {
+                                        _loadOpportunitiesStats();
+                                      });
+                                    }, (error) {
+                                      EasyLoading.showError(error);
+                                    });
                                   }
                                 },
                               ),
@@ -574,51 +668,6 @@ class _HomeState extends State<Home> {
         EasyLoading.showError(body['message']);
       }
     } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
-  }
-
-  _addToWishList(Opportunity opportunity) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var res = await Network()
-          .postData({'opportunity_id': opportunity.id}, WISH_LIST_URL);
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body : ${body}");
-      if (res.statusCode == 201) {
-        EasyLoading.dismiss();
-        _loadOpportunitiesStats();
-        EasyLoading.showSuccess(body["message"]);
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
-  }
-
-  _removeFromWithList(Opportunity opportunity) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var res =
-          await Network().deleteData({}, "${WISH_LIST_URL}/${opportunity.id}");
-      var body = json.decode(res.body);
-
-      if (res.statusCode == 200) {
-        print(body);
-        EasyLoading.dismiss();
-        _loadOpportunitiesStats();
-        EasyLoading.showSuccess(body["message"]);
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
-      print("error here");
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());
     }
