@@ -2,9 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:secure_bridges_app/Models/bar_chart_model.dart';
+import 'package:secure_bridges_app/features/org_admin/bar_chart_graph.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
+
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class OrgAdminHome extends StatefulWidget {
   @override
@@ -12,6 +16,43 @@ class OrgAdminHome extends StatefulWidget {
 }
 
 class _OrgAdminHomeState extends State<OrgAdminHome> {
+  final List<BarChartModel> data = [
+    BarChartModel(
+      year: "2014",
+      financial: 250,
+      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+    ),
+    BarChartModel(
+      year: "2015",
+      financial: 300,
+      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+    ),
+    BarChartModel(
+      year: "2016",
+      financial: 100,
+      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+    ),
+    BarChartModel(
+      year: "2017",
+      financial: 450,
+      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+    ),
+    BarChartModel(
+      year: "2018",
+      financial: 630,
+      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+    ),
+    BarChartModel(
+      year: "2019",
+      financial: 1000,
+      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+    ),
+    BarChartModel(
+      year: "2020",
+      financial: 400,
+      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +65,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
           alignment: Alignment.center,
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(top: kMargin32),
+              padding: const EdgeInsets.symmetric(vertical: kMargin32),
               child: Column(
                 children: [
                   Container(
@@ -90,14 +131,14 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "2",
+                                            "20",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: kMargin30,
                                                 fontWeight: FontWeight.w700),
                                           ),
                                           Text(
-                                            "Opportunities",
+                                            "Users",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: kMargin14,
@@ -123,14 +164,14 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "2",
+                                            "\$530",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: kMargin30,
                                                 fontWeight: FontWeight.w700),
                                           ),
                                           Text(
-                                            "Opportunities",
+                                            "Rewards",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: kMargin14,
@@ -181,7 +222,11 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                           padding: const EdgeInsets.symmetric(
                                               vertical: kMargin8,
                                               horizontal: kMargin24),
-                                          child: Text("Pending Approvals[16]"),
+                                          child: Text(
+                                            "Pending Approvals[16]",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -200,7 +245,11 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                           padding: const EdgeInsets.symmetric(
                                               vertical: kMargin8,
                                               horizontal: kMargin24),
-                                          child: Text("Pending Approvals[16]"),
+                                          child: Text(
+                                            "reward request[10]",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -223,62 +272,30 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                       borderRadius: BorderRadius.circular(kMargin35),
                     ),
                     width: MediaQuery.of(context).size.width,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: kMargin32, vertical: kMargin14),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kMargin32, vertical: kMargin14),
+                          child: Text(
                             "Participation Growth",
                             style: TextStyle(
                                 fontSize: kMargin14,
                                 fontWeight: FontWeight.bold,
                                 color: kPurpleColor),
                           ),
-                          SizedBox(
-                            height: kMargin8,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(kMargin16),
-                                  ),
-                                  color: KPinkBackground,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: kMargin8,
-                                        horizontal: kMargin24),
-                                    child: Text("Pending Approvals[16]"),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(kMargin16),
-                                  ),
-                                  color: KPinkBackground,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: kMargin8,
-                                        horizontal: kMargin24),
-                                    child: Text("Pending Approvals[16]"),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          height: kMargin8,
+                        ),
+                        BarChartGraph(
+                          data: data,
+                        ),
+                        SizedBox(
+                          height: kMargin8,
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
