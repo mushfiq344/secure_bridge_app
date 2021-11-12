@@ -46,6 +46,8 @@ const kTextShowIconPath = "images/ic_text_show.png";
 const kOpportunityIconPath = "images/ic_opportunity.png";
 const kAddUserImagePath = "images/im_add_user.png";
 const kUserIconPath = "images/ic_user.png";
+const kHomeIconPath = "images/ic_home.png";
+const kRightArrowWhiteIconPath = "images/ic_right_arrow_white.png";
 const String kNavigationExamplePage = '''
 <!DOCTYPE html><html>
 <head><title>Navigation Delegate Example</title></head>
