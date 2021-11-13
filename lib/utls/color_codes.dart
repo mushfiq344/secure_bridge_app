@@ -4,6 +4,7 @@ const kPurpleColor = Color(0xFF573353);
 const kPurpleBackGround = Color(0xFF5A189A);
 const kLightPurpleBackgroundColor = Color(0xFFB1AFE9);
 const kAlertDialogBackgroundColor = Color(0xFFDDDCFE);
+const kPinkBackground = Color(0xFFFFEFF0);
 
 const kGradiantBackground = [Color(0xFFDDDCFE), Color(0xFFDDDCFE)];
 const kPrimaryColor = Color(0xFF0A409A);

@@ -99,6 +99,10 @@ flutter:
     - images/ic_addition_white.png
     - images/ic_heart_white.png
     - images/ic_copy.png
+    - images/ic_home_white.png
+    - images/ic_multiple_users.png
+    - images/ic_aid.png
+    - images/ic_pizza.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
