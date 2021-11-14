@@ -217,7 +217,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                           borderRadius:
                                               BorderRadius.circular(kMargin16),
                                         ),
-                                        color: KPinkBackground,
+                                        color: kPinkBackground,
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: kMargin8,
@@ -240,7 +240,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                           borderRadius:
                                               BorderRadius.circular(kMargin16),
                                         ),
-                                        color: KPinkBackground,
+                                        color: kPinkBackground,
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: kMargin8,
