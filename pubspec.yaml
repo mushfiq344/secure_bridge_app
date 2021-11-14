@@ -37,7 +37,7 @@ dependencies:
   google_sign_in: any
   flutter_signin_button: ^2.0.0
   flash: ^2.0.3
-  charts_flutter: ^0.12.0
+  charts_flutter: any
 
 
 
@@ -100,6 +100,10 @@ flutter:
     - images/ic_heart_white.png
     - images/ic_copy.png
     - images/ic_right_arrow_white.png
+    - images/ic_home_white.png
+    - images/ic_multiple_users.png
+    - images/ic_aid.png
+    - images/ic_pizza.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
