@@ -272,7 +272,7 @@ class _HomeState extends State<Home> {
                                 fontSize: kMargin12))
                       ],
                     ),
-                    userId != item.createdBy
+                    userId != item.createdBy.id && userType == 0
                         ? Row(
                             children: [
                               GestureDetector(
@@ -528,57 +528,62 @@ class _HomeState extends State<Home> {
                             ],
                           )
                         : Row(
-                            children: [
-                              GestureDetector(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(kIconBackgroundPath),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  child: Image(
-                                    width: 32,
-                                    height: 32,
-                                    image: AssetImage(kIconWhiteEditPath),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      new MaterialPageRoute(
-                                          builder: (context) => OpportunityForm(
-                                              item,
-                                              opportunityUploadPath))).then(
-                                      (value) {
-                                    if (value) {
-                                      _loadOpportunitiesStats();
-                                    }
-                                  });
-                                },
-                              ),
-                              GestureDetector(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage(kIconBackgroundPath),
-                                        fit: BoxFit.cover,
+                            children: userId == item.createdBy.id
+                                ? [
+                                    GestureDetector(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image:
+                                                AssetImage(kIconBackgroundPath),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        child: Image(
+                                          width: 32,
+                                          height: 32,
+                                          image: AssetImage(kIconWhiteEditPath),
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Navigator.push(
+                                                context,
+                                                new MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OpportunityForm(item,
+                                                            opportunityUploadPath)))
+                                            .then((value) {
+                                          if (value) {
+                                            _loadOpportunitiesStats();
+                                          }
+                                        });
+                                      },
                                     ),
-                                    child: Image(
-                                      width: 32,
-                                      height: 32,
-                                      image: AssetImage(kTrashIconPath),
+                                    GestureDetector(
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                  kIconBackgroundPath),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          child: Image(
+                                            width: 32,
+                                            height: 32,
+                                            image: AssetImage(kTrashIconPath),
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        showAlertDialog(context, item.id);
+                                      },
                                     ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  showAlertDialog(context, item.id);
-                                },
-                              ),
-                            ],
+                                  ]
+                                : [],
                           ),
                   ],
                 ),
