@@ -259,7 +259,7 @@ class _HomeState extends State<Home> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Offered By Jet Constellations",
+                          "Offered By ${item.createdBy.name}",
                           style: TextStyle(
                               color: kPurpleColor,
                               fontWeight: FontWeight.w400,

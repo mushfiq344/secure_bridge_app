@@ -137,7 +137,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                             color: Colors.white),
                                       ),
                                       Text(
-                                        "Jet Constellations",
+                                        "${widget.opportunity.createdBy.name}",
                                         style: TextStyle(
                                             fontSize: kMargin12,
                                             color: Colors.white,
@@ -251,7 +251,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                             fontSize: kMargin12,
                                             color: Colors.white),
                                       ),
-                                      Text("Milwaukee, WI",
+                                      Text(
+                                          "${widget.opportunity.location ?? ''}",
                                           style: TextStyle(
                                               fontSize: kMargin12,
                                               color: Colors.white,
@@ -335,7 +336,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                         ))
                       : SizedBox(),
                   SizedBox(
-                    height: kMargin24,
+                    height: kMargin10,
                   ),
                   Container(
                     child: Row(
@@ -379,6 +380,47 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                           child: SizedBox(),
                           flex: 1,
                         )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: kMargin24,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: kMargin22),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            "Heighlights",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                fontSize: kMargin14,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: kMargin16,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: kMargin22),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            "${widget.opportunity.description}",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                fontSize: kMargin12,
+                                fontWeight: FontWeight.w400,
+                                color: kInactiveColor),
+                          ),
+                        ),
                       ],
                     ),
                   ),
