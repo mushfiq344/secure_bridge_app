@@ -25,4 +25,27 @@ class OrgAdminViewModel {
       _error(e.toString());
     }
   }
+
+  void deleteOpportunity(int id, _success, _error) async {
+    try {
+      EasyLoading.show(status: kLoading);
+      var res =
+          await Network().deleteData({}, "$ORG_ADMIN_OPPORTUNITIES_URL/$id");
+      print("body ${res.body}");
+      var body = json.decode(res.body);
+      // log("res ${res.statusCode}");
+      log("body : ${body}");
+      if (res.statusCode == 200) {
+        EasyLoading.dismiss();
+        EasyLoading.showSuccess(body["message"]);
+        _success();
+      } else {
+        EasyLoading.dismiss();
+        _error(body['message']);
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      _error(e.toString());
+    }
+  }
 }
