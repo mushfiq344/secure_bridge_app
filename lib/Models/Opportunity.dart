@@ -1,6 +1,8 @@
+import 'User.dart';
+
 class Opportunity {
   int id;
-  int createdBy;
+  User createdBy;
   String title;
   String subTitle;
   String description;
@@ -15,6 +17,7 @@ class Opportunity {
   String updatedAt;
   String slug;
   int isActive;
+  String location;
   bool show = false;
 
   Opportunity(
@@ -32,11 +35,12 @@ class Opportunity {
       this.createdAt,
       this.updatedAt,
       this.slug,
-      this.isActive});
+      this.isActive,
+      this.location});
 
   Opportunity.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    createdBy = json['created_by'];
+    createdBy = User.fromJson(json['created_by']);
     title = json['title'];
     subTitle = json['subtitle'];
     description = json['description'];
@@ -50,5 +54,6 @@ class Opportunity {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     slug = json['slug'];
+    location = json['location'];
   }
 }

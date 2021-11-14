@@ -47,6 +47,7 @@ const kOpportunityIconPath = "images/ic_opportunity.png";
 const kAddUserImagePath = "images/im_add_user.png";
 const kUserIconPath = "images/ic_user.png";
 const kHomeIconPath = "images/ic_home.png";
+const kRightArrowWhiteIconPath = "images/ic_right_arrow_white.png";
 const kHomeWhiteIconPath = "images/ic_home_white.png";
 const kMultipleUsersIconPath = "images/ic_multiple_users.png";
 const kAidIconPath = "images/ic_aid.png";
