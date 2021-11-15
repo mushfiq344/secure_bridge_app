@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_observer/Observable.dart';
 import 'package:secure_bridges_app/features/landing/landing_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
@@ -117,7 +118,11 @@ class CustomDrawer extends StatelessWidget {
                       Navigator.push(
                           context,
                           new MaterialPageRoute(
-                              builder: (context) => UserHome()));
+                              builder: (context) => UserHome())).then((value) {
+                        Observable.instance.notifyObservers([
+                          "_HomeState",
+                        ], notifyName: "可以通过notifyName判断通知");
+                      });
                       // Here you can give your route to navigate
                     },
                   )
