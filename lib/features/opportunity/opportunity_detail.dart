@@ -693,7 +693,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       ],
                     ),
                   ),
-                  if (widget.userId == widget.opportunity.createdBy)
+                  if (widget.userId == widget.opportunity.createdBy.id)
                     Column(
                       children: [
                         Row(
