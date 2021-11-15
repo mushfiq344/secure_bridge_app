@@ -14,3 +14,4 @@ const USER_OPPORTUNITY_RELATED_INFO_URL =
 const USER_OPPORTUNITIES_URL = "api/user-opportunities";
 
 const ORG_ADMIN_OPPORTUNITIES_URL = "api/org-admin/opportunities";
+const USER_ADMIN_OPPORTUNITIES_URL = "api/user/opportunities";

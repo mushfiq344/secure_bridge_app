@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/features/user/user_view_model.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
@@ -12,6 +17,30 @@ class UserHome extends StatefulWidget {
 }
 
 class _UserHomeState extends State<UserHome> {
+  UserViewModel _userViewModel = UserViewModel();
+  List<Opportunity> opportunities = <Opportunity>[];
+  String opportunityUploadPath;
+  List<int> userWishes = [];
+  List<int> userEnrollments = [];
+  @override
+  void initState() {
+    _userViewModel.getOpportunities((Map<dynamic, dynamic> body) {
+      log("body in class ${body}");
+      List<Opportunity> _opportunities = List<Opportunity>.from(
+          body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
+      setState(() {
+        opportunities = _opportunities;
+        opportunities = _opportunities;
+        opportunityUploadPath = body["data"]["upload_path"];
+        userWishes = body['data']['user_wishes'].cast<int>();
+        userEnrollments = body['data']['user_enrollments'].cast<int>();
+      });
+    }, (error) {
+      EasyLoading.showError(error);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
