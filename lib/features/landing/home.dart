@@ -4,12 +4,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_observer/Observable.dart';
+import 'package:flutter_observer/Observer.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/features/landing/drawer_menu.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart';
+import 'package:secure_bridges_app/features/user/user_view_model.dart';
 import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
@@ -27,7 +30,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with Observer {
   String name;
   String email;
   int userId;
@@ -42,20 +45,12 @@ class _HomeState extends State<Home> {
   TextEditingController _searchController = TextEditingController();
   OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
   OrgAdminViewModel _orgAdminViewModel = OrgAdminViewModel();
+  UserViewModel _userViewModel = UserViewModel();
   String opportunityUploadPath;
   @override
   void initState() {
-    _loadUserData();
-    _searchController.addListener(_applySearchOnOpportunityeList);
-    _loadOpportunitiesStats();
-    super.initState();
-  }
-
-  _loadUserData() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var user = jsonDecode(localStorage.getString('user'));
-    print("user $user");
-    if (user != null) {
+    Observable.instance.addObserver(this);
+    _userViewModel.loadUserData((Map<dynamic, dynamic> user) {
       setState(() {
         userId = user['id'];
         name = user['name'];
@@ -64,7 +59,12 @@ class _HomeState extends State<Home> {
         print("user type ${user['user_type']}");
         userType = user['user_type'];
       });
-    }
+    }, (error) {
+      EasyLoading.showError(error);
+    });
+    _searchController.addListener(_applySearchOnOpportunityeList);
+    _loadOpportunitiesStats();
+    super.initState();
   }
 
   void _applySearchOnOpportunityeList() {
@@ -110,6 +110,18 @@ class _HomeState extends State<Home> {
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());
     }
+  }
+
+  @override
+  void dispose() {
+    Observable.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  update(Observable observable, String notifyName, Map map) {
+    ///do your work
+    _loadOpportunitiesStats();
   }
 
   // fetchOpportunities(int maxDuration, int minDuratin, String maxReward,
@@ -210,7 +222,18 @@ class _HomeState extends State<Home> {
                     builder: (context) => OpportunityDetail(
                         item, opportunityUploadPath, userId, userType)))
             .then((value) {
-          _loadUserData();
+          _userViewModel.loadUserData((Map<dynamic, dynamic> user) {
+            setState(() {
+              userId = user['id'];
+              name = user['name'];
+              email = user['email'];
+              profilePictureUrl = user['profile_image'];
+              print("user type ${user['user_type']}");
+              userType = user['user_type'];
+            });
+          }, (error) {
+            EasyLoading.showError(error);
+          });
           _loadOpportunitiesStats();
         });
       },
@@ -427,7 +450,21 @@ class _HomeState extends State<Home> {
                                   if (userEnrollments.contains(item.id)) {
                                     _opportunityViewModel.removeFromEnrollments(
                                         context, item, (success) {
-                                      _loadUserData();
+                                      _userViewModel.loadUserData(
+                                          (Map<dynamic, dynamic> user) {
+                                        setState(() {
+                                          userId = user['id'];
+                                          name = user['name'];
+                                          email = user['email'];
+                                          profilePictureUrl =
+                                              user['profile_image'];
+                                          print(
+                                              "user type ${user['user_type']}");
+                                          userType = user['user_type'];
+                                        });
+                                      }, (error) {
+                                        EasyLoading.showError(error);
+                                      });
                                       _loadOpportunitiesStats();
                                     }, (error) {
                                       EasyLoading.showError(error);
@@ -518,7 +555,21 @@ class _HomeState extends State<Home> {
                                                   },
                                                 ),
                                               )).then((value) {
-                                        _loadUserData();
+                                        _userViewModel.loadUserData(
+                                            (Map<dynamic, dynamic> user) {
+                                          setState(() {
+                                            userId = user['id'];
+                                            name = user['name'];
+                                            email = user['email'];
+                                            profilePictureUrl =
+                                                user['profile_image'];
+                                            print(
+                                                "user type ${user['user_type']}");
+                                            userType = user['user_type'];
+                                          });
+                                        }, (error) {
+                                          EasyLoading.showError(error);
+                                        });
                                         _loadOpportunitiesStats();
                                       });
                                     }, (error) {
