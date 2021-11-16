@@ -200,7 +200,7 @@ class _LoginState extends State<Login> {
                               height: kMargin10,
                             ),
                             TextFormField(
-                              initialValue: '123456',
+                              initialValue: '12345678',
                               style: TextStyle(color: kPurpleColor),
                               cursorColor: kPurpleColor,
                               keyboardType: TextInputType.text,
