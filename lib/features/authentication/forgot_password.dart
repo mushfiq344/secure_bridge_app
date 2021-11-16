@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
 import 'package:secure_bridges_app/features/authentication/register.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -16,6 +18,7 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
   var email;
+  AuthenticationViewModel _authenticationViewModel = AuthenticationViewModel();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +98,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     true,
                                     () {
                                       if (_formKey.currentState.validate()) {
-                                        // _login();
+                                        _authenticationViewModel
+                                            .forgotPassword(email, (success) {
+                                          EasyLoading.showSuccess(success);
+                                        }, (error) {
+                                          EasyLoading.showError(error);
+                                        });
                                       }
                                     },
                                     fillColor: kPurpleColor,
