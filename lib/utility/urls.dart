@@ -1,5 +1,5 @@
-const BASE_URL = "http://securebridges.ubitrixbd.com/";
-// const BASE_URL = "http://192.168.0.105:8000/";
+// const BASE_URL = "http://securebridges.ubitrixbd.com/";
+const BASE_URL = "http://192.168.237.17:8000/";
 const SIGN_IN_URL = "api/login";
 const OPPORTUNITIES_URL = "api/opportunities";
 const FETCH_OPPORTUNITIES_URL = "api/fetch-opportunities";
@@ -15,3 +15,4 @@ const USER_OPPORTUNITIES_URL = "api/user-opportunities";
 
 const ORG_ADMIN_OPPORTUNITIES_URL = "api/org-admin/opportunities";
 const USER_ADMIN_OPPORTUNITIES_URL = "api/user/opportunities";
+const FORGOT_PASSWORD_URL = "api/password/email";

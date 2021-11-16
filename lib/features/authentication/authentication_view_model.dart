@@ -55,4 +55,24 @@ class AuthenticationViewModel {
       _error(error.toString());
     }
   }
+
+  Future<void> forgotPassword(String email, _success, _error) async {
+    try {
+      var data = {'email': email};
+      EasyLoading.show(status: kLoading);
+      var res = await Network().postData(data, FORGOT_PASSWORD_URL);
+      var body = json.decode(res.body);
+
+      if (res.statusCode == 200) {
+        EasyLoading.dismiss();
+        _success(body['message']);
+      } else {
+        EasyLoading.dismiss();
+        _error(body['message']);
+      }
+    } catch (error) {
+      EasyLoading.dismiss();
+      _error(error.toString());
+    }
+  }
 }
