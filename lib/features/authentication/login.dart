@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:secure_bridges_app/features/authentication/forgot_password.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -13,7 +14,6 @@ import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:secure_bridges_app/features/authentication/register.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -251,7 +251,11 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                               onTap: () {
-                                EasyLoading.showToast(kComingSoon);
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            ForgotPassword()));
                               },
                             ),
                             Padding(
