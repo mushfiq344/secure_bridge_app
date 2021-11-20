@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:secure_bridges_app/features/authentication/forgot_password.dart';
+import 'package:secure_bridges_app/features/authentication/register.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -13,7 +16,6 @@ import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:secure_bridges_app/features/authentication/register.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -21,12 +23,14 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   GoogleSignInAccount _userObj;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   var email;
   var password;
+  String fcmToken;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool hidePassword = false;
   _showMsg(msg) {
@@ -40,6 +44,33 @@ class _LoginState extends State<Login> {
       ),
     );
     _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  @override
+  void initState() {
+    /*push notification */
+    getFirebaseToken();
+    super.initState();
+  }
+
+  void getFirebaseToken() {
+    if (Platform.isIOS) iOS_Permission();
+
+    _firebaseMessaging.getToken().then((token) {
+      print("fcm token: $token");
+      setState(() {
+        fcmToken = token;
+      });
+    });
+  }
+
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
   }
 
   @override
@@ -314,10 +345,7 @@ class _LoginState extends State<Login> {
 
   void _login() async {
     try {
-      setState(() {
-        _isLoading = true;
-      });
-      var data = {'email': email, 'password': password};
+      var data = {'email': email, 'password': password, 'fcm_token': fcmToken};
       EasyLoading.show(status: kLoading);
       var res = await Network().authData(data, SIGN_IN_URL);
       var body = json.decode(res.body);
@@ -338,10 +366,6 @@ class _LoginState extends State<Login> {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);
       }
-
-      setState(() {
-        _isLoading = false;
-      });
     } catch (e) {
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());

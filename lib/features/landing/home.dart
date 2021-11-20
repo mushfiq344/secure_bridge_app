@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -47,6 +49,7 @@ class _HomeState extends State<Home> with Observer {
   OrgAdminViewModel _orgAdminViewModel = OrgAdminViewModel();
   UserViewModel _userViewModel = UserViewModel();
   String opportunityUploadPath;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
     Observable.instance.addObserver(this);
@@ -64,7 +67,34 @@ class _HomeState extends State<Home> with Observer {
     });
     _searchController.addListener(_applySearchOnOpportunityeList);
     _loadOpportunitiesStats();
+    /*push notification */
+    firebaseConnection();
     super.initState();
+  }
+
+  void firebaseConnection() {
+    if (Platform.isIOS) iOS_Permission();
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
+  }
+
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
   }
 
   void _applySearchOnOpportunityeList() {

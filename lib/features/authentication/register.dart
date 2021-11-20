@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
@@ -28,6 +30,34 @@ class _RegisterState extends State<Register> {
   AuthenticationViewModel _authenticationViewModel = AuthenticationViewModel();
   bool hidePassword = true;
   bool hideConfirmPassword = true;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  String fcmToken;
+
+  @override
+  void initState() {
+    getFirebaseToken();
+    super.initState();
+  }
+
+  void getFirebaseToken() {
+    if (Platform.isIOS) iOS_Permission();
+
+    _firebaseMessaging.getToken().then((token) {
+      print("fcm token: $token");
+      setState(() {
+        fcmToken = token;
+      });
+    });
+  }
+
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -331,6 +361,7 @@ class _RegisterState extends State<Register> {
       });
       var data = {
         'email': email,
+        'fcm_token': fcmToken,
         'password': password,
         'c_password': confirmPassword,
         'name': name,
