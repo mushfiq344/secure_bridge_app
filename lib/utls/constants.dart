@@ -52,6 +52,8 @@ const kHomeWhiteIconPath = "images/ic_home_white.png";
 const kMultipleUsersIconPath = "images/ic_multiple_users.png";
 const kAidIconPath = "images/ic_aid.png";
 const kPizzaIconPath = "images/ic_pizza.png";
+const kActiveNotificationIconPath = "images/ic_notification_active.png";
+const kInactiveNotificationIconPath = "images/ic_notification_inactive.png";
 const String kNavigationExamplePage = '''
 <!DOCTYPE html><html>
 <head><title>Navigation Delegate Example</title></head>

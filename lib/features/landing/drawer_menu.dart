@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_observer/Observable.dart';
+import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/landing/landing_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
@@ -14,11 +15,9 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 
 class CustomDrawer extends StatelessWidget {
-  final String profilePictureUrl;
-  final String name;
-  final String email;
-  final int userType;
-  CustomDrawer(this.profilePictureUrl, this.name, this.email, this.userType);
+  final User currentUser;
+
+  CustomDrawer(this.currentUser);
   LandingViewModel _landingViewModel = LandingViewModel();
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class CustomDrawer extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: CachedNetworkImage(
-                          imageUrl: "${BASE_URL}${profilePictureUrl}",
+                          imageUrl: "${BASE_URL}${currentUser.profileImage}",
                           placeholder: (context, url) =>
                               Image(image: AssetImage(kPlaceholderImagePath)),
                           errorWidget: (context, url, error) =>
@@ -56,7 +55,7 @@ class CustomDrawer extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(left: kMargin8),
                       child: Text(
-                        '${name}',
+                        '${currentUser.name}',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: kMargin18),
                       ),
@@ -69,7 +68,7 @@ class CustomDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            userType == 1
+            currentUser.userType == 1
                 ? ListTile(
                     leading: Image(
                       height: 25,
@@ -104,7 +103,7 @@ class CustomDrawer extends StatelessWidget {
                 // Here you can give your route to navigate
               },
             ),
-            userType == 0
+            currentUser.userType == 0
                 ? ListTile(
                     leading: Image(
                       height: 25,
@@ -116,9 +115,10 @@ class CustomDrawer extends StatelessWidget {
                             fontSize: kMargin22, fontWeight: FontWeight.w400)),
                     onTap: () {
                       Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => UserHome())).then((value) {
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => UserHome(currentUser)))
+                          .then((value) {
                         Observable.instance.notifyObservers([
                           "_HomeState",
                         ], notifyName: "可以通过notifyName判断通知");
@@ -128,7 +128,7 @@ class CustomDrawer extends StatelessWidget {
                   )
                 : SizedBox(),
 
-            userType == 1
+            currentUser.userType == 1
                 ? ListTile(
                     leading: Image(
                       height: 25,
@@ -183,7 +183,7 @@ class CustomDrawer extends StatelessWidget {
                     context,
                     new MaterialPageRoute(
                         builder: (context) =>
-                            SecureBridgeWebView(email, 'forum')));
+                            SecureBridgeWebView(currentUser.email, 'forum')));
               },
             ),
             // ListTile(

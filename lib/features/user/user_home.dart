@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
 
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
@@ -18,6 +19,8 @@ import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 
 class UserHome extends StatefulWidget {
+  final User currentUser;
+  UserHome(this.currentUser);
   @override
   _UserHomeState createState() => _UserHomeState();
 }
@@ -247,7 +250,7 @@ class _UserHomeState extends State<UserHome> {
                 context,
                 new MaterialPageRoute(
                     builder: (context) => OpportunityDetail(
-                        item, opportunityUploadPath, userId, userType)))
+                        item, opportunityUploadPath, widget.currentUser)))
             .then((value) {
           _userViewModel.getOpportunities((Map<dynamic, dynamic> body) {
             log("body in class ${body}");
