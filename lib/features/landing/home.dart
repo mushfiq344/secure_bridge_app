@@ -9,6 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:flutter_observer/Observer.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/features/Notification/notification_list.dart';
 import 'package:secure_bridges_app/features/landing/drawer_menu.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
@@ -50,6 +51,7 @@ class _HomeState extends State<Home> with Observer {
   UserViewModel _userViewModel = UserViewModel();
   String opportunityUploadPath;
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  bool hasUnreadNotification = false;
   @override
   void initState() {
     Observable.instance.addObserver(this);
@@ -77,6 +79,9 @@ class _HomeState extends State<Home> with Observer {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
+        setState(() {
+          hasUnreadNotification = true;
+        });
         print('on message $message');
       },
       onResume: (Map<String, dynamic> message) async {
@@ -684,6 +689,23 @@ class _HomeState extends State<Home> with Observer {
         appBar: AppBar(
           title: Text(kAppName),
           backgroundColor: kPurpleColor,
+          actions: [
+            GestureDetector(
+              child: Image(
+                image: AssetImage(hasUnreadNotification
+                    ? kActiveNotificationIconPath
+                    : kInactiveNotificationIconPath),
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => Notifications())).then((value) {
+                  _loadOpportunitiesStats();
+                });
+              },
+            )
+          ],
         ),
         body: SingleChildScrollView(
           physics: ScrollPhysics(),

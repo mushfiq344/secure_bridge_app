@@ -107,6 +107,8 @@ flutter:
     - images/ic_multiple_users.png
     - images/ic_aid.png
     - images/ic_pizza.png
+    - images/ic_notification_inactive.png
+    - images/ic_notification_active.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
