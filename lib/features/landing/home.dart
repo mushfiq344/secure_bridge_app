@@ -9,24 +9,24 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:flutter_observer/Observer.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/Notification/notification_list.dart';
 import 'package:secure_bridges_app/features/landing/drawer_menu.dart';
+import 'package:secure_bridges_app/features/landing/landing_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
-import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
-import 'package:secure_bridges_app/features/authentication/login.dart';
+
 import 'package:secure_bridges_app/network_utils/api.dart';
-import 'package:secure_bridges_app/features/opportunity/opportunities.dart';
+
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
-import 'package:secure_bridges_app/utls/styles.dart';
+
 import 'package:secure_bridges_app/widgets/PAButton.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -34,11 +34,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with Observer {
-  String name;
-  String email;
-  int userId;
-  String profilePictureUrl;
-  int userType;
+  LandingViewModel _landingViewModel = LandingViewModel();
   List<int> userWishes = [];
   List<int> userEnrollments = [];
   List<int> usersEnrollment = [];
@@ -52,21 +48,11 @@ class _HomeState extends State<Home> with Observer {
   String opportunityUploadPath;
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool hasUnreadNotification = false;
+  User currentUser;
   @override
   void initState() {
     Observable.instance.addObserver(this);
-    _userViewModel.loadUserData((Map<dynamic, dynamic> user) {
-      setState(() {
-        userId = user['id'];
-        name = user['name'];
-        email = user['email'];
-        profilePictureUrl = user['profile_image'];
-        print("user type ${user['user_type']}");
-        userType = user['user_type'];
-      });
-    }, (error) {
-      EasyLoading.showError(error);
-    });
+    _loadUserData();
     _searchController.addListener(_applySearchOnOpportunityeList);
     _loadOpportunitiesStats();
     /*push notification */
@@ -120,32 +106,31 @@ class _HomeState extends State<Home> with Observer {
   }
 
   _loadOpportunitiesStats() async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var res = await Network().getData(OPPORTUNITIES_URL);
-      var body = json.decode(res.body);
-      if (res.statusCode == 200) {
-        EasyLoading.dismiss();
-        log("$body");
-        List<Opportunity> _opportunities = List<Opportunity>.from(
-            body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
-        setState(() {
-          opportunities = _opportunities;
-          opportunitiesAll = _opportunities;
-          searchedOpportunities = _opportunities;
-          opportunityUploadPath = body["data"]["upload_path"];
-          userWishes = body['data']['user_wishes'].cast<int>();
-          userEnrollments = body['data']['user_enrollments'].cast<int>();
-          hasUnreadNotification = body['data']['has_active_notifications'];
-        });
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body["message"]);
-      }
-    } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
+    _landingViewModel.loadHomeScreenData((Map<dynamic, dynamic> body) {
+      List<Opportunity> _opportunities = List<Opportunity>.from(
+          body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
+      setState(() {
+        opportunities = _opportunities;
+        opportunitiesAll = _opportunities;
+        searchedOpportunities = _opportunities;
+        opportunityUploadPath = body["data"]["upload_path"];
+        userWishes = body['data']['user_wishes'].cast<int>();
+        userEnrollments = body['data']['user_enrollments'].cast<int>();
+        hasUnreadNotification = body['data']['has_active_notifications'];
+      });
+    }, (error) {
+      EasyLoading.showError(error);
+    });
+  }
+
+  _loadUserData() {
+    _userViewModel.loadUserData((Map<dynamic, dynamic> user) {
+      setState(() {
+        currentUser = User.fromJson(user);
+      });
+    }, (error) {
+      EasyLoading.showError(error);
+    });
   }
 
   @override
@@ -159,41 +144,6 @@ class _HomeState extends State<Home> with Observer {
     ///do your work
     _loadOpportunitiesStats();
   }
-
-  // fetchOpportunities(int maxDuration, int minDuratin, String maxReward,
-  //     String minReward) async {
-  //   try {
-  //     var data = {
-  //       'duration_high': maxDuration,
-  //       'duration_low': minDuratin,
-  //       'reward_low': minReward,
-  //       'reward_high': maxReward
-  //     };
-  //
-  //     var res = await Network().postData(data, FETCH_OPPORTUNITIES_URL);
-  //     var body = json.decode(res.body);
-  //     // log("res ${res.statusCode}");
-  //     if (res.statusCode == 200) {
-  //       List<Opportunity> _opportunities = List<Opportunity>.from(
-  //           body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
-  //
-  //       setState(() {
-  //         opportunities = _opportunities;
-  //         opportunitiesAll = _opportunities;
-  //         searchedOpportunities = _opportunities;
-  //         opportunityUploadPath = body["data"]["upload_path"];
-  //         userWishes=body['data']['user_wishes'].cast<int>();
-  //       });
-  //       EasyLoading.dismiss();
-  //     } else {
-  //       EasyLoading.dismiss();
-  //       EasyLoading.showError(body['message']);
-  //     }
-  //   } catch (e) {
-  //     EasyLoading.dismiss();
-  //     EasyLoading.showError(e.toString());
-  //   }
-  // }
 
   _setUpSearchBar() {
     return Container(
@@ -253,23 +203,11 @@ class _HomeState extends State<Home> with Observer {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-                context,
-                new MaterialPageRoute(
-                    builder: (context) => OpportunityDetail(
-                        item, opportunityUploadPath, userId, userType)))
-            .then((value) {
-          _userViewModel.loadUserData((Map<dynamic, dynamic> user) {
-            setState(() {
-              userId = user['id'];
-              name = user['name'];
-              email = user['email'];
-              profilePictureUrl = user['profile_image'];
-              print("user type ${user['user_type']}");
-              userType = user['user_type'];
-            });
-          }, (error) {
-            EasyLoading.showError(error);
-          });
+            context,
+            new MaterialPageRoute(
+                builder: (context) => OpportunityDetail(
+                    item, opportunityUploadPath, currentUser))).then((value) {
+          _loadUserData();
           _loadOpportunitiesStats();
         });
       },
@@ -333,7 +271,8 @@ class _HomeState extends State<Home> with Observer {
                                 fontSize: kMargin12))
                       ],
                     ),
-                    userId != item.createdBy.id && userType == 0
+                    currentUser.id != item.createdBy.id &&
+                            currentUser.userType == 0
                         ? Row(
                             children: [
                               GestureDetector(
@@ -486,21 +425,7 @@ class _HomeState extends State<Home> with Observer {
                                   if (userEnrollments.contains(item.id)) {
                                     _opportunityViewModel.removeFromEnrollments(
                                         context, item, (success) {
-                                      _userViewModel.loadUserData(
-                                          (Map<dynamic, dynamic> user) {
-                                        setState(() {
-                                          userId = user['id'];
-                                          name = user['name'];
-                                          email = user['email'];
-                                          profilePictureUrl =
-                                              user['profile_image'];
-                                          print(
-                                              "user type ${user['user_type']}");
-                                          userType = user['user_type'];
-                                        });
-                                      }, (error) {
-                                        EasyLoading.showError(error);
-                                      });
+                                      _loadUserData();
                                       _loadOpportunitiesStats();
                                     }, (error) {
                                       EasyLoading.showError(error);
@@ -591,21 +516,7 @@ class _HomeState extends State<Home> with Observer {
                                                   },
                                                 ),
                                               )).then((value) {
-                                        _userViewModel.loadUserData(
-                                            (Map<dynamic, dynamic> user) {
-                                          setState(() {
-                                            userId = user['id'];
-                                            name = user['name'];
-                                            email = user['email'];
-                                            profilePictureUrl =
-                                                user['profile_image'];
-                                            print(
-                                                "user type ${user['user_type']}");
-                                            userType = user['user_type'];
-                                          });
-                                        }, (error) {
-                                          EasyLoading.showError(error);
-                                        });
+                                        _loadUserData();
                                         _loadOpportunitiesStats();
                                       });
                                     }, (error) {
@@ -617,7 +528,7 @@ class _HomeState extends State<Home> with Observer {
                             ],
                           )
                         : Row(
-                            children: userId == item.createdBy.id
+                            children: currentUser.id == item.createdBy.id
                                 ? [
                                     GestureDetector(
                                       child: Container(
@@ -699,9 +610,10 @@ class _HomeState extends State<Home> with Observer {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => Notifications())).then((value) {
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => Notifications(currentUser)))
+                    .then((value) {
                   _loadOpportunitiesStats();
                 });
               },
@@ -724,7 +636,7 @@ class _HomeState extends State<Home> with Observer {
             ),
           ),
         ),
-        drawer: CustomDrawer(profilePictureUrl, name, email, userType));
+        drawer: CustomDrawer(currentUser));
   }
 
   showAlertDialog(BuildContext context, id) {

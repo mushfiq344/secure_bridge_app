@@ -28,4 +28,27 @@ class NotificationsViewModel {
       _onError(e.toString());
     }
   }
+
+  void getNotificationDetail(int notificationId, _onSuccess, _onError) async {
+    try {
+      EasyLoading.show(status: kLoading);
+
+      // EasyLoading.show(status: kLoading);
+      var res =
+          await Network().getData("${NOTIFICATIONS_URL}/${notificationId}");
+      var body = json.decode(res.body);
+
+      log("notifications : ${body}");
+      if (res.statusCode == 200) {
+        EasyLoading.dismiss();
+        _onSuccess(body);
+      } else {
+        EasyLoading.dismiss();
+        _onError(body['message']);
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      _onError(e.toString());
+    }
+  }
 }

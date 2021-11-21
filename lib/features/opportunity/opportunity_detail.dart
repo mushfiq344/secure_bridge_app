@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/opportunity/enrolled_user.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
@@ -20,11 +21,10 @@ import 'package:flutter/services.dart';
 class OpportunityDetail extends StatefulWidget {
   final Opportunity opportunity;
   final String uploadPath;
-  final userId;
-  final int userType;
 
-  OpportunityDetail(
-      this.opportunity, this.uploadPath, this.userId, this.userType);
+  final User currentUser;
+
+  OpportunityDetail(this.opportunity, this.uploadPath, this.currentUser);
   @override
   _OpportunityDetailState createState() => _OpportunityDetailState();
 }
@@ -427,7 +427,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                   SizedBox(
                     height: kMargin24,
                   ),
-                  widget.userType == 0
+                  widget.currentUser.userType == 0
                       ? GestureDetector(
                           child: Container(
                               child: Card(
@@ -566,7 +566,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                               )
                             : Expanded(
                                 flex: 1,
-                                child: widget.userType == 0
+                                child: widget.currentUser.userType == 0
                                     ? GestureDetector(
                                         child: Card(
                                             color: kPurpleColor,
@@ -693,7 +693,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       ],
                     ),
                   ),
-                  if (widget.userId == widget.opportunity.createdBy.id)
+                  if (widget.currentUser.id == widget.opportunity.createdBy.id)
                     Column(
                       children: [
                         Row(
