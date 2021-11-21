@@ -136,6 +136,7 @@ class _HomeState extends State<Home> with Observer {
           opportunityUploadPath = body["data"]["upload_path"];
           userWishes = body['data']['user_wishes'].cast<int>();
           userEnrollments = body['data']['user_enrollments'].cast<int>();
+          hasUnreadNotification = body['data']['has_active_notifications'];
         });
       } else {
         EasyLoading.dismiss();
