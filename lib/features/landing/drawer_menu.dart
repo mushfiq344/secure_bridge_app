@@ -8,6 +8,8 @@ import 'package:secure_bridges_app/features/landing/landing_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
+
+import 'package:secure_bridges_app/features/payment/payment_home.dart';
 import 'package:secure_bridges_app/features/user/user_home.dart';
 import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -129,23 +131,46 @@ class CustomDrawer extends StatelessWidget {
                 : SizedBox(),
 
             currentUser.userType == 1
-                ? ListTile(
-                    leading: Image(
-                      height: 25,
-                      width: 25,
-                      image: AssetImage(kOpportunityIconPath),
-                    ),
-                    title: Text('Create Opportunity',
-                        style: TextStyle(
-                            fontSize: kMargin22, fontWeight: FontWeight.w400)),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) =>
-                                  OpportunityForm(null, null)));
-                      // Here you can give your route to navigate
-                    },
+                ? Column(
+                    children: [
+                      ListTile(
+                        leading: Image(
+                          height: 25,
+                          width: 25,
+                          image: AssetImage(kOpportunityIconPath),
+                        ),
+                        title: Text('Create Opportunity',
+                            style: TextStyle(
+                                fontSize: kMargin22,
+                                fontWeight: FontWeight.w400)),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) =>
+                                      OpportunityForm(null, null)));
+                          // Here you can give your route to navigate
+                        },
+                      ),
+                      ListTile(
+                        leading: Image(
+                          height: 25,
+                          width: 25,
+                          image: AssetImage(kOpportunityIconPath),
+                        ),
+                        title: Text('Payment',
+                            style: TextStyle(
+                                fontSize: kMargin22,
+                                fontWeight: FontWeight.w400)),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => PaymentHome()));
+                          // Here you can give your route to navigate
+                        },
+                      ),
+                    ],
                   )
                 : SizedBox(),
 

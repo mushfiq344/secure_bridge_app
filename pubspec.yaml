@@ -40,6 +40,10 @@ dependencies:
   charts_flutter: any
   flutter_observer: ^2.0.0
 
+  flutter_credit_card: ^0.1.3
+  stripe_payment: ^1.0.7
+
+  progress_dialog: ^1.2.2
 
 
   # The following adds the Cupertino Icons font to your application.
