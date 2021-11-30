@@ -259,19 +259,29 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ),
                       ),
                       SizedBox(height: 10),
-                      FormBuilderDateTimePicker(
+                      FormBuilderTextField(
+                        readOnly: true,
                         controller: opportunityDateController,
                         name: 'opportunity_date',
-                        // onChanged: _onChanged,
-                        inputType: InputType.date,
                         decoration: _inputDecoration(
                             !opportunityDateController.text.isEmpty
                                 ? opportunityDateController.text
                                 : 'Opportunity Date'),
-                        initialTime: TimeOfDay(hour: 8, minute: 0),
-                        // initialValue: DateTime.now(),
-                        // enabled: true,
+                        onTap: () async {
+                          DateTime date = DateTime(1900);
+                          FocusScope.of(context).requestFocus(new FocusNode());
+
+                          date = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime(2100));
+
+                          opportunityDateController.text =
+                              DateFormat('yyyy-MM-dd').format(date);
+                        },
                       ),
+
                       SizedBox(height: 10),
                       RichText(
                         text: TextSpan(
@@ -319,28 +329,28 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         keyboardType: TextInputType.number,
                       ),
                       SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: "Type",
-                          style: TextStyle(
-                              color: Colors.black, fontSize: kMargin14),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      FormBuilderTextField(
-                        decoration: _inputDecoration('Type'),
-                        controller: typeController,
-                        name: 'type',
-                        validator: FormBuilderValidators.compose([
-                          /*  FormBuilderValidators.required(context),*/
-                        ]),
-                        keyboardType: TextInputType.text,
-                      ),
-                      SizedBox(height: kMargin16),
+                      // RichText(
+                      //   text: TextSpan(
+                      //     text: "Type",
+                      //     style: TextStyle(
+                      //         color: Colors.black, fontSize: kMargin14),
+                      //     children: <TextSpan>[
+                      //       TextSpan(
+                      //           text: '', style: TextStyle(color: Colors.red)),
+                      //     ],
+                      //   ),
+                      // ),
+                      // SizedBox(height: 10),
+                      // FormBuilderTextField(
+                      //   decoration: _inputDecoration('Type'),
+                      //   controller: typeController,
+                      //   name: 'type',
+                      //   validator: FormBuilderValidators.compose([
+                      //     /*  FormBuilderValidators.required(context),*/
+                      //   ]),
+                      //   keyboardType: TextInputType.text,
+                      // ),
+                      // SizedBox(height: kMargin16),
                       RichText(
                         text: TextSpan(
                           text: "Location",
@@ -605,6 +615,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         EasyLoading.showError("please add icon image");
         return;
       }
+
       var data = {
         'cover_image': _coverImageAreaMap[kImage],
         'icon_image': _iconImageAreaMap[kImage],
@@ -614,7 +625,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
-        'type': typeController.text,
+        // 'type': typeController.text,
         'location': locationController.text
       };
       EasyLoading.show(status: kLoading);
@@ -639,6 +650,8 @@ class _OpportunityFormState extends State<OpportunityForm> {
   }
 
   void _updateOpportunity() async {
+    print(opportunityDateController.text);
+
     try {
       var data = {
         'id': widget.oppotunity.id,
@@ -648,7 +661,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
-        'type': typeController.text,
+        // 'type': typeController.text,
         'location': locationController.text
       };
       if (_coverImageAreaMap[kImage] != null) {
