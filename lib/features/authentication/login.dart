@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:secure_bridges_app/features/authentication/forgot_password.dart';
 import 'package:secure_bridges_app/features/authentication/register.dart';
+import 'package:secure_bridges_app/features/authentication/select_account_type.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -97,6 +98,9 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
+              SizedBox(
+                height: kMargin36,
+              ),
               Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -357,11 +361,21 @@ class _LoginState extends State<Login> {
         localStorage.setString('token', body['data']['token']);
         localStorage.setString('user', json.encode(body['data']['user']));
         EasyLoading.dismiss();
-        await Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => Home()),
-          (route) => false,
-        );
+        int regCompleted = body['data']['user']['reg_completed'];
+        print("regCompleted $regCompleted");
+        if (regCompleted == 0) {
+          await Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => SelectAccountType()),
+            (route) => false,
+          );
+        } else {
+          await Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+            (route) => false,
+          );
+        }
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);
@@ -387,11 +401,21 @@ class _LoginState extends State<Login> {
         localStorage.setString('token', body['data']['token']);
         localStorage.setString('user', json.encode(body['data']['user']));
         EasyLoading.dismiss();
-        await Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => Home()),
-          (route) => false,
-        );
+        int regCompleted = body['data']['user']['reg_completed'];
+        print("regCompleted $regCompleted");
+        if (regCompleted == 0) {
+          await Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => SelectAccountType()),
+            (route) => false,
+          );
+        } else {
+          await Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+            (route) => false,
+          );
+        }
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);

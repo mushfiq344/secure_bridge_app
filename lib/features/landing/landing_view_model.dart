@@ -8,22 +8,6 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingViewModel {
-  void logout(_success, _error) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var res = await Network().postData({}, LOGOUT_URL);
-      var body = json.decode(res.body);
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.remove('user');
-      localStorage.remove('token');
-      EasyLoading.dismiss();
-      _success();
-    } catch (e) {
-      EasyLoading.dismiss();
-      _success();
-    }
-  }
-
   void loadHomeScreenData(_success, _error) async {
     try {
       EasyLoading.show(status: kLoading);

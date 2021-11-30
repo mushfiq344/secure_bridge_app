@@ -36,6 +36,22 @@ class AuthenticationViewModel {
     }
   }
 
+  void logout(_success, _error) async {
+    try {
+      EasyLoading.show(status: kLoading);
+      var res = await Network().postData({}, LOGOUT_URL);
+      var body = json.decode(res.body);
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.remove('user');
+      localStorage.remove('token');
+      EasyLoading.dismiss();
+      _success();
+    } catch (e) {
+      EasyLoading.dismiss();
+      _success();
+    }
+  }
+
   Future<void> handleGoogleSignIn(_success, _error) async {
     try {
       GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
@@ -73,6 +89,32 @@ class AuthenticationViewModel {
     } catch (error) {
       EasyLoading.dismiss();
       _error(error.toString());
+    }
+  }
+
+  void completeRegistration(int SelectedType, _success, _error) async {
+    try {
+      var data = {
+        'selected_type': SelectedType,
+      };
+      EasyLoading.show(status: kLoading);
+      var res = await Network().postData(data, COMPLETE_REGISTRATION_URL);
+      var body = json.decode(res.body);
+      log("res ${res.body}");
+
+      if (res.statusCode == 200) {
+        SharedPreferences localStorage = await SharedPreferences.getInstance();
+        localStorage.setString('user', json.encode(body['data']['user']));
+        EasyLoading.dismiss();
+        _success();
+      } else {
+        EasyLoading.dismiss();
+        _error(body['message']);
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      print(e);
+      _error(e.toString());
     }
   }
 }

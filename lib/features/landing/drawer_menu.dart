@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:secure_bridges_app/Models/User.dart';
+import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
 import 'package:secure_bridges_app/features/landing/landing_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
@@ -29,6 +30,7 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   LandingViewModel _landingViewModel = LandingViewModel();
+  AuthenticationViewModel _authenticationViewModel = AuthenticationViewModel();
   UserViewModel _userViewModel = UserViewModel();
   bool hasPermissionToCreate = false;
 
@@ -276,7 +278,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   style: TextStyle(
                       fontSize: kMargin22, fontWeight: FontWeight.w400)),
               onTap: () {
-                _landingViewModel.logout(() async {
+                _authenticationViewModel.logout(() async {
                   await Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => Login()),
