@@ -37,6 +37,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
   final TextEditingController durationController = TextEditingController();
   final TextEditingController rewardController = TextEditingController();
   final TextEditingController typeController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
   Map<String, dynamic> _coverImageAreaMap = Map();
   Map<String, dynamic> _iconImageAreaMap = Map();
   var _imageNameWithExtension;
@@ -158,6 +159,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
       durationController.text = widget.oppotunity.duration.toString();
       rewardController.text = widget.oppotunity.reward;
       typeController.text = widget.oppotunity.type;
+      locationController.text = widget.oppotunity.location;
     }
     super.initState();
   }
@@ -333,6 +335,28 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         decoration: _inputDecoration('Type'),
                         controller: typeController,
                         name: 'type',
+                        validator: FormBuilderValidators.compose([
+                          /*  FormBuilderValidators.required(context),*/
+                        ]),
+                        keyboardType: TextInputType.text,
+                      ),
+                      SizedBox(height: kMargin16),
+                      RichText(
+                        text: TextSpan(
+                          text: "Location",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      FormBuilderTextField(
+                        decoration: _inputDecoration('Location'),
+                        controller: locationController,
+                        name: 'location',
                         validator: FormBuilderValidators.compose([
                           /*  FormBuilderValidators.required(context),*/
                         ]),
@@ -590,14 +614,15 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
-        'type': typeController.text
+        'type': typeController.text,
+        'location': locationController.text
       };
       EasyLoading.show(status: kLoading);
-      var res = await Network().postData(data, OPPORTUNITIES_URL);
+      var res = await Network().postData(data, ORG_ADMIN_OPPORTUNITIES_URL);
       var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
+      log("res ${res.statusCode}");
       log("body : ${body}");
-      if (res.statusCode == 200) {
+      if (res.statusCode == 201) {
         print("success");
         EasyLoading.dismiss();
         EasyLoading.showSuccess(body["message"]);
@@ -607,6 +632,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         EasyLoading.showError(body['message']);
       }
     } catch (e) {
+      print(e);
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());
     }
@@ -622,7 +648,8 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
-        'type': typeController.text
+        'type': typeController.text,
+        'location': locationController.text
       };
       if (_coverImageAreaMap[kImage] != null) {
         data['cover_image'] = _coverImageAreaMap[kImage];

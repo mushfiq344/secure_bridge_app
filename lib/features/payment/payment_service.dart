@@ -28,12 +28,17 @@ class StripeService {
   }
 
   static Future<StripeTransactionResponse> payViaExistingCard(
-      {String amount, String currency, CreditCard card}) async {
+      {String amount,
+      String currency,
+      int userId,
+      int planId,
+      CreditCard card}) async {
     try {
       var paymentMethod = await StripePayment.createPaymentMethod(
           PaymentMethodRequest(card: card));
-      var paymentIntent =
-          await StripeService.createPaymentIntent(amount, currency);
+      var paymentIntent = await StripeService.createPaymentIntent(
+          amount, currency, userId, planId);
+      print('payment intent $paymentIntent');
       var response = await StripePayment.confirmPaymentIntent(PaymentIntent(
           clientSecret: paymentIntent['client_secret'],
           paymentMethodId: paymentMethod.id));
@@ -53,12 +58,12 @@ class StripeService {
   }
 
   static Future<StripeTransactionResponse> payWithNewCard(
-      {String amount, String currency}) async {
+      {String amount, String currency, int userId, int planId}) async {
     try {
       var paymentMethod = await StripePayment.paymentRequestWithCardForm(
           CardFormPaymentRequest());
-      var paymentIntent =
-          await StripeService.createPaymentIntent(amount, currency);
+      var paymentIntent = await StripeService.createPaymentIntent(
+          amount, currency, userId, planId);
       var response = await StripePayment.confirmPaymentIntent(PaymentIntent(
           clientSecret: paymentIntent['client_secret'],
           paymentMethodId: paymentMethod.id));
@@ -89,15 +94,20 @@ class StripeService {
   }
 
   static Future<Map<String, dynamic>> createPaymentIntent(
-      String amount, String currency) async {
+      String amount, String currency, int userId, int planId) async {
     try {
       Map<String, dynamic> body = {
         'amount': amount,
         'currency': currency,
+        'metadata[user_id]': userId.toString(),
+        'metadata[plan_id]': planId.toString(),
         'payment_method_types[]': 'card'
+
+        // 'transaction_id': transactionId
       };
       var response = await http.post(StripeService.paymentApiUrl,
           body: body, headers: StripeService.headers);
+      print("resp : ${response.body}");
       return jsonDecode(response.body);
     } catch (err) {
       print('err charging user: ${err.toString()}');

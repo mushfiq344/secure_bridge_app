@@ -6,7 +6,10 @@ import 'package:secure_bridges_app/features/payment/payment_service.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 
 class PaymentHome extends StatefulWidget {
-  PaymentHome({Key key}) : super(key: key);
+  final String amount;
+  final int userId;
+  final int planId;
+  PaymentHome({this.amount, this.userId, this.planId});
 
   @override
   PaymentHomeState createState() => PaymentHomeState();
@@ -29,14 +32,21 @@ class PaymentHomeState extends State<PaymentHome> {
     ProgressDialog dialog = new ProgressDialog(context);
     dialog.style(message: 'Please wait...');
     await dialog.show();
-    var response =
-        await StripeService.payWithNewCard(amount: '130', currency: 'USD');
+    var response = await StripeService.payWithNewCard(
+        amount: widget.amount,
+        currency: 'USD',
+        userId: widget.userId,
+        planId: widget.planId);
+    print(response.message);
     await dialog.hide();
     Scaffold.of(context).showSnackBar(SnackBar(
       content: Text(response.message),
       duration:
           new Duration(milliseconds: response.success == true ? 1200 : 3000),
     ));
+    if (response.success) {
+      Navigator.of(context).pop(true);
+    }
   }
 
   @override
@@ -65,10 +75,10 @@ class PaymentHomeState extends State<PaymentHome> {
                   icon = Icon(Icons.add_circle, color: kPurpleColor);
                   text = Text('Pay via new card');
                   break;
-                case 1:
-                  icon = Icon(Icons.credit_card, color: kPurpleColor);
-                  text = Text('Pay via existing card');
-                  break;
+                // case 1:
+                //   icon = Icon(Icons.credit_card, color: kPurpleColor);
+                //   text = Text('Pay via existing card');
+                //   break;
               }
 
               return InkWell(
