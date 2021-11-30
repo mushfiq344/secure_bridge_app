@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
 import 'package:secure_bridges_app/features/authentication/forgot_password.dart';
 import 'package:secure_bridges_app/features/authentication/register.dart';
+import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -128,7 +129,10 @@ class _SelectAccountTypeState extends State<SelectAccountType> {
                             () async {
                           await Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => Home()),
+                            MaterialPageRoute(
+                                builder: (context) => PlansList(
+                                      isRegistering: true,
+                                    )),
                             (route) => false,
                           );
                         }, (error) {

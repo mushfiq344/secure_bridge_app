@@ -212,8 +212,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                     new MaterialPageRoute(
                                         //builder: (context) => PaymentHome()
                                         builder: (context) => PlansList(
-                                            currentUser: widget
-                                                .currentUser))).then((value) {
+                                              currentUser: widget.currentUser,
+                                              isRegistering: false,
+                                            ))).then((value) {
                                   loadUserData();
                                 });
                                 // Here you can give your route to navigate

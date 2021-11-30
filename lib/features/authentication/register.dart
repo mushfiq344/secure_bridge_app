@@ -4,6 +4,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
+import 'package:secure_bridges_app/features/authentication/select_account_type.dart';
+import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -250,11 +252,45 @@ class _RegisterState extends State<Register> {
                         ),
                         onTap: () {
                           _authenticationViewModel.handleGoogleSignIn(() async {
-                            await Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => Home()),
-                              (route) => false,
-                            );
+                            SharedPreferences localStorage =
+                                await SharedPreferences.getInstance();
+                            var user =
+                                jsonDecode(localStorage.getString('user'));
+                            int regCompleted = user['reg_completed'];
+                            if (regCompleted < 2) {
+                              if (regCompleted < 1) {
+                                await Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SelectAccountType()),
+                                  (route) => false,
+                                );
+                              } else {
+                                int userType = user['user_type'];
+                                if (userType == 1) {
+                                  await Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PlansList()),
+                                    (route) => false,
+                                  );
+                                } else {
+                                  await Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Home()),
+                                    (route) => false,
+                                  );
+                                }
+                              }
+                            } else {
+                              await Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (context) => Home()),
+                                (route) => false,
+                              );
+                            }
                           }, (error) {
                             EasyLoading.showError(error);
                           });
@@ -376,9 +412,10 @@ class _RegisterState extends State<Register> {
         localStorage.setString('token', body['data']['token']);
         localStorage.setString('user', json.encode(body['data']['user']));
         EasyLoading.dismiss();
+
         await Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => SelectAccountType()),
           (route) => false,
         );
       } else {

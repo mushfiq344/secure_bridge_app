@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/features/authentication/select_account_type.dart';
 import 'package:secure_bridges_app/features/landing/home.dart';
+import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
@@ -30,6 +31,7 @@ class CheckAuth extends StatefulWidget {
 class _CheckAuthState extends State<CheckAuth> {
   bool isAuth = false;
   int regCompleted = 0;
+  int userType = 0;
   @override
   void initState() {
     configLoading();
@@ -62,6 +64,7 @@ class _CheckAuthState extends State<CheckAuth> {
       Map<String, dynamic> user = jsonDecode(localStorage.getString('user'));
       setState(() {
         regCompleted = user['reg_completed'];
+        userType = user['user_type'];
         isAuth = true;
       });
     }
@@ -74,7 +77,15 @@ class _CheckAuthState extends State<CheckAuth> {
       if (regCompleted == 0) {
         child = SelectAccountType();
       } else {
-        child = Home();
+        if (userType == 1) {
+          if (regCompleted < 2) {
+            child = PlansList();
+          } else {
+            child = Home();
+          }
+        } else {
+          child = Home();
+        }
       }
       // child = SelectAccountType();
     } else {

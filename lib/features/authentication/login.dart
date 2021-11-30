@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:secure_bridges_app/features/authentication/forgot_password.dart';
 import 'package:secure_bridges_app/features/authentication/register.dart';
 import 'package:secure_bridges_app/features/authentication/select_account_type.dart';
+import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -399,16 +400,34 @@ class _LoginState extends State<Login> {
         print("get token : ${body['data']['token']}");
         SharedPreferences localStorage = await SharedPreferences.getInstance();
         localStorage.setString('token', body['data']['token']);
-        localStorage.setString('user', json.encode(body['data']['user']));
+        await localStorage.setString('user', json.encode(body['data']['user']));
         EasyLoading.dismiss();
-        int regCompleted = body['data']['user']['reg_completed'];
-        print("regCompleted $regCompleted");
-        if (regCompleted == 0) {
-          await Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => SelectAccountType()),
-            (route) => false,
-          );
+
+        var user = jsonDecode(localStorage.getString('user'));
+        int regCompleted = user['reg_completed'];
+        if (regCompleted < 2) {
+          if (regCompleted < 1) {
+            await Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => SelectAccountType()),
+              (route) => false,
+            );
+          } else {
+            int userType = user['user_type'];
+            if (userType == 1) {
+              await Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => PlansList()),
+                (route) => false,
+              );
+            } else {
+              await Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+                (route) => false,
+              );
+            }
+          }
         } else {
           await Navigator.pushAndRemoveUntil(
             context,
