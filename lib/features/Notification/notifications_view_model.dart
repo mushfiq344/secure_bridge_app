@@ -12,10 +12,10 @@ class NotificationsViewModel {
       EasyLoading.show(status: kLoading);
 
       // EasyLoading.show(status: kLoading);
-      var res = await Network().getData("${NOTIFICATIONS_URL}");
+      var res = await Network().getData("$NOTIFICATIONS_URL");
       var body = json.decode(res.body);
 
-      log("notifications : ${body}");
+      log("notifications : $body");
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
         _onSuccess(body);
@@ -34,8 +34,7 @@ class NotificationsViewModel {
       EasyLoading.show(status: kLoading);
 
       // EasyLoading.show(status: kLoading);
-      var res =
-          await Network().getData("${NOTIFICATIONS_URL}/${notificationId}");
+      var res = await Network().getData("$NOTIFICATIONS_URL/$notificationId");
       var body = json.decode(res.body);
 
       log("notifications : ${body}");

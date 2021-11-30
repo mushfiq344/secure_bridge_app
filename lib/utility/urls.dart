@@ -1,5 +1,5 @@
 const BASE_URL = "http://securebridges.ubitrixbd.com/";
-// const BASE_URL = "http://192.168.0.106:8000/";
+// const BASE_URL = "http://f567-103-98-106-1.ngrok.io/";
 const SIGN_IN_URL = "api/login";
 const OPPORTUNITIES_URL = "api/opportunities";
 const FETCH_OPPORTUNITIES_URL = "api/fetch-opportunities";
@@ -17,3 +17,4 @@ const ORG_ADMIN_OPPORTUNITIES_URL = "api/org-admin/opportunities";
 const USER_ADMIN_OPPORTUNITIES_URL = "api/user/opportunities";
 const FORGOT_PASSWORD_URL = "api/password/email";
 const NOTIFICATIONS_URL = "api/notifications";
+const PLANS_URL = "api/org-admin/plans";

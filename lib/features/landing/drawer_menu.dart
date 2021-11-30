@@ -8,17 +8,50 @@ import 'package:secure_bridges_app/features/landing/landing_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
+
+import 'package:secure_bridges_app/features/payment/payment_home.dart';
+import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/features/user/user_home.dart';
+import 'package:secure_bridges_app/features/user/user_view_model.dart';
 import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   final User currentUser;
 
   CustomDrawer(this.currentUser);
+
+  @override
+  _CustomDrawerState createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
   LandingViewModel _landingViewModel = LandingViewModel();
+  UserViewModel _userViewModel = UserViewModel();
+  bool hasPermissionToCreate = false;
+
+  @override
+  void initState() {
+    loadUserData();
+    super.initState();
+  }
+
+  void loadUserData() {
+    _userViewModel.loadUserData((Map<String, dynamic> userJson) {
+      if (userJson['has_create_opportunity_permission'] == true) {
+        setState(() {
+          hasPermissionToCreate = true;
+        });
+      } else {
+        hasPermissionToCreate = false;
+      }
+    }, (error) {
+      EasyLoading.showError(error);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -38,7 +71,8 @@ class CustomDrawer extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: CachedNetworkImage(
-                          imageUrl: "${BASE_URL}${currentUser.profileImage}",
+                          imageUrl:
+                              "${BASE_URL}${widget.currentUser.profileImage}",
                           placeholder: (context, url) =>
                               Image(image: AssetImage(kPlaceholderImagePath)),
                           errorWidget: (context, url, error) =>
@@ -55,7 +89,7 @@ class CustomDrawer extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(left: kMargin8),
                       child: Text(
-                        '${currentUser.name}',
+                        '${widget.currentUser.name}',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: kMargin18),
                       ),
@@ -68,7 +102,7 @@ class CustomDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            currentUser.userType == 1
+            widget.currentUser.userType == 1
                 ? ListTile(
                     leading: Image(
                       height: 25,
@@ -103,7 +137,7 @@ class CustomDrawer extends StatelessWidget {
                 // Here you can give your route to navigate
               },
             ),
-            currentUser.userType == 0
+            widget.currentUser.userType == 0
                 ? ListTile(
                     leading: Image(
                       height: 25,
@@ -115,10 +149,10 @@ class CustomDrawer extends StatelessWidget {
                             fontSize: kMargin22, fontWeight: FontWeight.w400)),
                     onTap: () {
                       Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => UserHome(currentUser)))
-                          .then((value) {
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) =>
+                                  UserHome(widget.currentUser))).then((value) {
                         Observable.instance.notifyObservers([
                           "_HomeState",
                         ], notifyName: "可以通过notifyName判断通知");
@@ -128,24 +162,62 @@ class CustomDrawer extends StatelessWidget {
                   )
                 : SizedBox(),
 
-            currentUser.userType == 1
-                ? ListTile(
-                    leading: Image(
-                      height: 25,
-                      width: 25,
-                      image: AssetImage(kOpportunityIconPath),
-                    ),
-                    title: Text('Create Opportunity',
-                        style: TextStyle(
-                            fontSize: kMargin22, fontWeight: FontWeight.w400)),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) =>
-                                  OpportunityForm(null, null)));
-                      // Here you can give your route to navigate
-                    },
+            widget.currentUser.userType == 1
+                ? Column(
+                    children: [
+                      hasPermissionToCreate == true
+                          ? ListTile(
+                              leading: Image(
+                                height: 25,
+                                width: 25,
+                                image: AssetImage(kOpportunityIconPath),
+                              ),
+                              title: Text('Create Opportunity',
+                                  style: TextStyle(
+                                      fontSize: kMargin22,
+                                      fontWeight: FontWeight.w400)),
+                              onTap: () {
+                                Navigator.push(
+                                        context,
+                                        new MaterialPageRoute(
+                                            builder: (context) =>
+                                                OpportunityForm(null, null)))
+                                    .then((value) {
+                                  if (value != null) {
+                                    if (value) {
+                                      Observable.instance.notifyObservers([
+                                        "_HomeState",
+                                      ], notifyName: "可以通过notifyName判断通知");
+                                    }
+                                  }
+                                });
+                                // Here you can give your route to navigate
+                              },
+                            )
+                          : ListTile(
+                              leading: Image(
+                                height: 25,
+                                width: 25,
+                                image: AssetImage(kOpportunityIconPath),
+                              ),
+                              title: Text('Subscriptions',
+                                  style: TextStyle(
+                                      fontSize: kMargin22,
+                                      fontWeight: FontWeight.w400)),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        //builder: (context) => PaymentHome()
+                                        builder: (context) => PlansList(
+                                            currentUser: widget
+                                                .currentUser))).then((value) {
+                                  loadUserData();
+                                });
+                                // Here you can give your route to navigate
+                              },
+                            )
+                    ],
                   )
                 : SizedBox(),
 
@@ -182,8 +254,8 @@ class CustomDrawer extends StatelessWidget {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) =>
-                            SecureBridgeWebView(currentUser.email, 'forum')));
+                        builder: (context) => SecureBridgeWebView(
+                            widget.currentUser.email, 'forum')));
               },
             ),
             // ListTile(
