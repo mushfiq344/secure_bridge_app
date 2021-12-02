@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:secure_bridges_app/Models/Plan.dart';
 import 'package:secure_bridges_app/Models/User.dart';
+import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
+import 'package:secure_bridges_app/features/landing/home.dart';
 import 'package:secure_bridges_app/features/payment/payment_home.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_view_model.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
@@ -15,7 +18,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PlansList extends StatefulWidget {
   final User currentUser;
-  PlansList({this.currentUser});
+  bool isRegistering = false;
+  PlansList({this.currentUser, this.isRegistering});
   @override
   _PlansListState createState() => _PlansListState();
 }
@@ -23,12 +27,27 @@ class PlansList extends StatefulWidget {
 class _PlansListState extends State<PlansList> {
   PlansViewModel _plansViewModel = PlansViewModel();
   UserViewModel _userViewModel = UserViewModel();
+  AuthenticationViewModel _authenticationViewModel = AuthenticationViewModel();
   List<Plan> yearlyPlans = [];
+  List<Plan> monthlyPlans = [];
   List<int> userSubscribedPlans = [];
+  User currentUser;
+  bool isYear = true;
   @override
   void initState() {
     getPlans();
+    loadUsersData();
     super.initState();
+  }
+
+  loadUsersData() {
+    _userViewModel.loadUserData((var user) {
+      setState(() {
+        currentUser = User.fromJson(user);
+      });
+    }, (error) {
+      EasyLoading.showError(error);
+    });
   }
 
   getPlans() {
@@ -48,6 +67,20 @@ class _PlansListState extends State<PlansList> {
     });
   }
 
+  void toggleSwitch(bool value) {
+    if (isYear == false) {
+      setState(() {
+        isYear = true;
+      });
+      print('Switch Button is ON');
+    } else {
+      setState(() {
+        isYear = false;
+      });
+      print('Switch Button is OFF');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,121 +93,234 @@ class _PlansListState extends State<PlansList> {
           padding: const EdgeInsets.all(kMargin20),
           child: Column(
             children: [
-              ...yearlyPlans.map((e) {
-                return GestureDetector(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: kMargin20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Card(
-                              color: userSubscribedPlans.contains(e.id)
-                                  ? kPinkBackground
-                                  : Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(kMargin10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(28),
-                                child: Column(
-                                  children: [
-                                    Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(kMargin30),
-                                        ),
-                                        color: kLightYellow,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: kMargin10,
-                                              horizontal: kMargin32),
-                                          child: Text(
-                                            kPlanModes[e.mode],
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: kMargin14),
-                                          ),
-                                        )),
-                                    SizedBox(
-                                      height: kMargin13,
-                                    ),
-                                    Text(
-                                      e.title,
-                                      style: TextStyle(
-                                          fontSize: kMargin30,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: kMargin13,
-                                    ),
-                                    Text(
-                                      e.description,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: kMargin16,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ),
-                      ],
+              Text(
+                "Choose plan",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: kMargin30),
+              ),
+              SizedBox(
+                height: kMargin30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Monthly",
+                    style: TextStyle(
+                        fontSize: kMargin16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black38),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: kMargin10),
+                    child: FlutterSwitch(
+                      width: 70.0,
+                      height: 40.0,
+                      toggleSize: 30.0,
+                      value: isYear,
+                      borderRadius: 33.1,
+                      padding: 4.0,
+                      toggleColor: Color.fromRGBO(225, 225, 225, 1),
+                      activeColor: kLightBlack,
+                      inactiveColor: Colors.black38,
+                      onToggle: (val) {
+                        setState(() {
+                          isYear = val;
+                        });
+                      },
                     ),
                   ),
-                  onTap: () {
-                    if (userSubscribedPlans.contains(e.id)) {
-                      EasyLoading.showInfo(
-                          'You are already subscribed to this plan');
-                      return;
-                    }
-                    String amount = (e.amount * 100).toString();
-                    amount = amount.substring(0, amount.indexOf('.'));
-
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) => PaymentHome(
-                                  amount: amount,
-                                  userId: widget.currentUser.id,
-                                  planId: e.id,
-                                ))).then((value) {
-                      if (value != null) {
-                        if (value) {
-                          EasyLoading.showSuccess(
-                                  'You Have Subscribed To This Plan!')
-                              .then((value) {
-                            if (e.id == 2) {
-                              _userViewModel.loadUserData(
-                                  (Map<String, dynamic> userJson) async {
-                                Map<String, dynamic> _userJson = userJson;
-
-                                _userJson['has_create_opportunity_permission'] =
-                                    true;
-                                SharedPreferences localStorage =
-                                    await SharedPreferences.getInstance();
-
-                                localStorage.setString(
-                                    'user', json.encode(_userJson));
-                                if (e.id == 2) {
-                                  Navigator.of(context).pop();
-                                } else {
-                                  getPlans();
-                                }
-                              }, (error) {
-                                EasyLoading.showError(error);
-                              });
-                            }
-                          });
-                        }
-                      }
-                    });
-                  },
-                );
-              })
+                  Text(
+                    "Yearly",
+                    style: TextStyle(
+                        fontSize: kMargin16,
+                        fontWeight: FontWeight.bold,
+                        color: kLightBlack),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: kMargin30,
+              ),
+              isYear
+                  ? buildList(context, yearlyPlans)
+                  : buildList(context, monthlyPlans),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildList(BuildContext context, List<Plan> plans) {
+    return Column(
+      children: [
+        ...plans.map((e) {
+          return GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: kMargin20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                        color: userSubscribedPlans.contains(e.id)
+                            ? kPinkBackground
+                            : Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(kMargin10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(28),
+                          child: Column(
+                            children: [
+                              Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(kMargin30),
+                                  ),
+                                  color: kLightYellow,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: kMargin10,
+                                        horizontal: kMargin32),
+                                    child: Text(
+                                      kPlanModes[e.mode],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: kMargin14),
+                                    ),
+                                  )),
+                              SizedBox(
+                                height: kMargin13,
+                              ),
+                              Text(
+                                e.title,
+                                style: TextStyle(
+                                    fontSize: kMargin30,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: kMargin13,
+                              ),
+                              Text(
+                                e.description,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: kMargin16,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            ),
+            onTap: () {
+              if (userSubscribedPlans.contains(e.id)) {
+                EasyLoading.showInfo('You are already subscribed to this plan');
+                return;
+              }
+              String amount = (e.amount * 100).toString();
+              amount = amount.substring(0, amount.indexOf('.'));
+              if (e.mode == 0 || e.amount == 0) {
+                _authenticationViewModel.completeRegistration(1, () async {
+                  await Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                    (route) => false,
+                  );
+                }, (error) {
+                  EasyLoading.showError(error);
+                });
+              } else {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => PaymentHome(
+                              amount: amount,
+                              userId: currentUser.id,
+                              planId: e.id,
+                            ))).then((value) {
+                  if (value != null) {
+                    if (value) {
+                      // EasyLoading.showSuccess(
+                      //         'You Have Subscribed To This Plan!')
+                      //     .then((value) {
+                      //   _userViewModel.loadUserData(
+                      //       (Map<String, dynamic> userJson) async {
+                      //     Map<String, dynamic> _userJson = userJson;
+                      //
+                      //     _userJson['has_create_opportunity_permission'] =
+                      //         true;
+                      //     SharedPreferences localStorage =
+                      //         await SharedPreferences.getInstance();
+                      //
+                      //     localStorage.setString(
+                      //         'user', json.encode(_userJson));
+                      //     if (e.id == 2) {
+                      //       Navigator.of(context).pop();
+                      //     } else {
+                      //       getPlans();
+                      //     }
+                      //   }, (error) {
+                      //     EasyLoading.showError(error);
+                      //   });
+                      //
+                      // });
+                      EasyLoading.showSuccess(
+                          'You Have Subscribed To This Plan!');
+                      // if (widget.isRegistering) {
+                      //   _authenticationViewModel.completeRegistration(1,
+                      //       () async {
+                      //     await Navigator.pushAndRemoveUntil(
+                      //       context,
+                      //       MaterialPageRoute(builder: (context) => Home()),
+                      //       (route) => false,
+                      //     );
+                      //   }, (error) {
+                      //     EasyLoading.showError(error);
+                      //   });
+                      // } else {
+                      _userViewModel.loadUserData(
+                          (Map<String, dynamic> userJson) async {
+                        Map<String, dynamic> _userJson = userJson;
+
+                        _userJson['has_create_opportunity_permission'] = true;
+                        SharedPreferences localStorage =
+                            await SharedPreferences.getInstance();
+
+                        localStorage.setString('user', json.encode(_userJson));
+
+                        if (widget.isRegistering) {
+                          _authenticationViewModel.completeRegistration(1,
+                              () async {
+                            await Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => Home()),
+                              (route) => false,
+                            );
+                          }, (error) {
+                            EasyLoading.showError(error);
+                          });
+                        } else {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+                            (route) => false,
+                          );
+                        }
+                      }, (error) {
+                        EasyLoading.showError(error);
+                      });
+                    }
+                  }
+                });
+              }
+            },
+          );
+        })
+      ],
     );
   }
 }

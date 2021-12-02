@@ -24,3 +24,4 @@ const kWaitingForReviewColor = Color(0xFFFFA500);
 const kSubmitToReviewColor = Color(0xFF2FA5B8);
 const kOrangeBackgroundColor = Color(0xFFF9B566);
 const kLightYellow = Color(0xFFFFF1D6);
+const kLightBlack = Color(0xFF333E48);

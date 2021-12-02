@@ -52,6 +52,7 @@ dependencies:
   flutter_form_builder: ^6.0.0
   firebase_core: ^0.5.0+1
   firebase_messaging: ^7.0.3
+  flutter_switch: ^0.3.2
 
 dev_dependencies:
   flutter_test:
