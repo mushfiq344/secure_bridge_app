@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -402,10 +403,10 @@ class _RegisterState extends State<Register> {
         'c_password': confirmPassword,
         'name': name,
       };
-      print("data $data");
 
       var res = await Network().authData(data, REGISTER_URL);
       var body = json.decode(res.body);
+      // log("response $body");
 
       if (res.statusCode == 201) {
         SharedPreferences localStorage = await SharedPreferences.getInstance();
