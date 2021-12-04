@@ -22,6 +22,8 @@ class OpportunityHappening extends StatefulWidget {
 }
 
 class _OpportunityHappeningState extends State<OpportunityHappening> {
+  int totalRequest = 0;
+  int totalConfirm = 0;
   TextEditingController _searchController = TextEditingController();
   EnrollmentViewModel _enrollmentViewModel = EnrollmentViewModel();
   List<EnrolledUser> enrolledUsers = [];
@@ -33,9 +35,16 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
 
   fetchApprovedOpportunityUsers(int opportunityId) async {
     _enrollmentViewModel.fetchOpportunityUsers(opportunityId, 1,
-        (List<EnrolledUser> _enrolledUsers) {
+        (Map<dynamic, dynamic> body) {
+      List<EnrolledUser> _enrolledUsers = List<EnrolledUser>.from(body['data']
+              ['opportunity_users']
+          .map((i) => EnrolledUser.fromJson(i)));
+      int _totalRequest = body['data']['total_request'];
+      int _totalConfirm = body['data']['total_confirmed'];
       setState(() {
         enrolledUsers = _enrolledUsers;
+        totalRequest = _totalRequest;
+        totalConfirm = _totalConfirm;
       });
     }, (error) {
       EasyLoading.showError(error);
@@ -93,7 +102,7 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                         height: kMargin20,
                       ),
                       Text(
-                        "5/23 confirmed",
+                        "${totalConfirm.toString()}/${totalRequest.toString()} confirmed",
                         style: TextStyle(
                             fontSize: kMargin16, fontWeight: FontWeight.bold),
                       ),
@@ -173,7 +182,7 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                             onTap: () async {
                               await _enrollmentViewModel
                                   .changeUserOpportunityStatus(e.enrollmentId,
-                                      e.userId, e.opportunityId, 2, (success) {
+                                      e.userId, e.opportunityId, 3, (success) {
                                 showDialog(
                                     context: context,
                                     builder: (_) => new AlertDialog(

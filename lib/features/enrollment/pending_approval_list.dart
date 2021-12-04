@@ -42,7 +42,10 @@ class _PendingEnrolledOpportunityUserState
 
   fetchPendingOpportunityUsers(int opportunityId) async {
     _enrollmentViewModel.fetchOpportunityUsers(opportunityId, 0,
-        (List<EnrolledUser> _enrolledUsers) {
+        (Map<dynamic, dynamic> body) {
+      List<EnrolledUser> _enrolledUsers = List<EnrolledUser>.from(body['data']
+              ['opportunity_users']
+          .map((i) => EnrolledUser.fromJson(i)));
       setState(() {
         enrolledUsers = _enrolledUsers;
       });

@@ -44,13 +44,10 @@ class EnrollmentViewModel {
 
       var res = await Network().postData(data, FETCH_OPPORTUNITY_USERS_URL);
       var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
+      log("res ${body}");
 
       if (res.statusCode == 200) {
-        List<EnrolledUser> _enrolledUsers = List<EnrolledUser>.from(body['data']
-                ['opportunity_users']
-            .map((i) => EnrolledUser.fromJson(i)));
-        _success(_enrolledUsers);
+        _success(body);
         EasyLoading.dismiss();
       } else {
         EasyLoading.dismiss();
