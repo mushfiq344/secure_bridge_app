@@ -1,3 +1,5 @@
+import 'package:secure_bridges_app/Models/Profile.dart';
+
 class User {
   int id;
 
@@ -6,12 +8,7 @@ class User {
   String profileImage;
   int userType;
 
-  User({
-    this.id,
-    this.name,
-    this.email,
-    this.userType,
-  });
+  User({this.id, this.name, this.email, this.profileImage, this.userType});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];

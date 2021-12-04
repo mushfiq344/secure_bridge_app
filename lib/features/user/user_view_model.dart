@@ -37,6 +37,7 @@ class UserViewModel {
         _error('Something went wrong!');
       }
     } catch (e) {
+      print("error here $e");
       EasyLoading.dismiss();
       _error(e.toString());
     }
