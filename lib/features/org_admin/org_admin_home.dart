@@ -28,8 +28,15 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
   int totalReward = 0;
   int totalEnrolledUser = 0;
   int totalPendingApproval = 0;
+  TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
+    getOpportunities();
+
+    super.initState();
+  }
+
+  void getOpportunities() {
     _orgAdminViewModel.getOpportunities((Map<dynamic, dynamic> body) {
       log("body in class ${body}");
       List<Opportunity> _opportunities = List<Opportunity>.from(
@@ -44,7 +51,6 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
     }, (error) {
       EasyLoading.showError(error);
     });
-    super.initState();
   }
 
   final List<BarChartModel> data = [

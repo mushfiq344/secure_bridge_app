@@ -27,10 +27,13 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
   TextEditingController _searchController = TextEditingController();
   EnrollmentViewModel _enrollmentViewModel = EnrollmentViewModel();
   List<EnrolledUser> enrolledUsers = [];
+  List<EnrolledUser> enrolledUsersAll = [];
+  List<EnrolledUser> searchedEnrolledUsers = [];
   @override
   void initState() {
-    super.initState();
+    _searchController.addListener(_applySearchOnOpportunityUserList);
     fetchApprovedOpportunityUsers(widget.opportunity.id);
+    super.initState();
   }
 
   fetchApprovedOpportunityUsers(int opportunityId) async {
@@ -42,12 +45,37 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
       int _totalRequest = body['data']['total_request'];
       int _totalConfirm = body['data']['total_confirmed'];
       setState(() {
+        _searchController.text = "";
+        enrolledUsersAll = _enrolledUsers;
         enrolledUsers = _enrolledUsers;
         totalRequest = _totalRequest;
         totalConfirm = _totalConfirm;
       });
     }, (error) {
       EasyLoading.showError(error);
+    });
+  }
+
+  void _applySearchOnOpportunityUserList() {
+    List<EnrolledUser> _tempSearchedList = [];
+    for (EnrolledUser opportunityUser in enrolledUsersAll) {
+      if (opportunityUser.profileName != null) {
+        if (opportunityUser.profileName
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase())) {
+          _tempSearchedList.add(opportunityUser);
+        }
+      } else {
+        if (opportunityUser.userName
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase())) {
+          _tempSearchedList.add(opportunityUser);
+        }
+      }
+    }
+    setState(() {
+      enrolledUsers = _tempSearchedList;
+      searchedEnrolledUsers = _tempSearchedList;
     });
   }
 
