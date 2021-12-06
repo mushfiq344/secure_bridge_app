@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/Models/bar_chart_model.dart';
+import 'package:secure_bridges_app/features/enrollment/opportunity_happening.dart';
 import 'package:secure_bridges_app/features/org_admin/bar_chart_graph.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -27,8 +28,15 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
   int totalReward = 0;
   int totalEnrolledUser = 0;
   int totalPendingApproval = 0;
+  TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
+    getOpportunities();
+
+    super.initState();
+  }
+
+  void getOpportunities() {
     _orgAdminViewModel.getOpportunities((Map<dynamic, dynamic> body) {
       log("body in class ${body}");
       List<Opportunity> _opportunities = List<Opportunity>.from(
@@ -43,7 +51,6 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
     }, (error) {
       EasyLoading.showError(error);
     });
-    super.initState();
   }
 
   final List<BarChartModel> data = [
@@ -242,20 +249,23 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(kMargin16),
-                                        ),
-                                        color: kPinkBackground,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: kMargin8,
-                                              horizontal: kMargin24),
-                                          child: Text(
-                                            "Pending Approvals[${totalPendingApproval}]",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                      child: GestureDetector(
+                                        onTap: () {},
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                kMargin16),
+                                          ),
+                                          color: kPinkBackground,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: kMargin8,
+                                                horizontal: kMargin24),
+                                            child: Text(
+                                              "Pending Approvals[${totalPendingApproval}]",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -457,8 +467,13 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                               ),
                                             ),
                                             onTap: () {
-                                              EasyLoading.showToast(
-                                                  kComingSoon);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OpportunityHappening(
+                                                            opportunity)),
+                                              );
                                             },
                                           ),
                                         ),

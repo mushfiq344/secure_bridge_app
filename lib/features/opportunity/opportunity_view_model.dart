@@ -39,12 +39,13 @@ class OpportunityViewModel {
     try {
       EasyLoading.show(status: kLoading);
       var data = {'opportunity_id': oppurtunityId, 'user_id': userId};
+      print('data $data');
       // EasyLoading.show(status: kLoading);
       var res = await Network()
           .postData(data, "${USER_OPPORTUNITY_RELATED_INFO_URL}");
       var body = json.decode(res.body);
       // log("res ${res.statusCode}");
-      log("body : ${body}");
+      log("bodyssss : ${body}");
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
         return Future.value(body);
@@ -53,66 +54,6 @@ class OpportunityViewModel {
       }
     } catch (e) {
       EasyLoading.dismiss();
-    }
-  }
-
-  Widget getUserEnrollOption(BuildContext context, String status, int userCode,
-      int opportunityId, int userId) {
-    if (status == kApproved) {
-      return Row(
-        children: [
-          Expanded(
-              child: Text(
-                  "User validation code for this opportunity is ${userCode.toString()}")),
-        ],
-      );
-    }
-    if (status == kRequested) {
-      return Container(
-        height: 70,
-        child: Row(
-          children: [
-            Expanded(
-                child: PAButton(
-              "Approve",
-              true,
-              () {
-                _changeUserOpportunityStatus(context, opportunityId, userId);
-              },
-              textColor: Colors.orange,
-              fillColor: kGreyBackgroundColor,
-            )),
-          ],
-        ),
-      );
-    }
-  }
-
-  void _changeUserOpportunityStatus(
-      BuildContext context, int opportunityId, int userId) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var data = {
-        'opportunity_id': opportunityId,
-        'user_id': userId,
-        'status': 1
-      };
-      // EasyLoading.show(status: kLoading);
-      var res = await Network()
-          .putData(data, "${USER_OPPORTUNITIES_URL}/${userId.toString()}");
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body : ${body}");
-      if (res.statusCode == 200) {
-        EasyLoading.showSuccess(body["messaage"]);
-        Navigator.of(context).pop();
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
     }
   }
 

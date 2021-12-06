@@ -114,6 +114,9 @@ flutter:
     - images/ic_pizza.png
     - images/ic_notification_inactive.png
     - images/ic_notification_active.png
+    - images/ic_enrollment.png
+    - images/im_qr_code.png
+    - images/ic_search.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
