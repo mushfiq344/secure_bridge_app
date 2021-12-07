@@ -4,6 +4,7 @@ import 'package:secure_bridges_app/utls/dimens.dart';
 
 InputDecoration customInputDecoration(String hintText,
     {Color fillColor: Colors.white,
+    Color borderColor: Colors.white,
     bool showPrefixIcon = false,
     showSuffixIcon = false,
     String prefixIconPath,
@@ -20,13 +21,13 @@ InputDecoration customInputDecoration(String hintText,
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(kRadius10),
         borderSide: BorderSide(
-          color: fillColor,
+          color: borderColor,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(kRadius10),
         borderSide: BorderSide(
-          color: Colors.transparent,
+          color: borderColor,
           width: 1.0,
         ),
       ),

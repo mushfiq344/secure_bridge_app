@@ -11,6 +11,7 @@ import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 
 import 'package:secure_bridges_app/features/payment/payment_home.dart';
+import 'package:secure_bridges_app/features/profile/profile_form.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/features/user/user_home.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
@@ -33,11 +34,19 @@ class _CustomDrawerState extends State<CustomDrawer> {
   AuthenticationViewModel _authenticationViewModel = AuthenticationViewModel();
   UserViewModel _userViewModel = UserViewModel();
   bool hasPermissionToCreate = false;
+  int userType;
+  int profileImage;
 
   @override
   void initState() {
     loadUserData();
     super.initState();
+  }
+
+  @override
+  update(Observable observable, String notifyName, Map map) {
+    ///do your work
+    loadUserData();
   }
 
   void loadUserData() {
@@ -135,7 +144,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   style: TextStyle(
                       fontSize: kMargin22, fontWeight: FontWeight.w400)),
               onTap: () {
-                EasyLoading.showToast(kComingSoon);
+                Navigator.push(context,
+                    new MaterialPageRoute(builder: (context) => ProfileForm()));
                 // Here you can give your route to navigate
               },
             ),
