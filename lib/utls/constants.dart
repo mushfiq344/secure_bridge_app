@@ -28,6 +28,7 @@ const kImageNameWithExtension = "Image name with extension";
 const kImage = "Image";
 const IMAGE_URL_PREFIX = "data:image/png;base64,";
 const kUploadCover = "Upload Cover Image";
+const kUploadProfile = "Upload Profile Image";
 const kUploadIcon = "Upload Icon Image";
 const kAvatarIconPath = "images/ic_avatar.png";
 const kRightArrowIconPath = "images/ic_right_arrow.png";
@@ -57,6 +58,9 @@ const kInactiveNotificationIconPath = "images/ic_notification_inactive.png";
 const kEnrollmentIconPath = "images/ic_enrollment.png";
 const kQrCodeImagePath = "images/im_qr_code.png";
 const kSearchIconPath = "images/ic_search.png";
+const GENDER_OPTIONS = ['Male', 'Female', 'Others'];
+const GENDER_VALUES = {"Male": 0, "Female": 1, "Others": 2};
+const userProfileImagePath = 'uploads/images/profiles/';
 const String kNavigationExamplePage = '''
 <!DOCTYPE html><html>
 <head><title>Navigation Delegate Example</title></head>

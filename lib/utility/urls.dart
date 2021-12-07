@@ -1,5 +1,5 @@
 const BASE_URL = "http://securebridges.ubitrixbd.com/";
-// const BASE_URL = "http://c7aa-103-98-106-1.ngrok.io/";
+// const BASE_URL = "https://9dcc-103-98-106-1.ngrok.io/";
 const SIGN_IN_URL = "api/login";
 const OPPORTUNITIES_URL = "api/opportunities";
 const FETCH_OPPORTUNITIES_URL = "api/fetch-opportunities";
@@ -19,3 +19,4 @@ const FORGOT_PASSWORD_URL = "api/password/email";
 const NOTIFICATIONS_URL = "api/notifications";
 const PLANS_URL = "api/org-admin/plans";
 const COMPLETE_REGISTRATION_URL = "api/complete-registration";
+const PROFILE_URL = "api/profile";

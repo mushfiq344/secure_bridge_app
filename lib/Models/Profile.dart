@@ -4,7 +4,7 @@ class Profile {
   String fullName;
   String photo;
   String address;
-  String gender;
+  int gender;
 
   Profile(
       {this.id,
