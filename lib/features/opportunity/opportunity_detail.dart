@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/Models/User.dart';
+import 'package:secure_bridges_app/features/enrollment/participated_user_list.dart';
 import 'package:secure_bridges_app/features/enrollment/pending_approval_list.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
@@ -706,6 +707,28 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                     new MaterialPageRoute(
                                         builder: (context) =>
                                             PendingEnrolledOpportunityUser(
+                                                this.widget.opportunity)));
+                              },
+                                  fillColor: kGreyBackgroundColor,
+                                  textColor: Colors.orange,
+                                  capitalText: false),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: PAButton("View Participated User", true,
+                                  () {
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            ParticipatedUserList(
                                                 this.widget.opportunity)));
                               },
                                   fillColor: kGreyBackgroundColor,
