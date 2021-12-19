@@ -9,8 +9,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
-import 'package:secure_bridges_app/features/landing/home.dart';
+import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -637,7 +638,11 @@ class _OpportunityFormState extends State<OpportunityForm> {
         print("success");
         EasyLoading.dismiss();
         EasyLoading.showSuccess(body["message"]);
-        Navigator.of(context).pop(true);
+        await Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => OrgAdminHome()),
+          (route) => false,
+        );
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);
@@ -681,7 +686,11 @@ class _OpportunityFormState extends State<OpportunityForm> {
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
         EasyLoading.showSuccess(body["message"]);
-        Navigator.of(context).pop(true);
+        await Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => OrgAdminHome()),
+          (route) => false,
+        );
       } else {
         EasyLoading.dismiss();
         EasyLoading.showError(body['message']);

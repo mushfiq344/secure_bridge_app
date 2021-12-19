@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/features/authentication/select_account_type.dart';
-import 'package:secure_bridges_app/features/landing/home.dart';
+import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
+import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -81,10 +82,10 @@ class _CheckAuthState extends State<CheckAuth> {
           if (regCompleted < 2) {
             child = PlansList();
           } else {
-            child = Home();
+            child = OrgAdminHome();
           }
         } else {
-          child = Home();
+          child = LandingSearchPage();
         }
       }
       // child = SelectAccountType();

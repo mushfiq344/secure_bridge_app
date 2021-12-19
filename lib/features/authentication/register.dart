@@ -8,7 +8,7 @@ import 'package:secure_bridges_app/features/authentication/authentication_view_m
 import 'package:secure_bridges_app/features/authentication/select_account_type.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
-import 'package:secure_bridges_app/features/landing/home.dart';
+import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -280,7 +280,8 @@ class _RegisterState extends State<Register> {
                                   await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Home()),
+                                        builder: (context) =>
+                                            LandingSearchPage()),
                                     (route) => false,
                                   );
                                 }
@@ -288,7 +289,8 @@ class _RegisterState extends State<Register> {
                             } else {
                               await Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(builder: (context) => Home()),
+                                MaterialPageRoute(
+                                    builder: (context) => LandingSearchPage()),
                                 (route) => false,
                               );
                             }

@@ -7,13 +7,16 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/Models/bar_chart_model.dart';
 import 'package:secure_bridges_app/features/enrollment/opportunity_happening.dart';
+import 'package:secure_bridges_app/features/landing/drawer_menu.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
 import 'package:secure_bridges_app/features/org_admin/bar_chart_graph.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart';
+import 'package:secure_bridges_app/features/user/user_view_model.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
-
+import 'package:secure_bridges_app/Models/User.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class OrgAdminHome extends StatefulWidget {
@@ -29,10 +32,12 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
   int totalEnrolledUser = 0;
   int totalPendingApproval = 0;
   TextEditingController _searchController = TextEditingController();
+  UserViewModel _userViewModel = UserViewModel();
+  User currentUser;
   @override
   void initState() {
     getOpportunities();
-
+    _loadUserData();
     super.initState();
   }
 
@@ -47,6 +52,17 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
         totalReward = body["data"]["total_reward"];
         totalEnrolledUser = body["data"]["total_enrolled_users"];
         totalPendingApproval = body["data"]["total_pending_approval"];
+      });
+    }, (error) {
+      EasyLoading.showError(error);
+    });
+  }
+
+  _loadUserData() {
+    _userViewModel.loadUserData((Map<dynamic, dynamic> user) {
+      setState(() {
+        print('user json 2 $user');
+        currentUser = User.fromJson(user);
       });
     }, (error) {
       EasyLoading.showError(error);
@@ -98,6 +114,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
           title: Text(kOpportunities),
           backgroundColor: kPurpleColor,
         ),
+        drawer: CustomDrawer(currentUser),
         body: Container(
           alignment: Alignment.center,
           child: SingleChildScrollView(
@@ -346,144 +363,158 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                       ...opportunities.map((opportunity) {
                         String coverUrl =
                             "${BASE_URL}${opportunityUploadPath}${opportunity.coverImage}";
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: kMargin10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(kMargin35),
-                            ),
-                            width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: kMargin32, vertical: kMargin14),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${opportunity.title}",
-                                    style: TextStyle(
-                                        fontSize: kMargin14,
-                                        fontWeight: FontWeight.bold,
-                                        color: kPurpleColor),
-                                  ),
-                                  SizedBox(
-                                    height: kMargin8,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                kMargin16),
+                        return GestureDetector(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: kMargin10),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(kMargin35),
+                              ),
+                              width: MediaQuery.of(context).size.width,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: kMargin32, vertical: kMargin14),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${opportunity.title}",
+                                      style: TextStyle(
+                                          fontSize: kMargin14,
+                                          fontWeight: FontWeight.bold,
+                                          color: kPurpleColor),
+                                    ),
+                                    SizedBox(
+                                      height: kMargin8,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      kMargin16),
+                                            ),
+                                            child: AspectRatio(
+                                              aspectRatio: 1 / 1,
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(kRadius10)),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: "${coverUrl}",
+                                                  placeholder: (context, url) =>
+                                                      Image(
+                                                          image: AssetImage(
+                                                              kPlaceholderImagePath)),
+                                                  errorWidget: (context, url,
+                                                          error) =>
+                                                      Image(
+                                                          image: AssetImage(
+                                                              kPlaceholderImagePath)),
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ),
                                           ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
                                           child: AspectRatio(
                                             aspectRatio: 1 / 1,
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(kRadius10)),
-                                              child: CachedNetworkImage(
-                                                imageUrl: "${coverUrl}",
-                                                placeholder: (context, url) =>
-                                                    Image(
-                                                        image: AssetImage(
-                                                            kPlaceholderImagePath)),
-                                                errorWidget: (context, url,
-                                                        error) =>
-                                                    Image(
-                                                        image: AssetImage(
-                                                            kPlaceholderImagePath)),
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: AspectRatio(
-                                          aspectRatio: 1 / 1,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Start on ${opportunity.opportunityDate}",
-                                                  style: TextStyle(
-                                                      fontSize: kMargin12,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: kPurpleColor),
-                                                ),
-                                                SizedBox(
-                                                  height: kMargin10,
-                                                ),
-                                                Text(
-                                                  "Offered by ${opportunity.createdBy.name}",
-                                                  style: TextStyle(
-                                                      fontSize: kMargin12,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: kPurpleColor),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: AspectRatio(
-                                          aspectRatio: 1 / 1,
-                                          child: GestureDetector(
-                                            child: Card(
-                                              color: kBlackBackground,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        kMargin16),
-                                              ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5),
                                               child: Column(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment.start,
                                                 children: [
-                                                  Image(
-                                                      image: AssetImage(
-                                                          kRightArrowWhiteIconPath)),
+                                                  Text(
+                                                    "Start on ${opportunity.opportunityDate}",
+                                                    style: TextStyle(
+                                                        fontSize: kMargin12,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: kPurpleColor),
+                                                  ),
                                                   SizedBox(
                                                     height: kMargin10,
                                                   ),
                                                   Text(
-                                                    "Run",
+                                                    "Offered by ${opportunity.createdBy.name}",
                                                     style: TextStyle(
-                                                        color: Colors.white),
-                                                  )
+                                                        fontSize: kMargin12,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: kPurpleColor),
+                                                  ),
                                                 ],
                                               ),
                                             ),
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OpportunityHappening(
-                                                            opportunity)),
-                                              );
-                                            },
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        Expanded(
+                                          flex: 1,
+                                          child: AspectRatio(
+                                            aspectRatio: 1 / 1,
+                                            child: GestureDetector(
+                                              child: Card(
+                                                color: kBlackBackground,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          kMargin16),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Image(
+                                                        image: AssetImage(
+                                                            kRightArrowWhiteIconPath)),
+                                                    SizedBox(
+                                                      height: kMargin10,
+                                                    ),
+                                                    Text(
+                                                      "Run",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OpportunityHappening(
+                                                              opportunity)),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) => OpportunityDetail(
+                                        opportunity,
+                                        opportunityUploadPath,
+                                        currentUser))).then((value) {
+                              getOpportunities();
+                            });
+                          },
                         );
                       })
                     ],

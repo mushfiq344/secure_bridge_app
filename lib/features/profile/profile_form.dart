@@ -10,8 +10,10 @@ import 'package:flutter_observer/Observable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:secure_bridges_app/Models/Profile.dart';
 import 'package:secure_bridges_app/Models/User.dart';
-import 'package:secure_bridges_app/features/landing/home.dart';
+import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
+import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/features/profile/profile_view_model.dart';
+import 'package:secure_bridges_app/features/user/user_view_model.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -26,6 +28,8 @@ class ProfileForm extends StatefulWidget {
 
 class _ProfileFormState extends State<ProfileForm> {
   ProfileViewModel _profileViewModel = ProfileViewModel();
+  UserViewModel _userViewModel = UserViewModel();
+  User currentUser;
   final _formKey = GlobalKey<FormBuilderState>();
   final _genderKey = GlobalKey<FormBuilderFieldState>();
   final TextEditingController fullNameController = TextEditingController();
@@ -75,8 +79,19 @@ class _ProfileFormState extends State<ProfileForm> {
     }
   }
 
+  _loadUserData() {
+    _userViewModel.loadUserData((Map<dynamic, dynamic> user) {
+      setState(() {
+        currentUser = User.fromJson(user);
+      });
+    }, (error) {
+      EasyLoading.showError(error);
+    });
+  }
+
   @override
   void initState() {
+    _loadUserData();
     loadProfileData();
 
     super.initState();
@@ -86,6 +101,10 @@ class _ProfileFormState extends State<ProfileForm> {
     _profileViewModel.getProfile((Map<dynamic, dynamic> profileJson) {
       if (profileJson != null) {
         setProfileData(profileJson);
+      } else {
+        setState(() {
+          fullNameController.text = currentUser.name;
+        });
       }
     }, (error) {
       EasyLoading.showError(error);
@@ -290,18 +309,29 @@ class _ProfileFormState extends State<ProfileForm> {
                             _profileViewModel.createProfile(data,
                                 (success) async {
                               await EasyLoading.showSuccess(success);
-
-                              await Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => Home()),
-                                (route) => false,
-                              );
+                              if (currentUser.userType == 0) {
+                                await Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          LandingSearchPage()),
+                                  (route) => false,
+                                );
+                              } else if (currentUser.userType == 1) {
+                                await Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => OrgAdminHome()),
+                                  (route) => false,
+                                );
+                              }
                             }, (error) {
                               EasyLoading.showError(error);
                             });
                           }
                         } else {
                           data['id'] = profile.id;
+                          data['user_id'] = currentUser.id;
                           if (_profileImageAreaMap[kImage] != null) {
                             data['profile_image'] =
                                 _profileImageAreaMap[kImage];
@@ -311,11 +341,21 @@ class _ProfileFormState extends State<ProfileForm> {
                               (success) async {
                             await EasyLoading.showSuccess(success);
 
-                            await Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => Home()),
-                              (route) => false,
-                            );
+                            if (currentUser.userType == 0) {
+                              await Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LandingSearchPage()),
+                                (route) => false,
+                              );
+                            } else if (currentUser.userType == 1) {
+                              await Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrgAdminHome()),
+                                (route) => false,
+                              );
+                            }
                           }, (error) {
                             EasyLoading.showError(error);
                           });

@@ -59,12 +59,12 @@ class ProfileViewModel {
   updateProfile(Map<String, dynamic> data, _success, _error) async {
     try {
       EasyLoading.show(status: kLoading);
-
+      print("data $data");
       // EasyLoading.show(status: kLoading);
       var res = await Network().putData(data, "${PROFILE_URL}/${data["id"]}");
       var body = json.decode(res.body);
       // log("res ${res.statusCode}");
-      log("bodyssss : ${body}");
+      log("bodyssss : ${body} ${res.statusCode}");
       if (res.statusCode == 200) {
         SharedPreferences localStorage = await SharedPreferences.getInstance();
         localStorage.setString('user', json.encode(body['data']['user']));
