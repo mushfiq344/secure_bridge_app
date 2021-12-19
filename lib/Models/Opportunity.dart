@@ -10,7 +10,7 @@ class Opportunity {
   int duration;
   String reward;
 
-  String type;
+  int type;
   String coverImage;
   String iconImage;
   String createdAt;

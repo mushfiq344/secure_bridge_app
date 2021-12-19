@@ -28,12 +28,12 @@ import 'package:secure_bridges_app/utls/dimens.dart';
 
 import 'package:secure_bridges_app/widgets/PAButton.dart';
 
-class Home extends StatefulWidget {
+class LandingSearchPage extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _LandingSearchPageState createState() => _LandingSearchPageState();
 }
 
-class _HomeState extends State<Home> with Observer {
+class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   LandingViewModel _landingViewModel = LandingViewModel();
   List<int> userWishes = [];
   List<int> userEnrollments = [];

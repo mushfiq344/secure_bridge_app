@@ -7,7 +7,8 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:secure_bridges_app/Models/Plan.dart';
 import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
-import 'package:secure_bridges_app/features/landing/home.dart';
+import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
+import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/features/payment/payment_home.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_view_model.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
@@ -227,7 +228,7 @@ class _PlansListState extends State<PlansList> {
                 _authenticationViewModel.completeRegistration(1, () async {
                   await Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => Home()),
+                    MaterialPageRoute(builder: (context) => OrgAdminHome()),
                     (route) => false,
                   );
                 }, (error) {
@@ -297,7 +298,8 @@ class _PlansListState extends State<PlansList> {
                               () async {
                             await Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (context) => Home()),
+                              MaterialPageRoute(
+                                  builder: (context) => OrgAdminHome()),
                               (route) => false,
                             );
                           }, (error) {
@@ -306,7 +308,8 @@ class _PlansListState extends State<PlansList> {
                         } else {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => Home()),
+                            MaterialPageRoute(
+                                builder: (context) => OrgAdminHome()),
                             (route) => false,
                           );
                         }

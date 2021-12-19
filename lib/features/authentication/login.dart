@@ -8,9 +8,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:secure_bridges_app/features/authentication/forgot_password.dart';
 import 'package:secure_bridges_app/features/authentication/register.dart';
 import 'package:secure_bridges_app/features/authentication/select_account_type.dart';
+import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
-import 'package:secure_bridges_app/features/landing/home.dart';
+import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -371,11 +372,19 @@ class _LoginState extends State<Login> {
             (route) => false,
           );
         } else {
-          await Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => Home()),
-            (route) => false,
-          );
+          if (body['data']['user']['user_type'] == 0) {
+            await Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => LandingSearchPage()),
+              (route) => false,
+            );
+          } else if (body['data']['user']['user_type'] == 1) {
+            await Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => OrgAdminHome()),
+              (route) => false,
+            );
+          }
         }
       } else {
         EasyLoading.dismiss();
@@ -423,7 +432,7 @@ class _LoginState extends State<Login> {
             } else {
               await Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => LandingSearchPage()),
                 (route) => false,
               );
             }
@@ -431,7 +440,7 @@ class _LoginState extends State<Login> {
         } else {
           await Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => Home()),
+            MaterialPageRoute(builder: (context) => LandingSearchPage()),
             (route) => false,
           );
         }

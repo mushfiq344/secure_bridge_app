@@ -33,6 +33,7 @@ class _UserHomeState extends State<UserHome> {
   int userType = 0;
   UserViewModel _userViewModel = UserViewModel();
   OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
+  List<Opportunity> allOpportunities = <Opportunity>[];
   List<Opportunity> opportunities = <Opportunity>[];
   String opportunityUploadPath;
   List<int> userWishes = [];
@@ -56,7 +57,7 @@ class _UserHomeState extends State<UserHome> {
       List<Opportunity> _opportunities = List<Opportunity>.from(
           body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
       setState(() {
-        opportunities = _opportunities;
+        allOpportunities = _opportunities;
         opportunities = _opportunities;
         opportunityUploadPath = body["data"]["upload_path"];
         userWishes = body['data']['user_wishes'].cast<int>();
@@ -118,73 +119,113 @@ class _UserHomeState extends State<UserHome> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: AspectRatio(
-                        aspectRatio: 1 / 1,
+                      child: GestureDetector(
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Card(
+                            color: kPurpleBackGround,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(26)),
+                            child: Image(
+                              image: AssetImage(kHomeWhiteIconPath),
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            opportunities = allOpportunities;
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
                         child: Card(
                           color: kPurpleBackGround,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(26)),
-                          child: Image(
-                            image: AssetImage(kHomeWhiteIconPath),
+                          child: AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: Card(
+                              color: kPurpleBackGround,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(26)),
+                              child: Image(
+                                image: AssetImage(kMultipleUsersIconPath),
+                              ),
+                            ),
                           ),
                         ),
+                        onTap: () {
+                          List<Opportunity> filteredOpportunities =
+                              allOpportunities.where((element) {
+                            return element.type == 0;
+                          }).toList();
+                          setState(() {
+                            opportunities = filteredOpportunities;
+                          });
+                        },
                       ),
                     ),
                     Expanded(
                       flex: 1,
-                      child: Card(
-                        color: kPurpleBackGround,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(26)),
-                        child: AspectRatio(
-                          aspectRatio: 1 / 1,
-                          child: Card(
-                            color: kPurpleBackGround,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(26)),
-                            child: Image(
-                              image: AssetImage(kMultipleUsersIconPath),
+                      child: GestureDetector(
+                        child: Card(
+                          color: kPurpleBackGround,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(26)),
+                          child: AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: Card(
+                              color: kPurpleBackGround,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(26)),
+                              child: Image(
+                                image: AssetImage(kAidIconPath),
+                              ),
                             ),
                           ),
                         ),
+                        onTap: () {
+                          List<Opportunity> filteredOpportunities =
+                              allOpportunities.where((element) {
+                            return element.type == 1;
+                          }).toList();
+                          setState(() {
+                            opportunities = filteredOpportunities;
+                          });
+                        },
                       ),
                     ),
                     Expanded(
                       flex: 1,
-                      child: Card(
-                        color: kPurpleBackGround,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(26)),
-                        child: AspectRatio(
-                          aspectRatio: 1 / 1,
-                          child: Card(
-                            color: kPurpleBackGround,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(26)),
-                            child: Image(
-                              image: AssetImage(kAidIconPath),
+                      child: GestureDetector(
+                        child: Card(
+                          color: kPurpleBackGround,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(26)),
+                          child: AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: Card(
+                              color: kPurpleBackGround,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(26)),
+                              child: Image(
+                                image: AssetImage(kPizzaIconPath),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Card(
-                        color: kPurpleBackGround,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(26)),
-                        child: AspectRatio(
-                          aspectRatio: 1 / 1,
-                          child: Card(
-                            color: kPurpleBackGround,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(26)),
-                            child: Image(
-                              image: AssetImage(kPizzaIconPath),
-                            ),
-                          ),
-                        ),
+                        onTap: () {
+                          List<Opportunity> filteredOpportunities =
+                              allOpportunities.where((element) {
+                            return element.type == 2;
+                          }).toList();
+                          setState(() {
+                            opportunities = filteredOpportunities;
+                          });
+                        },
                       ),
                     ),
                   ],
