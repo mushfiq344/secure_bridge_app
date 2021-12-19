@@ -37,7 +37,6 @@ class _OpportunityFormState extends State<OpportunityForm> {
       TextEditingController();
   final TextEditingController durationController = TextEditingController();
   final TextEditingController rewardController = TextEditingController();
-  final TextEditingController typeController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   Map<String, dynamic> _coverImageAreaMap = Map();
   Map<String, dynamic> _iconImageAreaMap = Map();
@@ -159,7 +158,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
       opportunityDateController.text = widget.oppotunity.opportunityDate;
       durationController.text = widget.oppotunity.duration.toString();
       rewardController.text = widget.oppotunity.reward;
-      typeController.text = widget.oppotunity.type;
+
       locationController.text = widget.oppotunity.location;
     }
     super.initState();
