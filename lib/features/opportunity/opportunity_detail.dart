@@ -39,6 +39,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   final TextEditingController codeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String code;
+  int opportunityStatus = OPPORTUNITY_STATUS_VALUES["Drafted"];
   @override
   initState() {
     super.initState();
@@ -48,8 +49,9 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   void loadOpportunityDetail() {
     _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,
         (Map<String, dynamic> body) {
-      log("body model $body");
+      log("body model ${body['data']['opportunity']}");
       setState(() {
+        opportunityStatus = body['data']['opportunity']['status'];
         userEnrolled = body['data']['is_user_enrolled'];
         inUserWithList = body['data']['in_user_wish_list'];
         userCode = body['data']['user_code'];
@@ -567,7 +569,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                               )
                             : Expanded(
                                 flex: 1,
-                                child: widget.currentUser.userType == 0
+                                child: widget.currentUser.userType == 0 &&
+                                        opportunityStatus ==
+                                            OPPORTUNITY_STATUS_VALUES[
+                                                "Published"]
                                     ? GestureDetector(
                                         child: Card(
                                             color: kPurpleColor,
@@ -740,6 +745,52 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                         SizedBox(
                           height: 10,
                         ),
+                        opportunityStatus ==
+                                    OPPORTUNITY_STATUS_VALUES['Published'] ||
+                                opportunityStatus ==
+                                    OPPORTUNITY_STATUS_VALUES[
+                                        'Currently Happening']
+                            ? Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: PAButton(
+                                        opportunityStatus ==
+                                                OPPORTUNITY_STATUS_VALUES[
+                                                    'Published']
+                                            ? "Run"
+                                            : "STOP",
+                                        true, () {
+                                      if (opportunityStatus ==
+                                          OPPORTUNITY_STATUS_VALUES[
+                                              'Published']) {
+                                        var data = widget.opportunity.toJson();
+                                        data['status'] =
+                                            OPPORTUNITY_STATUS_VALUES[
+                                                'Currently Happening'];
+                                        _opportunityViewModel
+                                            .updateOpportunity(data, () {
+                                          loadOpportunityDetail();
+                                        });
+                                      } else if (opportunityStatus ==
+                                          OPPORTUNITY_STATUS_VALUES[
+                                              'Currently Happening']) {
+                                        var data = widget.opportunity.toJson();
+                                        data['status'] =
+                                            OPPORTUNITY_STATUS_VALUES['Ended'];
+                                        _opportunityViewModel
+                                            .updateOpportunity(data, () {
+                                          loadOpportunityDetail();
+                                        });
+                                      }
+                                    },
+                                        fillColor: kGreyBackgroundColor,
+                                        textColor: kPurpleColor,
+                                        capitalText: false),
+                                  ),
+                                ],
+                              )
+                            : SizedBox(),
                         // Row(
                         //   children: [
                         //     Expanded(
@@ -858,34 +909,37 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   Widget showStatus(BuildContext context, String status) {
     Widget response = Text(" ");
     if (status == kRequested) {
-      response = GestureDetector(
-        child: Card(
-            color: kInactiveColor,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: kMargin16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image(image: AssetImage(kIconAdditionWhitePath)),
-                  SizedBox(
-                    width: kMargin10,
-                  ),
-                  Text(
-                    "pending approval",
-                    style: TextStyle(color: Colors.white, fontSize: kMargin14),
-                  ),
-                ],
-              ),
-            )),
-        onTap: () {
-          _opportunityViewModel
-              .removeFromEnrollments(context, widget.opportunity, (success) {
-            loadOpportunityDetail();
-          }, (error) {
-            EasyLoading.showError(error);
-          });
-        },
-      );
+      response = opportunityStatus == OPPORTUNITY_STATUS_VALUES['Published']
+          ? GestureDetector(
+              child: Card(
+                  color: kInactiveColor,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: kMargin16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(image: AssetImage(kIconAdditionWhitePath)),
+                        SizedBox(
+                          width: kMargin10,
+                        ),
+                        Text(
+                          "pending approval",
+                          style: TextStyle(
+                              color: Colors.white, fontSize: kMargin14),
+                        ),
+                      ],
+                    ),
+                  )),
+              onTap: () {
+                _opportunityViewModel.removeFromEnrollments(
+                    context, widget.opportunity, (success) {
+                  loadOpportunityDetail();
+                }, (error) {
+                  EasyLoading.showError(error);
+                });
+              },
+            )
+          : SizedBox();
     }
     if (status == kParticipated) {
       return SizedBox();

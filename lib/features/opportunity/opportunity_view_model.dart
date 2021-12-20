@@ -20,7 +20,7 @@ class OpportunityViewModel {
           await Network().getData("${OPPORTUNITIES_URL}/${oppurtunityId}");
       var body = json.decode(res.body);
       // log("res ${res.statusCode}");
-      log("body : ${body}");
+
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
         _onSuccess(body);

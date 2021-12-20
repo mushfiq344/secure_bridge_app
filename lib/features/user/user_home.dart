@@ -529,186 +529,205 @@ class _UserHomeState extends State<UserHome> {
                         SizedBox(
                           width: 5,
                         ),
-                        GestureDetector(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(kIconBackgroundPath),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: userEnrollments.contains(item.id)
-                                ? Image(
-                                    width: 32,
-                                    height: 32,
-                                    image: AssetImage(kIconAdditionWhitePath),
-                                  )
-                                : Image(
-                                    width: 32,
-                                    height: 32,
-                                    image: AssetImage(kIconAdditionPath),
+                        item.status == OPPORTUNITY_STATUS_VALUES['Published']
+                            ? GestureDetector(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(kIconBackgroundPath),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                          ),
-                          onTap: () {
-                            if (userEnrollments.contains(item.id)) {
-                              _opportunityViewModel.removeFromEnrollments(
-                                  context, item, (success) {
-                                _userViewModel.loadUserData(
-                                    (Map<dynamic, dynamic> user) {
-                                  setState(() {
-                                    userId = user['id'];
-                                    name = user['name'];
-                                    email = user['email'];
-                                    profilePictureUrl = user['profile_image'];
-                                    print("user type ${user['user_type']}");
-                                    userType = user['user_type'];
-                                  });
-                                }, (error) {
-                                  EasyLoading.showError(error);
-                                });
-                                _userViewModel.getOpportunities(
-                                    (Map<dynamic, dynamic> body) {
-                                  log("body in class ${body}");
-                                  List<Opportunity> _opportunities =
-                                      List<Opportunity>.from(body['data']
-                                              ['opportunities']
-                                          .map((i) => Opportunity.fromJson(i)));
-                                  setState(() {
-                                    opportunities = _opportunities;
-                                    opportunities = _opportunities;
-                                    opportunityUploadPath =
-                                        body["data"]["upload_path"];
-                                    userWishes =
-                                        body['data']['user_wishes'].cast<int>();
-                                    userEnrollments = body['data']
-                                            ['user_enrollments']
-                                        .cast<int>();
-                                  });
-                                }, (error) {
-                                  EasyLoading.showError(error);
-                                });
-                              }, (error) {
-                                EasyLoading.showError(error);
-                              });
-                            } else {
-                              _opportunityViewModel.enrollUser(context, item,
-                                  () {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => new AlertDialog(
-                                          backgroundColor: Colors.transparent,
-                                          contentPadding: EdgeInsets.zero,
-                                          content: Builder(
-                                            builder: (context) {
-                                              // Get available height and width of the build area of this widget. Make a choice depending on the size.
-                                              var height =
-                                                  MediaQuery.of(context)
-                                                      .size
-                                                      .height;
-                                              var width = MediaQuery.of(context)
-                                                  .size
-                                                  .width;
+                                  child: userEnrollments.contains(item.id)
+                                      ? Image(
+                                          width: 32,
+                                          height: 32,
+                                          image: AssetImage(
+                                              kIconAdditionWhitePath),
+                                        )
+                                      : Image(
+                                          width: 32,
+                                          height: 32,
+                                          image: AssetImage(kIconAdditionPath),
+                                        ),
+                                ),
+                                onTap: () {
+                                  if (userEnrollments.contains(item.id)) {
+                                    _opportunityViewModel.removeFromEnrollments(
+                                        context, item, (success) {
+                                      _userViewModel.loadUserData(
+                                          (Map<dynamic, dynamic> user) {
+                                        setState(() {
+                                          userId = user['id'];
+                                          name = user['name'];
+                                          email = user['email'];
+                                          profilePictureUrl =
+                                              user['profile_image'];
+                                          print(
+                                              "user type ${user['user_type']}");
+                                          userType = user['user_type'];
+                                        });
+                                      }, (error) {
+                                        EasyLoading.showError(error);
+                                      });
+                                      _userViewModel.getOpportunities(
+                                          (Map<dynamic, dynamic> body) {
+                                        log("body in class ${body}");
+                                        List<Opportunity> _opportunities =
+                                            List<Opportunity>.from(body['data']
+                                                    ['opportunities']
+                                                .map((i) =>
+                                                    Opportunity.fromJson(i)));
+                                        setState(() {
+                                          opportunities = _opportunities;
+                                          opportunities = _opportunities;
+                                          opportunityUploadPath =
+                                              body["data"]["upload_path"];
+                                          userWishes = body['data']
+                                                  ['user_wishes']
+                                              .cast<int>();
+                                          userEnrollments = body['data']
+                                                  ['user_enrollments']
+                                              .cast<int>();
+                                        });
+                                      }, (error) {
+                                        EasyLoading.showError(error);
+                                      });
+                                    }, (error) {
+                                      EasyLoading.showError(error);
+                                    });
+                                  } else {
+                                    _opportunityViewModel
+                                        .enrollUser(context, item, () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => new AlertDialog(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                contentPadding: EdgeInsets.zero,
+                                                content: Builder(
+                                                  builder: (context) {
+                                                    // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                                    var height =
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height;
+                                                    var width =
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width;
 
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                        kAlertDialogBackgroundColor,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0))),
-                                                height: height * .5,
-                                                width: width * .75,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      vertical: 50,
-                                                      horizontal: 30),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        "ENROLLMENT CONFIRMATION",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontSize: kMargin24,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                kPurpleColor),
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              kAlertDialogBackgroundColor,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      20.0))),
+                                                      height: height * .5,
+                                                      width: width * .75,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 50,
+                                                                horizontal: 30),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              "ENROLLMENT CONFIRMATION",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      kMargin24,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color:
+                                                                      kPurpleColor),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 33,
+                                                            ),
+                                                            Text(
+                                                              "Your request to enroll to the oppoertunity is pending for admin review. You’ll get notification once the request is approved",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 33,
+                                                            ),
+                                                            PAButton(
+                                                              "Ok",
+                                                              true,
+                                                              () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              fillColor:
+                                                                  kPurpleColor,
+                                                            )
+                                                          ],
+                                                        ),
                                                       ),
-                                                      SizedBox(
-                                                        height: 33,
-                                                      ),
-                                                      Text(
-                                                        "Your request to enroll to the oppoertunity is pending for admin review. You’ll get notification once the request is approved",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 33,
-                                                      ),
-                                                      PAButton(
-                                                        "Ok",
-                                                        true,
-                                                        () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        fillColor: kPurpleColor,
-                                                      )
-                                                    ],
-                                                  ),
+                                                    );
+                                                  },
                                                 ),
-                                              );
-                                            },
-                                          ),
-                                        )).then((value) {
-                                  _userViewModel.loadUserData(
-                                      (Map<dynamic, dynamic> user) {
-                                    setState(() {
-                                      userId = user['id'];
-                                      name = user['name'];
-                                      email = user['email'];
-                                      profilePictureUrl = user['profile_image'];
-                                      print("user type ${user['user_type']}");
-                                      userType = user['user_type'];
+                                              )).then((value) {
+                                        _userViewModel.loadUserData(
+                                            (Map<dynamic, dynamic> user) {
+                                          setState(() {
+                                            userId = user['id'];
+                                            name = user['name'];
+                                            email = user['email'];
+                                            profilePictureUrl =
+                                                user['profile_image'];
+                                            print(
+                                                "user type ${user['user_type']}");
+                                            userType = user['user_type'];
+                                          });
+                                        }, (error) {
+                                          EasyLoading.showError(error);
+                                        });
+                                        _userViewModel.getOpportunities(
+                                            (Map<dynamic, dynamic> body) {
+                                          log("body in class ${body}");
+                                          List<Opportunity> _opportunities =
+                                              List<Opportunity>.from(body[
+                                                      'data']['opportunities']
+                                                  .map((i) =>
+                                                      Opportunity.fromJson(i)));
+                                          setState(() {
+                                            opportunities = _opportunities;
+                                            opportunities = _opportunities;
+                                            opportunityUploadPath =
+                                                body["data"]["upload_path"];
+                                            userWishes = body['data']
+                                                    ['user_wishes']
+                                                .cast<int>();
+                                            userEnrollments = body['data']
+                                                    ['user_enrollments']
+                                                .cast<int>();
+                                          });
+                                        }, (error) {
+                                          EasyLoading.showError(error);
+                                        });
+                                      });
+                                    }, (error) {
+                                      EasyLoading.showError(error);
                                     });
-                                  }, (error) {
-                                    EasyLoading.showError(error);
-                                  });
-                                  _userViewModel.getOpportunities(
-                                      (Map<dynamic, dynamic> body) {
-                                    log("body in class ${body}");
-                                    List<Opportunity> _opportunities =
-                                        List<Opportunity>.from(body['data']
-                                                ['opportunities']
-                                            .map((i) =>
-                                                Opportunity.fromJson(i)));
-                                    setState(() {
-                                      opportunities = _opportunities;
-                                      opportunities = _opportunities;
-                                      opportunityUploadPath =
-                                          body["data"]["upload_path"];
-                                      userWishes = body['data']['user_wishes']
-                                          .cast<int>();
-                                      userEnrollments = body['data']
-                                              ['user_enrollments']
-                                          .cast<int>();
-                                    });
-                                  }, (error) {
-                                    EasyLoading.showError(error);
-                                  });
-                                });
-                              }, (error) {
-                                EasyLoading.showError(error);
-                              });
-                            }
-                          },
-                        )
+                                  }
+                                },
+                              )
+                            : SizedBox()
                       ],
                     )
                   ],

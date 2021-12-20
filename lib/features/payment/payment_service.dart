@@ -105,7 +105,7 @@ class StripeService {
 
         // 'transaction_id': transactionId
       };
-      var response = await http.post(StripeService.paymentApiUrl,
+      var response = await http.post(Uri.parse(StripeService.paymentApiUrl),
           body: body, headers: StripeService.headers);
       print("resp : ${response.body}");
       return jsonDecode(response.body);

@@ -167,7 +167,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               builder: (context) =>
                                   UserHome(widget.currentUser))).then((value) {
                         Observable.instance.notifyObservers([
-                          "_HomeState",
+                          "_LandingSearchPageState",
                         ], notifyName: "可以通过notifyName判断通知");
                       });
                       // Here you can give your route to navigate
@@ -199,7 +199,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   if (value != null) {
                                     if (value) {
                                       Observable.instance.notifyObservers([
-                                        "_HomeState",
+                                        "_LandingSearchPageState",
                                       ], notifyName: "可以通过notifyName判断通知");
                                     }
                                   }
