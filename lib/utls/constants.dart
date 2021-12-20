@@ -58,8 +58,38 @@ const kInactiveNotificationIconPath = "images/ic_notification_inactive.png";
 const kEnrollmentIconPath = "images/ic_enrollment.png";
 const kQrCodeImagePath = "images/im_qr_code.png";
 const kSearchIconPath = "images/ic_search.png";
+const kVerifyIconPath = "images/im_verify.png";
+const kArchiveIconPath = "images/ic_archive.png";
+const kStarconPath = "images/ic_star.png";
 const GENDER_OPTIONS = ['Male', 'Female', 'Others'];
 const GENDER_VALUES = {"Male": 0, "Female": 1, "Others": 2};
+
+const OPPORTUNITY_TYPES = ['Shelter', 'Counselling', 'Food'];
+const OPPORTUNITY_TYPES_VALUES = {"Shelter": 0, "Counselling": 1, "Food": 2};
+const OPPORTUNITY_STATUS = [
+  "Drafted",
+  "Published",
+  "Currently Happening",
+  "Ended",
+  "Rewarding",
+  "Finished"
+];
+const OPPORTUNITY_STATUS_VALUES = {
+  "Drafted": 0,
+  "Published": 1,
+  "Currently Happening": 2,
+  "Ended": 3,
+  "Rewarding": 4,
+  "Finished": 5
+};
+const OPPORTUNITY_STATUS_ACTIONS_TEXT = {
+  "Drafted": "Update",
+  "Published": "Pending Requests",
+  "Currently Happening": "End The Event",
+  "Ended": "Start Rewarding",
+  "Rewarding": "Verify",
+  "Finished": "Archived"
+};
 const userProfileImagePath = 'uploads/images/profiles/';
 const String kNavigationExamplePage = '''
 <!DOCTYPE html><html>

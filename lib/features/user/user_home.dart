@@ -127,7 +127,7 @@ class _UserHomeState extends State<UserHome> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(26)),
                             child: Image(
-                              image: AssetImage(kHomeWhiteIconPath),
+                              image: AssetImage(kStarconPath),
                             ),
                           ),
                         ),
@@ -152,7 +152,7 @@ class _UserHomeState extends State<UserHome> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(26)),
                               child: Image(
-                                image: AssetImage(kMultipleUsersIconPath),
+                                image: AssetImage(kHomeWhiteIconPath),
                               ),
                             ),
                           ),
@@ -182,7 +182,7 @@ class _UserHomeState extends State<UserHome> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(26)),
                               child: Image(
-                                image: AssetImage(kAidIconPath),
+                                image: AssetImage(kMultipleUsersIconPath),
                               ),
                             ),
                           ),

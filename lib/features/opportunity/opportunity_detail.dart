@@ -710,7 +710,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                 this.widget.opportunity)));
                               },
                                   fillColor: kGreyBackgroundColor,
-                                  textColor: Colors.orange,
+                                  textColor: kPurpleColor,
                                   capitalText: false),
                             ),
                           ],
@@ -732,7 +732,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                 this.widget.opportunity)));
                               },
                                   fillColor: kGreyBackgroundColor,
-                                  textColor: Colors.orange,
+                                  textColor: kPurpleColor,
                                   capitalText: false),
                             ),
                           ],
@@ -740,83 +740,83 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                         SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: PAButton("Test Code", true, () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
-                                        child: Form(
-                                          key: _formKey,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: TextFormField(
-                                                  style: TextStyle(
-                                                      color: Color(0xFF000000)),
-                                                  cursorColor:
-                                                      Color(0xFF9b9b9b),
-                                                  keyboardType:
-                                                      TextInputType.text,
-                                                  decoration: InputDecoration(
-                                                    prefixIcon: Icon(
-                                                      Icons.approval,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    hintText: "Code",
-                                                    hintStyle: TextStyle(
-                                                        color:
-                                                            Color(0xFF9b9b9b),
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.normal),
-                                                  ),
-                                                  validator: (codeValue) {
-                                                    if (codeValue.isEmpty) {
-                                                      return 'Please enter code';
-                                                    }
-                                                    code = codeValue;
-                                                    return null;
-                                                  },
-                                                ),
-                                              ),
-                                              PAButton(
-                                                'Check',
-                                                true,
-                                                () {
-                                                  if (_formKey.currentState
-                                                      .validate()) {
-                                                    _confirmUser(
-                                                        widget.opportunity.id,
-                                                        code);
-                                                  }
-                                                },
-                                                fillColor: kGreyBackgroundColor,
-                                                textColor: Colors.orange,
-                                                capitalText: false,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    });
-                              },
-                                  fillColor: kGreyBackgroundColor,
-                                  textColor: Colors.orange,
-                                  capitalText: false),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       flex: 1,
+                        //       child: PAButton("Test Code", true, () {
+                        //         showModalBottomSheet(
+                        //             context: context,
+                        //             builder: (context) {
+                        //               return Padding(
+                        //                 padding: EdgeInsets.only(
+                        //                     bottom: MediaQuery.of(context)
+                        //                         .viewInsets
+                        //                         .bottom),
+                        //                 child: Form(
+                        //                   key: _formKey,
+                        //                   child: Column(
+                        //                     mainAxisSize: MainAxisSize.min,
+                        //                     children: <Widget>[
+                        //                       Padding(
+                        //                         padding:
+                        //                             const EdgeInsets.all(8.0),
+                        //                         child: TextFormField(
+                        //                           style: TextStyle(
+                        //                               color: Color(0xFF000000)),
+                        //                           cursorColor:
+                        //                               Color(0xFF9b9b9b),
+                        //                           keyboardType:
+                        //                               TextInputType.text,
+                        //                           decoration: InputDecoration(
+                        //                             prefixIcon: Icon(
+                        //                               Icons.approval,
+                        //                               color: Colors.grey,
+                        //                             ),
+                        //                             hintText: "Code",
+                        //                             hintStyle: TextStyle(
+                        //                                 color:
+                        //                                     Color(0xFF9b9b9b),
+                        //                                 fontSize: 15,
+                        //                                 fontWeight:
+                        //                                     FontWeight.normal),
+                        //                           ),
+                        //                           validator: (codeValue) {
+                        //                             if (codeValue.isEmpty) {
+                        //                               return 'Please enter code';
+                        //                             }
+                        //                             code = codeValue;
+                        //                             return null;
+                        //                           },
+                        //                         ),
+                        //                       ),
+                        //                       PAButton(
+                        //                         'Check',
+                        //                         true,
+                        //                         () {
+                        //                           if (_formKey.currentState
+                        //                               .validate()) {
+                        //                             _confirmUser(
+                        //                                 widget.opportunity.id,
+                        //                                 code);
+                        //                           }
+                        //                         },
+                        //                         fillColor: kGreyBackgroundColor,
+                        //                         textColor: Colors.orange,
+                        //                         capitalText: false,
+                        //                       )
+                        //                     ],
+                        //                   ),
+                        //                 ),
+                        //               );
+                        //             });
+                        //       },
+                        //           fillColor: kGreyBackgroundColor,
+                        //           textColor: Colors.orange,
+                        //           capitalText: false),
+                        //     ),
+                        //   ], bv
+                        // ),
                       ],
                     )
                   else

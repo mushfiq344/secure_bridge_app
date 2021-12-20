@@ -8,6 +8,7 @@ import 'package:secure_bridges_app/features/authentication/authentication_view_m
 import 'package:secure_bridges_app/features/landing/landing_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
+import 'package:secure_bridges_app/features/org_admin/my_opportunity.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 
 import 'package:secure_bridges_app/features/payment/payment_home.dart';
@@ -229,7 +230,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 });
                                 // Here you can give your route to navigate
                               },
-                            )
+                            ),
+                      ListTile(
+                        leading: Image(
+                          height: 25,
+                          width: 25,
+                          image: AssetImage(kOpportunityIconPath),
+                        ),
+                        title: Text('My Opportunity',
+                            style: TextStyle(
+                                fontSize: kMargin22,
+                                fontWeight: FontWeight.w400)),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  //builder: (context) => PaymentHome()
+                                  builder: (context) => MyOpportunity()));
+                          // Here you can give your route to navigate
+                        },
+                      )
                     ],
                   )
                 : SizedBox(),

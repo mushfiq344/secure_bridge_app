@@ -9,6 +9,7 @@ import 'package:secure_bridges_app/Models/bar_chart_model.dart';
 import 'package:secure_bridges_app/features/enrollment/opportunity_happening.dart';
 import 'package:secure_bridges_app/features/landing/drawer_menu.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/org_admin/bar_chart_graph.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
@@ -26,6 +27,7 @@ class OrgAdminHome extends StatefulWidget {
 
 class _OrgAdminHomeState extends State<OrgAdminHome> {
   OrgAdminViewModel _orgAdminViewModel = OrgAdminViewModel();
+  OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
   List<Opportunity> opportunities = <Opportunity>[];
   String opportunityUploadPath;
   int totalReward = 0;
@@ -47,7 +49,10 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
       List<Opportunity> _opportunities = List<Opportunity>.from(
           body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
       setState(() {
-        opportunities = _opportunities;
+        opportunities = _opportunities
+            .where((element) =>
+                element.status == OPPORTUNITY_STATUS_VALUES['Published'])
+            .toList();
         opportunityUploadPath = body["data"]["upload_path"];
         totalReward = body["data"]["total_reward"];
         totalEnrolledUser = body["data"]["total_enrolled_users"];
@@ -492,7 +497,26 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                                       builder: (context) =>
                                                           OpportunityHappening(
                                                               opportunity)),
-                                                );
+                                                ).then((value) {
+                                                  getOpportunities();
+                                                });
+                                                // var data = opportunity.toJson();
+                                                // data['status'] =
+                                                //     OPPORTUNITY_STATUS_VALUES[
+                                                //         'Currently Happening'];
+                                                // _opportunityViewModel
+                                                //     .updateOpportunity(data,
+                                                //         () {
+                                                //   Navigator.push(
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //         builder: (context) =>
+                                                //             OpportunityHappening(
+                                                //                 opportunity)),
+                                                //   ).then((value) {
+                                                //     getOpportunities();
+                                                //   });
+                                                // });
                                               },
                                             ),
                                           ),

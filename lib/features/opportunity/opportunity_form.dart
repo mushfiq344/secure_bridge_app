@@ -9,16 +9,16 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/features/org_admin/my_opportunity.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
-import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:secure_bridges_app/widgets/input_decoration.dart';
 
 class OpportunityForm extends StatefulWidget {
   final Opportunity oppotunity;
@@ -38,6 +38,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
   final TextEditingController durationController = TextEditingController();
   final TextEditingController rewardController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
+  final _opportunityTypeKey = GlobalKey<FormBuilderFieldState>();
   Map<String, dynamic> _coverImageAreaMap = Map();
   Map<String, dynamic> _iconImageAreaMap = Map();
   var _imageNameWithExtension;
@@ -152,14 +153,17 @@ class _OpportunityFormState extends State<OpportunityForm> {
   @override
   void initState() {
     if (widget.oppotunity != null) {
-      titleController.text = widget.oppotunity.title;
-      subTitleController.text = widget.oppotunity.subTitle;
-      descriptionController.text = widget.oppotunity.description;
-      opportunityDateController.text = widget.oppotunity.opportunityDate;
-      durationController.text = widget.oppotunity.duration.toString();
-      rewardController.text = widget.oppotunity.reward;
-
-      locationController.text = widget.oppotunity.location;
+      Future.delayed(const Duration(), () {
+        titleController.text = widget.oppotunity.title;
+        subTitleController.text = widget.oppotunity.subTitle;
+        descriptionController.text = widget.oppotunity.description;
+        opportunityDateController.text = widget.oppotunity.opportunityDate;
+        durationController.text = widget.oppotunity.duration.toString();
+        rewardController.text = widget.oppotunity.reward;
+        _opportunityTypeKey.currentState
+            .setValue(OPPORTUNITY_TYPES[widget.oppotunity.type]);
+        locationController.text = widget.oppotunity.location;
+      });
     }
     super.initState();
   }
@@ -273,15 +277,15 @@ class _OpportunityFormState extends State<OpportunityForm> {
 
                           date = await showDatePicker(
                               context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900),
+                              initialDate:
+                                  DateTime.now().add(Duration(days: 15)),
+                              firstDate: DateTime.now().add(Duration(days: 15)),
                               lastDate: DateTime(2100));
 
                           opportunityDateController.text =
                               DateFormat('yyyy-MM-dd').format(date);
                         },
                       ),
-
                       SizedBox(height: 10),
                       RichText(
                         text: TextSpan(
@@ -329,28 +333,6 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         keyboardType: TextInputType.number,
                       ),
                       SizedBox(height: 10),
-                      // RichText(
-                      //   text: TextSpan(
-                      //     text: "Type",
-                      //     style: TextStyle(
-                      //         color: Colors.black, fontSize: kMargin14),
-                      //     children: <TextSpan>[
-                      //       TextSpan(
-                      //           text: '', style: TextStyle(color: Colors.red)),
-                      //     ],
-                      //   ),
-                      // ),
-                      // SizedBox(height: 10),
-                      // FormBuilderTextField(
-                      //   decoration: _inputDecoration('Type'),
-                      //   controller: typeController,
-                      //   name: 'type',
-                      //   validator: FormBuilderValidators.compose([
-                      //     /*  FormBuilderValidators.required(context),*/
-                      //   ]),
-                      //   keyboardType: TextInputType.text,
-                      // ),
-                      // SizedBox(height: kMargin16),
                       RichText(
                         text: TextSpan(
                           text: "Location",
@@ -372,6 +354,37 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ]),
                         keyboardType: TextInputType.text,
                       ),
+                      SizedBox(height: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: "Type",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '*', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      FormBuilderDropdown(
+                        key: _opportunityTypeKey,
+                        name: 'type',
+                        decoration: customInputDecoration("Type",
+                            borderColor: kBorderColor),
+                        // initialValue: 'Male',
+                        allowClear: true,
+
+                        validator: FormBuilderValidators.compose(
+                            [FormBuilderValidators.required(context)]),
+                        items: OPPORTUNITY_TYPES
+                            .map((type) => DropdownMenuItem(
+                                  value: type,
+                                  child: Text('$type'),
+                                ))
+                            .toList(),
+                      ),
+                      SizedBox(height: 10),
                       SizedBox(height: kMargin16),
                       Row(
                         children: [
@@ -521,20 +534,46 @@ class _OpportunityFormState extends State<OpportunityForm> {
                               },
                               fillColor: kPurpleColor,
                             )
-                          : PAButton(
-                              "Update",
-                              true,
-                              () {
-                                _formKey.currentState.save();
-                                if (_formKey.currentState.validate()) {
-                                  print(_formKey.currentState.value);
+                          : Column(
+                              children: [
+                                PAButton(
+                                  "Update",
+                                  true,
+                                  () {
+                                    _formKey.currentState.save();
+                                    if (_formKey.currentState.validate()) {
+                                      print(_formKey.currentState.value);
 
-                                  _updateOpportunity();
-                                } else {
-                                  EasyLoading.showError("validation failed");
-                                }
-                              },
-                              fillColor: kPurpleColor,
+                                      _updateOpportunity();
+                                    } else {
+                                      EasyLoading.showError(
+                                          "validation failed");
+                                    }
+                                  },
+                                  fillColor: kPurpleColor,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                PAButton(
+                                  "Publish",
+                                  true,
+                                  () {
+                                    _formKey.currentState.save();
+                                    if (_formKey.currentState.validate()) {
+                                      print(_formKey.currentState.value);
+
+                                      _updateOpportunity(
+                                          status: OPPORTUNITY_STATUS_VALUES[
+                                              'Published']);
+                                    } else {
+                                      EasyLoading.showError(
+                                          "validation failed");
+                                    }
+                                  },
+                                  fillColor: kPurpleColor,
+                                ),
+                              ],
                             ),
                     ),
                   ],
@@ -625,7 +664,8 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
-        // 'type': typeController.text,
+        'type':
+            OPPORTUNITY_TYPES_VALUES[_opportunityTypeKey.currentState.value],
         'location': locationController.text
       };
       EasyLoading.show(status: kLoading);
@@ -653,9 +693,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
     }
   }
 
-  void _updateOpportunity() async {
-    print(opportunityDateController.text);
-
+  void _updateOpportunity({int status = 0}) async {
     try {
       var data = {
         'id': widget.oppotunity.id,
@@ -665,7 +703,9 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
-        // 'type': typeController.text,
+        'type':
+            OPPORTUNITY_TYPES_VALUES[_opportunityTypeKey.currentState.value],
+        'status': status,
         'location': locationController.text
       };
       if (_coverImageAreaMap[kImage] != null) {
@@ -687,7 +727,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         EasyLoading.showSuccess(body["message"]);
         await Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => OrgAdminHome()),
+          MaterialPageRoute(builder: (context) => MyOpportunity()),
           (route) => false,
         );
       } else {

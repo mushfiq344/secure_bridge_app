@@ -144,4 +144,27 @@ class OpportunityViewModel {
       _error(e.toString());
     }
   }
+
+  updateOpportunity(Map<String, dynamic> data, _success) async {
+    try {
+      log("data $data");
+
+      EasyLoading.show(status: kLoading);
+      var res = await Network()
+          .putData(data, "$ORG_ADMIN_OPPORTUNITIES_URL/${data['id']}");
+      var body = json.decode(res.body);
+      // log("res ${res.statusCode}");
+      log("body : ${body}");
+      if (res.statusCode == 200) {
+        EasyLoading.dismiss();
+        _success();
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showError(body['message']);
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.toString());
+    }
+  }
 }

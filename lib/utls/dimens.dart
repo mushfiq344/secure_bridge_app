@@ -1,4 +1,5 @@
 const kMargin4 = 4.0;
+const kMargin5 = 5.0;
 const kMargin8 = 8.0;
 const kMargin10 = 10.0;
 const kMargin12 = 12.0;

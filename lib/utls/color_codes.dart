@@ -25,3 +25,4 @@ const kSubmitToReviewColor = Color(0xFF2FA5B8);
 const kOrangeBackgroundColor = Color(0xFFF9B566);
 const kLightYellow = Color(0xFFFFF1D6);
 const kLightBlack = Color(0xFF333E48);
+const kDarkBlueBackGround = Color(0xFF1B237E);
