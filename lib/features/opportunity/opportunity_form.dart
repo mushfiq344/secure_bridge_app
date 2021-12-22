@@ -519,20 +519,47 @@ class _OpportunityFormState extends State<OpportunityForm> {
                   children: <Widget>[
                     Expanded(
                       child: widget.oppotunity == null
-                          ? PAButton(
-                              "Submit",
-                              true,
-                              () {
-                                _formKey.currentState.save();
-                                if (_formKey.currentState.validate()) {
-                                  print(_formKey.currentState.value);
+                          ? Column(
+                              children: [
+                                PAButton(
+                                  "Submit",
+                                  true,
+                                  () {
+                                    _formKey.currentState.save();
+                                    if (_formKey.currentState.validate()) {
+                                      print(_formKey.currentState.value);
 
-                                  _createOpportunity();
-                                } else {
-                                  EasyLoading.showError("validation failed");
-                                }
-                              },
-                              fillColor: kPurpleColor,
+                                      _createOpportunity(
+                                          OPPORTUNITY_STATUS_VALUES["Drafted"]);
+                                    } else {
+                                      EasyLoading.showError(
+                                          "validation failed");
+                                    }
+                                  },
+                                  fillColor: kPurpleColor,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                PAButton(
+                                  "Submit & Publish",
+                                  true,
+                                  () {
+                                    _formKey.currentState.save();
+                                    if (_formKey.currentState.validate()) {
+                                      print(_formKey.currentState.value);
+
+                                      _createOpportunity(
+                                          OPPORTUNITY_STATUS_VALUES[
+                                              "Published"]);
+                                    } else {
+                                      EasyLoading.showError(
+                                          "validation failed");
+                                    }
+                                  },
+                                  fillColor: kPurpleColor,
+                                ),
+                              ],
                             )
                           : Column(
                               children: [
@@ -644,7 +671,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         });
   }
 
-  void _createOpportunity() async {
+  void _createOpportunity(int status) async {
     try {
       if (_coverImageAreaMap[kImage] == null) {
         EasyLoading.showError("please add cover image");
@@ -666,6 +693,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'reward': rewardController.text,
         'type':
             OPPORTUNITY_TYPES_VALUES[_opportunityTypeKey.currentState.value],
+        'status': status,
         'location': locationController.text
       };
       EasyLoading.show(status: kLoading);
