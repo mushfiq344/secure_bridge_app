@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/Models/User.dart';
+import 'package:secure_bridges_app/features/enrollment/opportunity_happening.dart';
 import 'package:secure_bridges_app/features/enrollment/participated_user_list.dart';
 import 'package:secure_bridges_app/features/enrollment/pending_approval_list.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
@@ -723,6 +724,29 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                         SizedBox(
                           height: 10,
                         ),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: PAButton("View Approved Users", true, () {
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            OpportunityHappening(
+                                                this.widget.opportunity)));
+                              },
+                                  fillColor: kGreyBackgroundColor,
+                                  textColor: kPurpleColor,
+                                  capitalText: false),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+
                         Row(
                           children: [
                             Expanded(
