@@ -1,11 +1,14 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/Models/bar_chart_model.dart';
+import 'package:secure_bridges_app/features/Notification/notification_list.dart';
 import 'package:secure_bridges_app/features/enrollment/opportunity_happening.dart';
 import 'package:secure_bridges_app/features/landing/drawer_menu.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
@@ -36,11 +39,42 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
   TextEditingController _searchController = TextEditingController();
   UserViewModel _userViewModel = UserViewModel();
   User currentUser;
+  bool hasUnreadNotification = false;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
     getOpportunities();
     _loadUserData();
+    firebaseConnection();
     super.initState();
+  }
+
+  void firebaseConnection() {
+    if (Platform.isIOS) iOS_Permission();
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        setState(() {
+          hasUnreadNotification = true;
+        });
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
+  }
+
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
   }
 
   void getOpportunities() {
@@ -118,6 +152,24 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
         appBar: AppBar(
           title: Text(kOpportunities),
           backgroundColor: kPurpleColor,
+          actions: [
+            GestureDetector(
+              child: Image(
+                image: AssetImage(hasUnreadNotification
+                    ? kActiveNotificationIconPath
+                    : kInactiveNotificationIconPath),
+              ),
+              onTap: () {
+                Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => Notifications(currentUser)))
+                    .then((value) {
+                  getOpportunities();
+                });
+              },
+            )
+          ],
         ),
         drawer: CustomDrawer(currentUser),
         body: Container(
