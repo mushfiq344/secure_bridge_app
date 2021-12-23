@@ -387,61 +387,69 @@ class _OpportunityFormState extends State<OpportunityForm> {
                       SizedBox(height: kMargin16),
                       Row(
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(kMargin14),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: kBorderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(kRadius10),
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                _showCoverPicker(context);
-                              },
-                              child: _coverImage != null
-                                  ? Image.file(
-                                      File(_coverImage.path),
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.fitHeight,
-                                    )
-                                  : Container(
-                                      child: widget.oppotunity == null
-                                          ? Image(
-                                              image:
-                                                  AssetImage(kAvatarIconPath),
-                                              width: 100,
-                                              height: 100,
-                                            )
-                                          : CachedNetworkImage(
-                                              imageUrl:
-                                                  "${BASE_URL}${widget.uploadPath}${widget.oppotunity.coverImage}",
-                                              placeholder: (context, url) =>
-                                                  Image(
-                                                      image: AssetImage(
-                                                          kPlaceholderImagePath)),
-                                              errorWidget: (context, url,
-                                                      error) =>
-                                                  Image(
-                                                      image: AssetImage(
-                                                          kPlaceholderImagePath)),
-                                              fit: BoxFit.fill,
-                                              height: 100,
-                                              width: 100,
-                                            ),
-                                    ),
-                            ),
-                          ),
-                          SizedBox(width: kMargin24),
                           Expanded(
                             flex: 1,
-                            child: Text(
-                              kUploadCover,
-                              style: TextStyle(
-                                color: kLabelColor,
-                                fontSize: kMargin14,
+                            child: Container(
+                              padding: EdgeInsets.all(kMargin14),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: kBorderColor,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(kRadius10),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _showCoverPicker(context);
+                                },
+                                child: _coverImage != null
+                                    ? AspectRatio(
+                                        aspectRatio: 16 / 9,
+                                        child: Image.file(
+                                            File(_coverImage.path),
+                                            fit: BoxFit.cover),
+                                      )
+                                    : Container(
+                                        child: widget.oppotunity == null
+                                            ? AspectRatio(
+                                                aspectRatio: 16 / 9,
+                                                child: Image(
+                                                  image: AssetImage(
+                                                      kAvatarIconPath),
+                                                  fit: BoxFit
+                                                      .fitHeight, // use this
+                                                ),
+                                              )
+                                            : CachedNetworkImage(
+                                                imageUrl:
+                                                    "${BASE_URL}${widget.uploadPath}${widget.oppotunity.coverImage}",
+                                                placeholder: (context, url) =>
+                                                    Image(
+                                                        image: AssetImage(
+                                                            kPlaceholderImagePath)),
+                                                errorWidget: (context, url,
+                                                        error) =>
+                                                    Image(
+                                                        image: AssetImage(
+                                                            kPlaceholderImagePath)),
+                                                fit: BoxFit.fill,
+                                                height: 100,
+                                                width: 100,
+                                              ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: kMargin10),
+                              child: Text(
+                                kUploadCover,
+                                style: TextStyle(
+                                  color: kLabelColor,
+                                  fontSize: kMargin14,
+                                ),
                               ),
                             ),
                           ),
