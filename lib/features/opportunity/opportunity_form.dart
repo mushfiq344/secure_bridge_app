@@ -277,9 +277,8 @@ class _OpportunityFormState extends State<OpportunityForm> {
 
                           date = await showDatePicker(
                               context: context,
-                              initialDate:
-                                  DateTime.now().add(Duration(days: 15)),
-                              firstDate: DateTime.now().add(Duration(days: 15)),
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
                               lastDate: DateTime(2100));
 
                           opportunityDateController.text =
