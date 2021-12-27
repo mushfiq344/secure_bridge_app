@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'dart:io';
+import 'package:flutter_summernote/flutter_summernote.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,6 +32,8 @@ class OpportunityForm extends StatefulWidget {
 
 class _OpportunityFormState extends State<OpportunityForm> {
   final _formKey = GlobalKey<FormBuilderState>();
+  GlobalKey<FlutterSummernoteState> _descriptionKeyEditor =
+      GlobalKey<FlutterSummernoteState>();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController subTitleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -153,17 +157,31 @@ class _OpportunityFormState extends State<OpportunityForm> {
   @override
   void initState() {
     if (widget.oppotunity != null) {
-      Future.delayed(const Duration(), () {
-        titleController.text = widget.oppotunity.title;
-        subTitleController.text = widget.oppotunity.subTitle;
-        descriptionController.text = widget.oppotunity.description;
-        opportunityDateController.text = widget.oppotunity.opportunityDate;
-        durationController.text = widget.oppotunity.duration.toString();
-        rewardController.text = widget.oppotunity.reward;
-        _opportunityTypeKey.currentState
-            .setValue(OPPORTUNITY_TYPES[widget.oppotunity.type]);
-        locationController.text = widget.oppotunity.location;
-      });
+      try {
+        EasyLoading.show(status: kLoading);
+        Future.delayed(const Duration(), () async {
+          titleController.text = widget.oppotunity.title;
+          subTitleController.text = widget.oppotunity.subTitle;
+          descriptionController.text = widget.oppotunity.description;
+          opportunityDateController.text = widget.oppotunity.opportunityDate;
+          durationController.text = widget.oppotunity.duration.toString();
+          rewardController.text = widget.oppotunity.reward;
+          _opportunityTypeKey.currentState
+              .setValue(OPPORTUNITY_TYPES[widget.oppotunity.type]);
+          locationController.text = widget.oppotunity.location;
+
+          await Future.delayed(Duration(milliseconds: 500));
+          await Future.delayed(Duration(milliseconds: 500));
+          _descriptionKeyEditor.currentState
+              .setText(widget.oppotunity.description);
+          await Future.delayed(Duration(milliseconds: 500));
+
+          EasyLoading.dismiss();
+        });
+      } catch (e) {
+        EasyLoading.dismiss();
+        EasyLoading.showError(e.toString());
+      }
     }
     super.initState();
   }
@@ -241,14 +259,22 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ),
                       ),
                       SizedBox(height: 10),
-                      FormBuilderTextField(
-                        decoration: _inputDecoration('Description'),
-                        controller: descriptionController,
-                        name: 'description',
-                        validator: FormBuilderValidators.compose([
-                          /*FormBuilderValidators.required(context),*/
-                        ]),
-                        keyboardType: TextInputType.text,
+                      // FormBuilderTextField(
+                      //   decoration: _inputDecoration('Description'),
+                      //   controller: descriptionController,
+                      //   name: 'description',
+                      //   validator: FormBuilderValidators.compose([
+                      //     /*FormBuilderValidators.required(context),*/
+                      //   ]),
+                      //   keyboardType: TextInputType.text,
+                      // ),
+                      Container(
+                        height: 400,
+                        child: FlutterSummernote(
+                            hasAttachment: false,
+                            showBottomToolbar: false,
+                            hint: "Your text here...",
+                            key: _descriptionKeyEditor),
                       ),
                       SizedBox(height: 10),
                       RichText(
@@ -679,6 +705,10 @@ class _OpportunityFormState extends State<OpportunityForm> {
   }
 
   void _createOpportunity(int status) async {
+    String description = await _descriptionKeyEditor.currentState?.getText();
+    // getText() is buggy and doesn't work first time when it's called
+    await Future.delayed(Duration(milliseconds: 500));
+    description = await _descriptionKeyEditor.currentState?.getText();
     try {
       if (_coverImageAreaMap[kImage] == null) {
         EasyLoading.showError("please add cover image");
@@ -694,7 +724,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'icon_image': _iconImageAreaMap[kImage],
         'title': titleController.text,
         'subtitle': subTitleController.text,
-        'description': descriptionController.text,
+        'description': description,
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
@@ -729,12 +759,17 @@ class _OpportunityFormState extends State<OpportunityForm> {
   }
 
   void _updateOpportunity({int status = 0}) async {
+    String description = await _descriptionKeyEditor.currentState?.getText();
+    // getText() is buggy and doesn't work first time when it's called
+    await Future.delayed(Duration(milliseconds: 500));
+    description = await _descriptionKeyEditor.currentState?.getText();
+
     try {
       var data = {
         'id': widget.oppotunity.id,
         'title': titleController.text,
         'subtitle': subTitleController.text,
-        'description': descriptionController.text,
+        'description': description,
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,

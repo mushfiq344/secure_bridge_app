@@ -340,6 +340,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.1.0"
+  flutter_summernote:
+    dependency: "direct main"
+    description:
+      name: flutter_summernote
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter_switch:
     dependency: "direct main"
     description:
