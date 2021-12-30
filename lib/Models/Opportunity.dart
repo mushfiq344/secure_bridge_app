@@ -1,3 +1,5 @@
+import 'package:secure_bridges_app/utls/constants.dart';
+
 import 'User.dart';
 
 class Opportunity {
@@ -17,6 +19,7 @@ class Opportunity {
   String updatedAt;
   String slug;
   int isActive;
+  int status;
   String location;
   bool show = false;
 
@@ -36,6 +39,7 @@ class Opportunity {
       this.updatedAt,
       this.slug,
       this.isActive,
+      this.status,
       this.location});
 
   Opportunity.fromJson(Map<String, dynamic> json) {
@@ -51,9 +55,26 @@ class Opportunity {
     coverImage = json['cover_image'];
     iconImage = json['icon_image'];
     isActive = json['is_active'];
+    status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     slug = json['slug'];
     location = json['location'];
+  }
+
+  Map<String, dynamic> toJson() {
+    var data = {
+      'id': id,
+      'title': title,
+      'subtitle': subTitle,
+      'description': description,
+      'opportunity_date': opportunityDate,
+      'duration': duration,
+      'reward': reward,
+      'type': type,
+      'status': status,
+      'location': location,
+    };
+    return data;
   }
 }

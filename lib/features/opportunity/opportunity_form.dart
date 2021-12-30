@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
+import 'dart:io';
+import 'package:flutter_summernote/flutter_summernote.dart';
+import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,16 +11,16 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/features/org_admin/my_opportunity.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
-import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:secure_bridges_app/widgets/input_decoration.dart';
 
 class OpportunityForm extends StatefulWidget {
   final Opportunity oppotunity;
@@ -30,6 +32,8 @@ class OpportunityForm extends StatefulWidget {
 
 class _OpportunityFormState extends State<OpportunityForm> {
   final _formKey = GlobalKey<FormBuilderState>();
+  GlobalKey<FlutterSummernoteState> _descriptionKeyEditor =
+      GlobalKey<FlutterSummernoteState>();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController subTitleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -38,6 +42,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
   final TextEditingController durationController = TextEditingController();
   final TextEditingController rewardController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
+  final _opportunityTypeKey = GlobalKey<FormBuilderFieldState>();
   Map<String, dynamic> _coverImageAreaMap = Map();
   Map<String, dynamic> _iconImageAreaMap = Map();
   var _imageNameWithExtension;
@@ -152,14 +157,41 @@ class _OpportunityFormState extends State<OpportunityForm> {
   @override
   void initState() {
     if (widget.oppotunity != null) {
-      titleController.text = widget.oppotunity.title;
-      subTitleController.text = widget.oppotunity.subTitle;
-      descriptionController.text = widget.oppotunity.description;
-      opportunityDateController.text = widget.oppotunity.opportunityDate;
-      durationController.text = widget.oppotunity.duration.toString();
-      rewardController.text = widget.oppotunity.reward;
+      try {
+        EasyLoading.show(status: kLoading);
+        Future.delayed(const Duration(), () async {
+          titleController.text = widget.oppotunity.title;
+          subTitleController.text = widget.oppotunity.subTitle;
+          descriptionController.text = widget.oppotunity.description;
+          opportunityDateController.text = widget.oppotunity.opportunityDate;
+          durationController.text = widget.oppotunity.duration.toString();
+          rewardController.text = widget.oppotunity.reward;
+          _opportunityTypeKey.currentState
+              .setValue(OPPORTUNITY_TYPES[widget.oppotunity.type]);
+          locationController.text = widget.oppotunity.location;
 
-      locationController.text = widget.oppotunity.location;
+          await Future.delayed(Duration(milliseconds: 500));
+          if (widget.oppotunity.description != null) {
+            _descriptionKeyEditor.currentState
+                .setText(widget.oppotunity.description);
+          }
+
+          await Future.delayed(Duration(milliseconds: 500));
+          if (widget.oppotunity.description == null) {
+            _descriptionKeyEditor.currentState.setHint(
+              "Your text here...",
+            );
+          } else {
+            _descriptionKeyEditor.currentState.setHint("");
+          }
+
+          await Future.delayed(Duration(milliseconds: 500));
+          EasyLoading.dismiss();
+        });
+      } catch (e) {
+        EasyLoading.dismiss();
+        EasyLoading.showError(e.toString());
+      }
     }
     super.initState();
   }
@@ -237,14 +269,22 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ),
                       ),
                       SizedBox(height: 10),
-                      FormBuilderTextField(
-                        decoration: _inputDecoration('Description'),
-                        controller: descriptionController,
-                        name: 'description',
-                        validator: FormBuilderValidators.compose([
-                          /*FormBuilderValidators.required(context),*/
-                        ]),
-                        keyboardType: TextInputType.text,
+                      // FormBuilderTextField(
+                      //   decoration: _inputDecoration('Description'),
+                      //   controller: descriptionController,
+                      //   name: 'description',
+                      //   validator: FormBuilderValidators.compose([
+                      //     /*FormBuilderValidators.required(context),*/
+                      //   ]),
+                      //   keyboardType: TextInputType.text,
+                      // ),
+                      Container(
+                        height: 400,
+                        child: FlutterSummernote(
+                            hasAttachment: false,
+                            showBottomToolbar: false,
+                            hint: "Your text here...",
+                            key: _descriptionKeyEditor),
                       ),
                       SizedBox(height: 10),
                       RichText(
@@ -274,14 +314,13 @@ class _OpportunityFormState extends State<OpportunityForm> {
                           date = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              firstDate: DateTime(1900),
+                              firstDate: DateTime.now(),
                               lastDate: DateTime(2100));
 
                           opportunityDateController.text =
                               DateFormat('yyyy-MM-dd').format(date);
                         },
                       ),
-
                       SizedBox(height: 10),
                       RichText(
                         text: TextSpan(
@@ -329,28 +368,6 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         keyboardType: TextInputType.number,
                       ),
                       SizedBox(height: 10),
-                      // RichText(
-                      //   text: TextSpan(
-                      //     text: "Type",
-                      //     style: TextStyle(
-                      //         color: Colors.black, fontSize: kMargin14),
-                      //     children: <TextSpan>[
-                      //       TextSpan(
-                      //           text: '', style: TextStyle(color: Colors.red)),
-                      //     ],
-                      //   ),
-                      // ),
-                      // SizedBox(height: 10),
-                      // FormBuilderTextField(
-                      //   decoration: _inputDecoration('Type'),
-                      //   controller: typeController,
-                      //   name: 'type',
-                      //   validator: FormBuilderValidators.compose([
-                      //     /*  FormBuilderValidators.required(context),*/
-                      //   ]),
-                      //   keyboardType: TextInputType.text,
-                      // ),
-                      // SizedBox(height: kMargin16),
                       RichText(
                         text: TextSpan(
                           text: "Location",
@@ -372,64 +389,103 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ]),
                         keyboardType: TextInputType.text,
                       ),
+                      SizedBox(height: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: "Type",
+                          style: TextStyle(
+                              color: Colors.black, fontSize: kMargin14),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '*', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      FormBuilderDropdown(
+                        key: _opportunityTypeKey,
+                        name: 'type',
+                        decoration: customInputDecoration("Type",
+                            borderColor: kBorderColor),
+                        // initialValue: 'Male',
+                        allowClear: true,
+
+                        validator: FormBuilderValidators.compose(
+                            [FormBuilderValidators.required(context)]),
+                        items: OPPORTUNITY_TYPES
+                            .map((type) => DropdownMenuItem(
+                                  value: type,
+                                  child: Text('$type'),
+                                ))
+                            .toList(),
+                      ),
+                      SizedBox(height: 10),
                       SizedBox(height: kMargin16),
                       Row(
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(kMargin14),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: kBorderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(kRadius10),
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                _showCoverPicker(context);
-                              },
-                              child: _coverImage != null
-                                  ? Image.file(
-                                      File(_coverImage.path),
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.fitHeight,
-                                    )
-                                  : Container(
-                                      child: widget.oppotunity == null
-                                          ? Image(
-                                              image:
-                                                  AssetImage(kAvatarIconPath),
-                                              width: 100,
-                                              height: 100,
-                                            )
-                                          : CachedNetworkImage(
-                                              imageUrl:
-                                                  "${BASE_URL}${widget.uploadPath}${widget.oppotunity.coverImage}",
-                                              placeholder: (context, url) =>
-                                                  Image(
-                                                      image: AssetImage(
-                                                          kPlaceholderImagePath)),
-                                              errorWidget: (context, url,
-                                                      error) =>
-                                                  Image(
-                                                      image: AssetImage(
-                                                          kPlaceholderImagePath)),
-                                              fit: BoxFit.fill,
-                                              height: 100,
-                                              width: 100,
-                                            ),
-                                    ),
-                            ),
-                          ),
-                          SizedBox(width: kMargin24),
                           Expanded(
                             flex: 1,
-                            child: Text(
-                              kUploadCover,
-                              style: TextStyle(
-                                color: kLabelColor,
-                                fontSize: kMargin14,
+                            child: Container(
+                              padding: EdgeInsets.all(kMargin14),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: kBorderColor,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(kRadius10),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _showCoverPicker(context);
+                                },
+                                child: _coverImage != null
+                                    ? AspectRatio(
+                                        aspectRatio: 16 / 9,
+                                        child: Image.file(
+                                            File(_coverImage.path),
+                                            fit: BoxFit.cover),
+                                      )
+                                    : Container(
+                                        child: widget.oppotunity == null
+                                            ? AspectRatio(
+                                                aspectRatio: 16 / 9,
+                                                child: Image(
+                                                  image: AssetImage(
+                                                      kAvatarIconPath),
+                                                  fit: BoxFit
+                                                      .fitHeight, // use this
+                                                ),
+                                              )
+                                            : CachedNetworkImage(
+                                                imageUrl:
+                                                    "${BASE_URL}${widget.uploadPath}${widget.oppotunity.coverImage}",
+                                                placeholder: (context, url) =>
+                                                    Image(
+                                                        image: AssetImage(
+                                                            kPlaceholderImagePath)),
+                                                errorWidget: (context, url,
+                                                        error) =>
+                                                    Image(
+                                                        image: AssetImage(
+                                                            kPlaceholderImagePath)),
+                                                fit: BoxFit.fill,
+                                                height: 100,
+                                                width: 100,
+                                              ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: kMargin10),
+                              child: Text(
+                                kUploadCover,
+                                style: TextStyle(
+                                  color: kLabelColor,
+                                  fontSize: kMargin14,
+                                ),
                               ),
                             ),
                           ),
@@ -506,35 +562,88 @@ class _OpportunityFormState extends State<OpportunityForm> {
                   children: <Widget>[
                     Expanded(
                       child: widget.oppotunity == null
-                          ? PAButton(
-                              "Submit",
-                              true,
-                              () {
-                                _formKey.currentState.save();
-                                if (_formKey.currentState.validate()) {
-                                  print(_formKey.currentState.value);
+                          ? Column(
+                              children: [
+                                PAButton(
+                                  "Submit",
+                                  true,
+                                  () {
+                                    _formKey.currentState.save();
+                                    if (_formKey.currentState.validate()) {
+                                      print(_formKey.currentState.value);
 
-                                  _createOpportunity();
-                                } else {
-                                  EasyLoading.showError("validation failed");
-                                }
-                              },
-                              fillColor: kPurpleColor,
+                                      _createOpportunity(
+                                          OPPORTUNITY_STATUS_VALUES["Drafted"]);
+                                    } else {
+                                      EasyLoading.showError(
+                                          "validation failed");
+                                    }
+                                  },
+                                  fillColor: kPurpleColor,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                PAButton(
+                                  "Submit & Publish",
+                                  true,
+                                  () {
+                                    _formKey.currentState.save();
+                                    if (_formKey.currentState.validate()) {
+                                      print(_formKey.currentState.value);
+
+                                      _createOpportunity(
+                                          OPPORTUNITY_STATUS_VALUES[
+                                              "Published"]);
+                                    } else {
+                                      EasyLoading.showError(
+                                          "validation failed");
+                                    }
+                                  },
+                                  fillColor: kPurpleColor,
+                                ),
+                              ],
                             )
-                          : PAButton(
-                              "Update",
-                              true,
-                              () {
-                                _formKey.currentState.save();
-                                if (_formKey.currentState.validate()) {
-                                  print(_formKey.currentState.value);
+                          : Column(
+                              children: [
+                                PAButton(
+                                  "Update",
+                                  true,
+                                  () {
+                                    _formKey.currentState.save();
+                                    if (_formKey.currentState.validate()) {
+                                      print(_formKey.currentState.value);
 
-                                  _updateOpportunity();
-                                } else {
-                                  EasyLoading.showError("validation failed");
-                                }
-                              },
-                              fillColor: kPurpleColor,
+                                      _updateOpportunity();
+                                    } else {
+                                      EasyLoading.showError(
+                                          "validation failed");
+                                    }
+                                  },
+                                  fillColor: kPurpleColor,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                PAButton(
+                                  "Publish",
+                                  true,
+                                  () {
+                                    _formKey.currentState.save();
+                                    if (_formKey.currentState.validate()) {
+                                      print(_formKey.currentState.value);
+
+                                      _updateOpportunity(
+                                          status: OPPORTUNITY_STATUS_VALUES[
+                                              'Published']);
+                                    } else {
+                                      EasyLoading.showError(
+                                          "validation failed");
+                                    }
+                                  },
+                                  fillColor: kPurpleColor,
+                                ),
+                              ],
                             ),
                     ),
                   ],
@@ -605,7 +714,11 @@ class _OpportunityFormState extends State<OpportunityForm> {
         });
   }
 
-  void _createOpportunity() async {
+  void _createOpportunity(int status) async {
+    String description = await _descriptionKeyEditor.currentState?.getText();
+    // getText() is buggy and doesn't work first time when it's called
+    await Future.delayed(Duration(milliseconds: 500));
+    description = await _descriptionKeyEditor.currentState?.getText();
     try {
       if (_coverImageAreaMap[kImage] == null) {
         EasyLoading.showError("please add cover image");
@@ -621,11 +734,13 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'icon_image': _iconImageAreaMap[kImage],
         'title': titleController.text,
         'subtitle': subTitleController.text,
-        'description': descriptionController.text,
+        'description': description,
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
-        // 'type': typeController.text,
+        'type':
+            OPPORTUNITY_TYPES_VALUES[_opportunityTypeKey.currentState.value],
+        'status': status,
         'location': locationController.text
       };
       EasyLoading.show(status: kLoading);
@@ -653,19 +768,24 @@ class _OpportunityFormState extends State<OpportunityForm> {
     }
   }
 
-  void _updateOpportunity() async {
-    print(opportunityDateController.text);
+  void _updateOpportunity({int status = 0}) async {
+    String description = await _descriptionKeyEditor.currentState?.getText();
+    // getText() is buggy and doesn't work first time when it's called
+    await Future.delayed(Duration(milliseconds: 500));
+    description = await _descriptionKeyEditor.currentState?.getText();
 
     try {
       var data = {
         'id': widget.oppotunity.id,
         'title': titleController.text,
         'subtitle': subTitleController.text,
-        'description': descriptionController.text,
+        'description': description,
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
-        // 'type': typeController.text,
+        'type':
+            OPPORTUNITY_TYPES_VALUES[_opportunityTypeKey.currentState.value],
+        'status': status,
         'location': locationController.text
       };
       if (_coverImageAreaMap[kImage] != null) {
@@ -687,7 +807,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         EasyLoading.showSuccess(body["message"]);
         await Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => OrgAdminHome()),
+          MaterialPageRoute(builder: (context) => MyOpportunity()),
           (route) => false,
         );
       } else {

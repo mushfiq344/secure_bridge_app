@@ -7,6 +7,8 @@ import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/Models/enrolled_user.dart';
 import 'package:secure_bridges_app/features/enrollment/code_check_modal.dart';
 import 'package:secure_bridges_app/features/enrollment/enrollment_view_model.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
+import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -24,6 +26,7 @@ class OpportunityHappening extends StatefulWidget {
 class _OpportunityHappeningState extends State<OpportunityHappening> {
   int totalRequest = 0;
   int totalConfirm = 0;
+  OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
   TextEditingController _searchController = TextEditingController();
   EnrollmentViewModel _enrollmentViewModel = EnrollmentViewModel();
   List<EnrolledUser> enrolledUsers = [];
@@ -137,6 +140,24 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                     ],
                   ),
                 ),
+              ),
+              SizedBox(
+                height: kMargin24,
+              ),
+              PAButton(
+                "End the Event",
+                true,
+                () {
+                  var data = widget.opportunity.toJson();
+                  data['status'] = OPPORTUNITY_STATUS_VALUES['Ended'];
+                  _opportunityViewModel.updateOpportunity(data, () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OrgAdminHome()),
+                    );
+                  });
+                },
+                fillColor: kPurpleColor,
               ),
               SizedBox(
                 height: kMargin24,

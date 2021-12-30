@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/Models/User.dart';
+import 'package:secure_bridges_app/features/enrollment/opportunity_happening.dart';
 import 'package:secure_bridges_app/features/enrollment/participated_user_list.dart';
 import 'package:secure_bridges_app/features/enrollment/pending_approval_list.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
@@ -39,6 +41,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   final TextEditingController codeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String code;
+  int opportunityStatus = OPPORTUNITY_STATUS_VALUES["Drafted"];
   @override
   initState() {
     super.initState();
@@ -48,8 +51,9 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   void loadOpportunityDetail() {
     _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,
         (Map<String, dynamic> body) {
-      log("body model $body");
+      log("body model ${body['data']['opportunity']}");
       setState(() {
+        opportunityStatus = body['data']['opportunity']['status'];
         userEnrolled = body['data']['is_user_enrolled'];
         inUserWithList = body['data']['in_user_wish_list'];
         userCode = body['data']['user_code'];
@@ -413,14 +417,16 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: Text(
-                            "${widget.opportunity.description}",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                fontSize: kMargin12,
-                                fontWeight: FontWeight.w400,
-                                color: kInactiveColor),
-                          ),
+                          child:
+                              Html(data: "${widget.opportunity.description}"),
+                          // child: Text(
+                          //   "${widget.opportunity.description}",
+                          //   textAlign: TextAlign.start,
+                          //   style: TextStyle(
+                          //       fontSize: kMargin12,
+                          //       fontWeight: FontWeight.w400,
+                          //       color: kInactiveColor),
+                          // ),
                         ),
                       ],
                     ),
@@ -567,7 +573,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                               )
                             : Expanded(
                                 flex: 1,
-                                child: widget.currentUser.userType == 0
+                                child: widget.currentUser.userType == 0 &&
+                                        opportunityStatus ==
+                                            OPPORTUNITY_STATUS_VALUES[
+                                                "Published"]
                                     ? GestureDetector(
                                         child: Card(
                                             color: kPurpleColor,
@@ -710,7 +719,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                 this.widget.opportunity)));
                               },
                                   fillColor: kGreyBackgroundColor,
-                                  textColor: Colors.orange,
+                                  textColor: kPurpleColor,
                                   capitalText: false),
                             ),
                           ],
@@ -718,6 +727,29 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                         SizedBox(
                           height: 10,
                         ),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: PAButton("View Approved Users", true, () {
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            OpportunityHappening(
+                                                this.widget.opportunity)));
+                              },
+                                  fillColor: kGreyBackgroundColor,
+                                  textColor: kPurpleColor,
+                                  capitalText: false),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+
                         Row(
                           children: [
                             Expanded(
@@ -732,7 +764,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                 this.widget.opportunity)));
                               },
                                   fillColor: kGreyBackgroundColor,
-                                  textColor: Colors.orange,
+                                  textColor: kPurpleColor,
                                   capitalText: false),
                             ),
                           ],
@@ -740,83 +772,129 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                         SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: PAButton("Test Code", true, () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom),
-                                        child: Form(
-                                          key: _formKey,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: TextFormField(
-                                                  style: TextStyle(
-                                                      color: Color(0xFF000000)),
-                                                  cursorColor:
-                                                      Color(0xFF9b9b9b),
-                                                  keyboardType:
-                                                      TextInputType.text,
-                                                  decoration: InputDecoration(
-                                                    prefixIcon: Icon(
-                                                      Icons.approval,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    hintText: "Code",
-                                                    hintStyle: TextStyle(
-                                                        color:
-                                                            Color(0xFF9b9b9b),
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.normal),
-                                                  ),
-                                                  validator: (codeValue) {
-                                                    if (codeValue.isEmpty) {
-                                                      return 'Please enter code';
-                                                    }
-                                                    code = codeValue;
-                                                    return null;
-                                                  },
-                                                ),
-                                              ),
-                                              PAButton(
-                                                'Check',
-                                                true,
-                                                () {
-                                                  if (_formKey.currentState
-                                                      .validate()) {
-                                                    _confirmUser(
-                                                        widget.opportunity.id,
-                                                        code);
-                                                  }
-                                                },
-                                                fillColor: kGreyBackgroundColor,
-                                                textColor: Colors.orange,
-                                                capitalText: false,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    });
-                              },
-                                  fillColor: kGreyBackgroundColor,
-                                  textColor: Colors.orange,
-                                  capitalText: false),
-                            ),
-                          ],
-                        ),
+                        opportunityStatus ==
+                                    OPPORTUNITY_STATUS_VALUES['Published'] ||
+                                opportunityStatus ==
+                                    OPPORTUNITY_STATUS_VALUES[
+                                        'Currently Happening']
+                            ? Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: PAButton(
+                                        opportunityStatus ==
+                                                OPPORTUNITY_STATUS_VALUES[
+                                                    'Published']
+                                            ? "Run"
+                                            : "STOP",
+                                        true, () {
+                                      if (opportunityStatus ==
+                                          OPPORTUNITY_STATUS_VALUES[
+                                              'Published']) {
+                                        var data = widget.opportunity.toJson();
+                                        data['status'] =
+                                            OPPORTUNITY_STATUS_VALUES[
+                                                'Currently Happening'];
+                                        _opportunityViewModel
+                                            .updateOpportunity(data, () {
+                                          loadOpportunityDetail();
+                                        });
+                                      } else if (opportunityStatus ==
+                                          OPPORTUNITY_STATUS_VALUES[
+                                              'Currently Happening']) {
+                                        var data = widget.opportunity.toJson();
+                                        data['status'] =
+                                            OPPORTUNITY_STATUS_VALUES['Ended'];
+                                        _opportunityViewModel
+                                            .updateOpportunity(data, () {
+                                          loadOpportunityDetail();
+                                        });
+                                      }
+                                    },
+                                        fillColor: kGreyBackgroundColor,
+                                        textColor: kPurpleColor,
+                                        capitalText: false),
+                                  ),
+                                ],
+                              )
+                            : SizedBox(),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       flex: 1,
+                        //       child: PAButton("Test Code", true, () {
+                        //         showModalBottomSheet(
+                        //             context: context,
+                        //             builder: (context) {
+                        //               return Padding(
+                        //                 padding: EdgeInsets.only(
+                        //                     bottom: MediaQuery.of(context)
+                        //                         .viewInsets
+                        //                         .bottom),
+                        //                 child: Form(
+                        //                   key: _formKey,
+                        //                   child: Column(
+                        //                     mainAxisSize: MainAxisSize.min,
+                        //                     children: <Widget>[
+                        //                       Padding(
+                        //                         padding:
+                        //                             const EdgeInsets.all(8.0),
+                        //                         child: TextFormField(
+                        //                           style: TextStyle(
+                        //                               color: Color(0xFF000000)),
+                        //                           cursorColor:
+                        //                               Color(0xFF9b9b9b),
+                        //                           keyboardType:
+                        //                               TextInputType.text,
+                        //                           decoration: InputDecoration(
+                        //                             prefixIcon: Icon(
+                        //                               Icons.approval,
+                        //                               color: Colors.grey,
+                        //                             ),
+                        //                             hintText: "Code",
+                        //                             hintStyle: TextStyle(
+                        //                                 color:
+                        //                                     Color(0xFF9b9b9b),
+                        //                                 fontSize: 15,
+                        //                                 fontWeight:
+                        //                                     FontWeight.normal),
+                        //                           ),
+                        //                           validator: (codeValue) {
+                        //                             if (codeValue.isEmpty) {
+                        //                               return 'Please enter code';
+                        //                             }
+                        //                             code = codeValue;
+                        //                             return null;
+                        //                           },
+                        //                         ),
+                        //                       ),
+                        //                       PAButton(
+                        //                         'Check',
+                        //                         true,
+                        //                         () {
+                        //                           if (_formKey.currentState
+                        //                               .validate()) {
+                        //                             _confirmUser(
+                        //                                 widget.opportunity.id,
+                        //                                 code);
+                        //                           }
+                        //                         },
+                        //                         fillColor: kGreyBackgroundColor,
+                        //                         textColor: Colors.orange,
+                        //                         capitalText: false,
+                        //                       )
+                        //                     ],
+                        //                   ),
+                        //                 ),
+                        //               );
+                        //             });
+                        //       },
+                        //           fillColor: kGreyBackgroundColor,
+                        //           textColor: Colors.orange,
+                        //           capitalText: false),
+                        //     ),
+                        //   ], bv
+                        // ),
                       ],
                     )
                   else
@@ -858,34 +936,37 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   Widget showStatus(BuildContext context, String status) {
     Widget response = Text(" ");
     if (status == kRequested) {
-      response = GestureDetector(
-        child: Card(
-            color: kInactiveColor,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: kMargin16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image(image: AssetImage(kIconAdditionWhitePath)),
-                  SizedBox(
-                    width: kMargin10,
-                  ),
-                  Text(
-                    "pending approval",
-                    style: TextStyle(color: Colors.white, fontSize: kMargin14),
-                  ),
-                ],
-              ),
-            )),
-        onTap: () {
-          _opportunityViewModel
-              .removeFromEnrollments(context, widget.opportunity, (success) {
-            loadOpportunityDetail();
-          }, (error) {
-            EasyLoading.showError(error);
-          });
-        },
-      );
+      response = opportunityStatus == OPPORTUNITY_STATUS_VALUES['Published']
+          ? GestureDetector(
+              child: Card(
+                  color: kInactiveColor,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: kMargin16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(image: AssetImage(kIconAdditionWhitePath)),
+                        SizedBox(
+                          width: kMargin10,
+                        ),
+                        Text(
+                          "pending approval",
+                          style: TextStyle(
+                              color: Colors.white, fontSize: kMargin14),
+                        ),
+                      ],
+                    ),
+                  )),
+              onTap: () {
+                _opportunityViewModel.removeFromEnrollments(
+                    context, widget.opportunity, (success) {
+                  loadOpportunityDetail();
+                }, (error) {
+                  EasyLoading.showError(error);
+                });
+              },
+            )
+          : SizedBox();
     }
     if (status == kParticipated) {
       return SizedBox();
