@@ -140,6 +140,65 @@ class _ProfileFormState extends State<ProfileForm> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Center(
+                          child: Container(
+                            padding: EdgeInsets.all(kMargin14),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: kBorderColor,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(kRadius10),
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                _showCoverPicker(context);
+                              },
+                              child: _profileImage != null
+                                  ? Image.file(
+                                      File(_profileImage.path),
+                                      fit: BoxFit.fitHeight,
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              2 /
+                                              3,
+                                      width: MediaQuery.of(context).size.width,
+                                    )
+                                  : Container(
+                                      child: profile == null
+                                          ? Image(
+                                              image:
+                                                  AssetImage(kAddUserImagePath),
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  2 /
+                                                  3,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                            )
+                                          : CachedNetworkImage(
+                                              imageUrl:
+                                                  "${BASE_URL}${userProfileImagePath}${profile.photo}",
+                                              placeholder: (context, url) =>
+                                                  Image(
+                                                      image: AssetImage(
+                                                          kPlaceholderImagePath)),
+                                              errorWidget: (context, url,
+                                                      error) =>
+                                                  Image(
+                                                      image: AssetImage(
+                                                          kPlaceholderImagePath)),
+                                              fit: BoxFit.fill,
+                                              height: 100,
+                                              width: 100,
+                                            ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
                         RichText(
                           text: TextSpan(
                             text: "Full Name",
@@ -217,69 +276,6 @@ class _ProfileFormState extends State<ProfileForm> {
                                     child: Text('$gender'),
                                   ))
                               .toList(),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(kMargin14),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: kBorderColor,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(kRadius10),
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  _showCoverPicker(context);
-                                },
-                                child: _profileImage != null
-                                    ? Image.file(
-                                        File(_profileImage.path),
-                                        height: 100,
-                                        width: 100,
-                                        fit: BoxFit.fitHeight,
-                                      )
-                                    : Container(
-                                        child: profile == null
-                                            ? Image(
-                                                image:
-                                                    AssetImage(kAvatarIconPath),
-                                                width: 100,
-                                                height: 100,
-                                              )
-                                            : CachedNetworkImage(
-                                                imageUrl:
-                                                    "${BASE_URL}${userProfileImagePath}${profile.photo}",
-                                                placeholder: (context, url) =>
-                                                    Image(
-                                                        image: AssetImage(
-                                                            kPlaceholderImagePath)),
-                                                errorWidget: (context, url,
-                                                        error) =>
-                                                    Image(
-                                                        image: AssetImage(
-                                                            kPlaceholderImagePath)),
-                                                fit: BoxFit.fill,
-                                                height: 100,
-                                                width: 100,
-                                              ),
-                                      ),
-                              ),
-                            ),
-                            SizedBox(width: kMargin24),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                kUploadProfile,
-                                style: TextStyle(
-                                  color: kLabelColor,
-                                  fontSize: kMargin14,
-                                ),
-                              ),
-                            ),
-                          ],
                         ),
                         SizedBox(height: 10),
                       ])),
