@@ -217,8 +217,6 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                     builder: (context) => OpportunityDetail(
                         item, opportunityUploadPath, currentUser)))
             .then((value) async {
-          bool callApi = await shouldMakeApiCall(context);
-          if (!callApi) return;
           _loadUserData();
           _loadOpportunitiesStats();
         });
@@ -637,8 +635,6 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                         new MaterialPageRoute(
                             builder: (context) => Notifications(currentUser)))
                     .then((value) async {
-                  bool callApi = await shouldMakeApiCall(context);
-                  if (!callApi) return;
                   _loadOpportunitiesStats();
                 });
               },
