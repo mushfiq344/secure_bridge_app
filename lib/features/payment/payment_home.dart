@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:secure_bridges_app/features/payment/existing_cards.dart';
 import 'package:secure_bridges_app/features/payment/payment_service.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 
 class PaymentHome extends StatefulWidget {
@@ -82,7 +83,9 @@ class PaymentHomeState extends State<PaymentHome> {
               }
 
               return InkWell(
-                onTap: () {
+                onTap: () async {
+                  bool callApi = await shouldMakeApiCall(context);
+                  if (!callApi) return;
                   onItemPress(context, index);
                 },
                 child: ListTile(

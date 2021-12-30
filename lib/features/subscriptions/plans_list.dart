@@ -12,6 +12,7 @@ import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/features/payment/payment_home.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_view_model.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
@@ -217,7 +218,7 @@ class _PlansListState extends State<PlansList> {
                 ],
               ),
             ),
-            onTap: () {
+            onTap: () async {
               if (userSubscribedPlans.contains(e.id)) {
                 EasyLoading.showInfo('You are already subscribed to this plan');
                 return;

@@ -146,8 +146,52 @@ class _LoginState extends State<Login> {
                                   fontWeight: FontWeight.bold)),
                         ),
                       ),
-                      onTap: () {
-                        _handleSignIn();
+                      onTap: () async {
+                        bool callApi = await shouldMakeApiCall(context);
+                        if (!callApi) return;
+                        _authenticationViewModel.handleGoogleSignIn(() async {
+                          SharedPreferences localStorage =
+                              await SharedPreferences.getInstance();
+                          var user = jsonDecode(localStorage.getString('user'));
+                          int regCompleted = user['reg_completed'];
+                          if (regCompleted < 2) {
+                            if (regCompleted < 1) {
+                              await Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SelectAccountType()),
+                                (route) => false,
+                              );
+                            } else {
+                              int userType = user['user_type'];
+                              if (userType == 1) {
+                                await Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PlansList()),
+                                  (route) => false,
+                                );
+                              } else {
+                                await Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          LandingSearchPage()),
+                                  (route) => false,
+                                );
+                              }
+                            }
+                          } else {
+                            await Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LandingSearchPage()),
+                              (route) => false,
+                            );
+                          }
+                        }, (error) {
+                          EasyLoading.showError(error);
+                        });
                       },
                     ),
                     SizedBox(
@@ -372,82 +416,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  Future<void> _handleSignIn() async {
-    try {
-      GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-      if (googleSignInAccount == null) {
-        print('Google Signin ERROR! googleAccount: null!');
-        return null;
-      }
-      GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
-
-      //this is user access token from google that is retrieved with the plugin
-      print("User Access Token: ${googleSignInAuthentication.accessToken}");
-      String accessToken = googleSignInAuthentication.accessToken;
-      googleAuth(accessToken);
-    } catch (error) {
-      EasyLoading.showError(error);
-    }
-  }
-
-  void googleAuth(String token) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var data = {"google_token": token};
-      // EasyLoading.show(status: kLoading);
-      var res = await Network().postData(data, GOOGLE_AUTH_URL);
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body : ${body}");
-      if (res.statusCode == 200) {
-        print("get token : ${body['data']['token']}");
-        SharedPreferences localStorage = await SharedPreferences.getInstance();
-        localStorage.setString('token', body['data']['token']);
-        await localStorage.setString('user', json.encode(body['data']['user']));
-        EasyLoading.dismiss();
-
-        var user = jsonDecode(localStorage.getString('user'));
-        int regCompleted = user['reg_completed'];
-        if (regCompleted < 2) {
-          if (regCompleted < 1) {
-            await Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => SelectAccountType()),
-              (route) => false,
-            );
-          } else {
-            int userType = user['user_type'];
-            if (userType == 1) {
-              await Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => PlansList()),
-                (route) => false,
-              );
-            } else {
-              await Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => LandingSearchPage()),
-                (route) => false,
-              );
-            }
-          }
-        } else {
-          await Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => LandingSearchPage()),
-            (route) => false,
-          );
-        }
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(kSomethingWentWrong);
-    }
   }
 }

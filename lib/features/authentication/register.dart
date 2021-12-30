@@ -9,6 +9,7 @@ import 'package:secure_bridges_app/features/authentication/select_account_type.d
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -187,7 +188,9 @@ class _RegisterState extends State<Register> {
                           PAButton(
                             "Create Account",
                             true,
-                            () {
+                            () async {
+                              bool callApi = await shouldMakeApiCall(context);
+                              if (!callApi) return;
                               if (_formKey.currentState.validate()) {
                                 _register();
                               }
@@ -251,7 +254,9 @@ class _RegisterState extends State<Register> {
                             ],
                           ),
                         ),
-                        onTap: () {
+                        onTap: () async {
+                          bool callApi = await shouldMakeApiCall(context);
+                          if (!callApi) return;
                           _authenticationViewModel.handleGoogleSignIn(() async {
                             SharedPreferences localStorage =
                                 await SharedPreferences.getInstance();
