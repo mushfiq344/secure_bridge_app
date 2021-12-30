@@ -117,4 +117,32 @@ class AuthenticationViewModel {
       _error(e.toString());
     }
   }
+
+  void login(String email, String password, _success, _error) async {
+    try {
+      var data = {'email': email, 'password': password};
+      EasyLoading.show(status: kLoading);
+      var res = await Network().authData(data, SIGN_IN_URL);
+      var body = json.decode(res.body);
+      log("res ${res.statusCode}");
+      log("body : ${body['data']['user']}");
+      if (res.statusCode == 200) {
+        print("get token : ${body['data']['token']}");
+        SharedPreferences localStorage = await SharedPreferences.getInstance();
+        localStorage.setString('token', body['data']['token']);
+        localStorage.setString('user', json.encode(body['data']['user']));
+        EasyLoading.dismiss();
+        int regCompleted = body['data']['user']['reg_completed'];
+        print("regCompleted $regCompleted");
+        _success(regCompleted, body);
+      } else {
+        EasyLoading.dismiss();
+        _error(body['message']);
+      }
+    } catch (e) {
+      print(e);
+      EasyLoading.dismiss();
+      _error(kSomethingWentWrong);
+    }
+  }
 }
