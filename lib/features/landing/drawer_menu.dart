@@ -222,7 +222,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   style: TextStyle(
                                       fontSize: kMargin22,
                                       fontWeight: FontWeight.w400)),
-                              onTap: () {
+                              onTap: () async {
+                                bool callApi = await shouldMakeApiCall(context);
+                                if (!callApi) return;
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
@@ -246,7 +248,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             style: TextStyle(
                                 fontSize: kMargin22,
                                 fontWeight: FontWeight.w400)),
-                        onTap: () {
+                        onTap: () async {
+                          bool callApi = await shouldMakeApiCall(context);
+                          if (!callApi) return;
                           Navigator.push(
                               context,
                               new MaterialPageRoute(

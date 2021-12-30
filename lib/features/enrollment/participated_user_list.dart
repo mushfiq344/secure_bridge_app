@@ -10,6 +10,7 @@ import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/Models/enrolled_user.dart';
 import 'package:secure_bridges_app/features/enrollment/enrollment_view_model.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -39,16 +40,23 @@ class _ParticipatedUserListState extends State<ParticipatedUserList> {
   }
 
   fetchParticipatedUsers(int opportunityId) async {
-    _enrollmentViewModel.fetchOpportunityUsers(opportunityId, 3,
-        (Map<dynamic, dynamic> body) {
-      List<EnrolledUser> _enrolledUsers = List<EnrolledUser>.from(body['data']
-              ['opportunity_users']
-          .map((i) => EnrolledUser.fromJson(i)));
-      setState(() {
-        enrolledUsers = _enrolledUsers;
-      });
-    }, (error) {
-      EasyLoading.showError(error);
+    Utils.checkInternetAvailability().then((value) {
+      if (value) {
+        _enrollmentViewModel.fetchOpportunityUsers(opportunityId, 3,
+            (Map<dynamic, dynamic> body) {
+          List<EnrolledUser> _enrolledUsers = List<EnrolledUser>.from(
+              body['data']['opportunity_users']
+                  .map((i) => EnrolledUser.fromJson(i)));
+          setState(() {
+            enrolledUsers = _enrolledUsers;
+          });
+        }, (error) {
+          EasyLoading.showError(error);
+        });
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showInfo(kNoInternetAvailable);
+      }
     });
   }
 
@@ -123,6 +131,8 @@ class _ParticipatedUserListState extends State<ParticipatedUserList> {
                                 image: AssetImage(kEnrollmentIconPath),
                               ),
                               onTap: () async {
+                                bool callApi = await shouldMakeApiCall(context);
+                                if (!callApi) return;
                                 await _enrollmentViewModel
                                     .changeUserOpportunityStatus(
                                         e.enrollmentId,

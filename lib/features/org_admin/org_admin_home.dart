@@ -16,6 +16,7 @@ import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.d
 import 'package:secure_bridges_app/features/org_admin/bar_chart_graph.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -78,22 +79,30 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
   }
 
   void getOpportunities() {
-    _orgAdminViewModel.getOpportunities((Map<dynamic, dynamic> body) {
-      log("body in class ${body}");
-      List<Opportunity> _opportunities = List<Opportunity>.from(
-          body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
-      setState(() {
-        opportunities = _opportunities
-            .where((element) =>
-                element.status == OPPORTUNITY_STATUS_VALUES['Published'])
-            .toList();
-        opportunityUploadPath = body["data"]["upload_path"];
-        totalReward = body["data"]["total_reward"];
-        totalEnrolledUser = body["data"]["total_enrolled_users"];
-        totalPendingApproval = body["data"]["total_pending_approval"];
-      });
-    }, (error) {
-      EasyLoading.showError(error);
+    Utils.checkInternetAvailability().then((value) {
+      if (value) {
+        _orgAdminViewModel.getOpportunities((Map<dynamic, dynamic> body) {
+          log("body in class ${body}");
+          List<Opportunity> _opportunities = List<Opportunity>.from(body['data']
+                  ['opportunities']
+              .map((i) => Opportunity.fromJson(i)));
+          setState(() {
+            opportunities = _opportunities
+                .where((element) =>
+                    element.status == OPPORTUNITY_STATUS_VALUES['Published'])
+                .toList();
+            opportunityUploadPath = body["data"]["upload_path"];
+            totalReward = body["data"]["total_reward"];
+            totalEnrolledUser = body["data"]["total_enrolled_users"];
+            totalPendingApproval = body["data"]["total_pending_approval"];
+          });
+        }, (error) {
+          EasyLoading.showError(error);
+        });
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showInfo(kNoInternetAvailable);
+      }
     });
   }
 
@@ -159,7 +168,9 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                     ? kActiveNotificationIconPath
                     : kInactiveNotificationIconPath),
               ),
-              onTap: () {
+              onTap: () async {
+                bool callApi = await shouldMakeApiCall(context);
+                if (!callApi) return;
                 Navigator.push(
                         context,
                         new MaterialPageRoute(

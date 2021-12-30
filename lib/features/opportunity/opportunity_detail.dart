@@ -723,7 +723,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                           children: [
                             Expanded(
                               flex: 1,
-                              child: PAButton("View Enrolled User", true, () {
+                              child: PAButton("View Enrolled User", true,
+                                  () async {
+                                bool callApi = await shouldMakeApiCall(context);
+                                if (!callApi) return;
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
@@ -745,7 +748,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                           children: [
                             Expanded(
                               flex: 1,
-                              child: PAButton("View Approved Users", true, () {
+                              child: PAButton("View Approved Users", true,
+                                  () async {
+                                bool callApi = await shouldMakeApiCall(context);
+                                if (!callApi) return;
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
@@ -768,7 +774,9 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                             Expanded(
                               flex: 1,
                               child: PAButton("View Participated User", true,
-                                  () {
+                                  () async {
+                                bool callApi = await shouldMakeApiCall(context);
+                                if (!callApi) return;
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
@@ -800,7 +808,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                     'Published']
                                             ? "Run"
                                             : "STOP",
-                                        true, () {
+                                        true, () async {
+                                      bool callApi =
+                                          await shouldMakeApiCall(context);
+                                      if (!callApi) return;
                                       if (opportunityStatus ==
                                           OPPORTUNITY_STATUS_VALUES[
                                               'Published']) {
