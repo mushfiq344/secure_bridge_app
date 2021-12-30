@@ -226,6 +226,8 @@ class _PlansListState extends State<PlansList> {
               String amount = (e.amount * 100).toString();
               amount = amount.substring(0, amount.indexOf('.'));
               if (e.mode == 0 || e.amount == 0) {
+                bool callApi = await shouldMakeApiCall(context);
+                if (!callApi) return;
                 _authenticationViewModel.completeRegistration(1, () async {
                   await Navigator.pushAndRemoveUntil(
                     context,
