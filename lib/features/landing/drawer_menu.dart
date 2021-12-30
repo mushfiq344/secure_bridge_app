@@ -19,6 +19,7 @@ import 'package:secure_bridges_app/features/user/user_view_model.dart';
 import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
+import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 
@@ -67,6 +68,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    print("url ${BASE_URL}${widget.currentUser.profileImage}");
     return Drawer(
       elevation: 10.0,
       child: Container(
@@ -79,20 +81,28 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: AspectRatio(
-                      aspectRatio: 1 / 1,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              "${BASE_URL}${widget.currentUser.profileImage}",
-                          placeholder: (context, url) =>
-                              Image(image: AssetImage(kPlaceholderImagePath)),
-                          errorWidget: (context, url, error) =>
-                              Image(image: AssetImage(kPlaceholderImagePath)),
-                          fit: BoxFit.fill,
-                          width: 88,
-                          height: 88,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: kPurpleColor,
+                          border: Border.all(
+                            color: kPurpleColor,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(100))),
+                      child: AspectRatio(
+                        aspectRatio: 1 / 1,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                "${BASE_URL}${widget.currentUser.profileImage}",
+                            placeholder: (context, url) =>
+                                Image(image: AssetImage(kPlaceholderImagePath)),
+                            errorWidget: (context, url, error) =>
+                                Image(image: AssetImage(kPlaceholderImagePath)),
+                            fit: BoxFit.fill,
+                            width: 88,
+                            height: 88,
+                          ),
                         ),
                       ),
                     ),
