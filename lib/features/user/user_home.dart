@@ -11,6 +11,7 @@ import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart'
 
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -286,7 +287,9 @@ class _UserHomeState extends State<UserHome> {
     String coverUrl = "${BASE_URL}${opportunityUploadPath}${item.coverImage}";
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        bool callApi = await shouldMakeApiCall(context);
+        if (!callApi) return;
         Navigator.push(
                 context,
                 new MaterialPageRoute(

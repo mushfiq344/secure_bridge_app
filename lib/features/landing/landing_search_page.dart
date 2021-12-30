@@ -20,6 +20,7 @@ import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart'
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
 
 import 'package:secure_bridges_app/network_utils/api.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
@@ -201,7 +202,9 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
     String coverUrl = "${BASE_URL}${opportunityUploadPath}${item.coverImage}";
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        bool callApi = await shouldMakeApiCall(context);
+        if (!callApi) return;
         Navigator.push(
             context,
             new MaterialPageRoute(
@@ -295,7 +298,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                           image: AssetImage(kIconLovePath),
                                         ),
                                 ),
-                                onTap: () {
+                                onTap: () async {
+                                  bool callApi =
+                                      await shouldMakeApiCall(context);
+                                  if (!callApi) return;
                                   if (userWishes.contains(item.id)) {
                                     _opportunityViewModel.removeFromWithList(
                                         context, item, (success) {
@@ -304,6 +310,9 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                       EasyLoading.showError(error);
                                     });
                                   } else {
+                                    bool callApi =
+                                        await shouldMakeApiCall(context);
+                                    if (!callApi) return;
                                     _opportunityViewModel
                                         .addToWishList(context, item, () {
                                       showDialog(
@@ -421,7 +430,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                           image: AssetImage(kIconAdditionPath),
                                         ),
                                 ),
-                                onTap: () {
+                                onTap: () async {
+                                  bool callApi =
+                                      await shouldMakeApiCall(context);
+                                  if (!callApi) return;
                                   if (userEnrollments.contains(item.id)) {
                                     _opportunityViewModel.removeFromEnrollments(
                                         context, item, (success) {
@@ -608,7 +620,9 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                     ? kActiveNotificationIconPath
                     : kInactiveNotificationIconPath),
               ),
-              onTap: () {
+              onTap: () async {
+                bool callApi = await shouldMakeApiCall(context);
+                if (!callApi) return;
                 Navigator.push(
                         context,
                         new MaterialPageRoute(

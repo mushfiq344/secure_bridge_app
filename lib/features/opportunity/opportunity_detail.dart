@@ -12,6 +12,7 @@ import 'package:secure_bridges_app/features/enrollment/pending_approval_list.dar
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -465,7 +466,9 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                       ],
                                     ),
                                   ))),
-                          onTap: () {
+                          onTap: () async {
+                            bool callApi = await shouldMakeApiCall(context);
+                            if (!callApi) return;
                             if (!inUserWithList) {
                               _opportunityViewModel.addToWishList(
                                   context, widget.opportunity, () {
@@ -603,7 +606,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                 ],
                                               ),
                                             )),
-                                        onTap: () {
+                                        onTap: () async {
+                                          bool callApi =
+                                              await shouldMakeApiCall(context);
+                                          if (!callApi) return;
                                           _opportunityViewModel.enrollUser(
                                               context, widget.opportunity, () {
                                             showDialog(
