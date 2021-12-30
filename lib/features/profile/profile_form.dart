@@ -191,8 +191,14 @@ class _ProfileFormState extends State<ProfileForm> {
                                                       image: AssetImage(
                                                           kPlaceholderImagePath)),
                                               fit: BoxFit.fill,
-                                              height: 100,
-                                              width: 100,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  2 /
+                                                  3,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
                                             ),
                                     ),
                             ),
