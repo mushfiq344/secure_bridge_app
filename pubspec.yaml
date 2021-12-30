@@ -55,6 +55,7 @@ dependencies:
   flutter_switch: ^0.3.2
   google_map_location_picker: ^4.1.7
   flutter_summernote: ^1.0.0
+  flutter_html: ^0.8.2
 
 dev_dependencies:
   flutter_test:

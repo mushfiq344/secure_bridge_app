@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/enrollment/opportunity_happening.dart';
@@ -416,14 +417,16 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: Text(
-                            "${widget.opportunity.description}",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                fontSize: kMargin12,
-                                fontWeight: FontWeight.w400,
-                                color: kInactiveColor),
-                          ),
+                          child:
+                              Html(data: "${widget.opportunity.description}"),
+                          // child: Text(
+                          //   "${widget.opportunity.description}",
+                          //   textAlign: TextAlign.start,
+                          //   style: TextStyle(
+                          //       fontSize: kMargin12,
+                          //       fontWeight: FontWeight.w400,
+                          //       color: kInactiveColor),
+                          // ),
                         ),
                       ],
                     ),

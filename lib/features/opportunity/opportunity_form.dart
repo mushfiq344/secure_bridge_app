@@ -171,11 +171,21 @@ class _OpportunityFormState extends State<OpportunityForm> {
           locationController.text = widget.oppotunity.location;
 
           await Future.delayed(Duration(milliseconds: 500));
-          await Future.delayed(Duration(milliseconds: 500));
-          _descriptionKeyEditor.currentState
-              .setText(widget.oppotunity.description);
-          await Future.delayed(Duration(milliseconds: 500));
+          if (widget.oppotunity.description != null) {
+            _descriptionKeyEditor.currentState
+                .setText(widget.oppotunity.description);
+          }
 
+          await Future.delayed(Duration(milliseconds: 500));
+          if (widget.oppotunity.description == null) {
+            _descriptionKeyEditor.currentState.setHint(
+              "Your text here...",
+            );
+          } else {
+            _descriptionKeyEditor.currentState.setHint("");
+          }
+
+          await Future.delayed(Duration(milliseconds: 500));
           EasyLoading.dismiss();
         });
       } catch (e) {
