@@ -14,6 +14,7 @@ import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/features/org_admin/my_opportunity.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -567,7 +568,10 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                 PAButton(
                                   "Submit",
                                   true,
-                                  () {
+                                  () async {
+                                    bool callApi =
+                                        await shouldMakeApiCall(context);
+                                    if (!callApi) return;
                                     _formKey.currentState.save();
                                     if (_formKey.currentState.validate()) {
                                       print(_formKey.currentState.value);
@@ -587,7 +591,10 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                 PAButton(
                                   "Submit & Publish",
                                   true,
-                                  () {
+                                  () async {
+                                    bool callApi =
+                                        await shouldMakeApiCall(context);
+                                    if (!callApi) return;
                                     _formKey.currentState.save();
                                     if (_formKey.currentState.validate()) {
                                       print(_formKey.currentState.value);

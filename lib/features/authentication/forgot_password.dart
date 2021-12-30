@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
 import 'package:secure_bridges_app/features/authentication/register.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
@@ -96,7 +97,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   child: PAButton(
                                     "Send Reset Link",
                                     true,
-                                    () {
+                                    () async {
+                                      bool callApi =
+                                          await shouldMakeApiCall(context);
+                                      if (!callApi) return;
                                       if (_formKey.currentState.validate()) {
                                         _authenticationViewModel
                                             .forgotPassword(email, (success) {

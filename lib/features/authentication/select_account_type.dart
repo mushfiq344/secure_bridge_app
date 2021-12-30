@@ -11,6 +11,7 @@ import 'package:secure_bridges_app/features/authentication/register.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -125,6 +126,8 @@ class _SelectAccountTypeState extends State<SelectAccountType> {
                       "Help Youth",
                       true,
                       () async {
+                        bool callApi = await shouldMakeApiCall(context);
+                        if (!callApi) return;
                         _authenticationViewModel.completeRegistration(1,
                             () async {
                           await Navigator.pushAndRemoveUntil(
@@ -175,6 +178,8 @@ class _SelectAccountTypeState extends State<SelectAccountType> {
                       "Get Help",
                       true,
                       () async {
+                        bool callApi = await shouldMakeApiCall(context);
+                        if (!callApi) return;
                         _authenticationViewModel.completeRegistration(0,
                             () async {
                           await Navigator.pushAndRemoveUntil(

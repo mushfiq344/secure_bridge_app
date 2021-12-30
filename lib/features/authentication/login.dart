@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
 import 'package:secure_bridges_app/features/authentication/forgot_password.dart';
 import 'package:secure_bridges_app/features/authentication/register.dart';
 import 'package:secure_bridges_app/features/authentication/select_account_type.dart';
@@ -12,6 +13,7 @@ import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -27,6 +29,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  AuthenticationViewModel _authenticationViewModel = AuthenticationViewModel();
   GoogleSignInAccount _userObj;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   bool _isLoading = false;
@@ -143,8 +146,52 @@ class _LoginState extends State<Login> {
                                   fontWeight: FontWeight.bold)),
                         ),
                       ),
-                      onTap: () {
-                        _handleSignIn();
+                      onTap: () async {
+                        bool callApi = await shouldMakeApiCall(context);
+                        if (!callApi) return;
+                        _authenticationViewModel.handleGoogleSignIn(() async {
+                          SharedPreferences localStorage =
+                              await SharedPreferences.getInstance();
+                          var user = jsonDecode(localStorage.getString('user'));
+                          int regCompleted = user['reg_completed'];
+                          if (regCompleted < 2) {
+                            if (regCompleted < 1) {
+                              await Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SelectAccountType()),
+                                (route) => false,
+                              );
+                            } else {
+                              int userType = user['user_type'];
+                              if (userType == 1) {
+                                await Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PlansList()),
+                                  (route) => false,
+                                );
+                              } else {
+                                await Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          LandingSearchPage()),
+                                  (route) => false,
+                                );
+                              }
+                            }
+                          } else {
+                            await Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LandingSearchPage()),
+                              (route) => false,
+                            );
+                          }
+                        }, (error) {
+                          EasyLoading.showError(error);
+                        });
                       },
                     ),
                     SizedBox(
@@ -269,9 +316,50 @@ class _LoginState extends State<Login> {
                                 child: PAButton(
                                   "Login",
                                   true,
-                                  () {
+                                  () async {
+                                    bool callApi =
+                                        await shouldMakeApiCall(context);
+                                    if (!callApi) return;
+                                    _formKey.currentState.save();
                                     if (_formKey.currentState.validate()) {
-                                      _login();
+                                      _authenticationViewModel.login(
+                                          email, password, (int regCompleted,
+                                              Map<String, dynamic> body) async {
+                                        if (regCompleted == 0) {
+                                          await Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SelectAccountType()),
+                                            (route) => false,
+                                          );
+                                        } else {
+                                          if (body['data']['user']
+                                                  ['user_type'] ==
+                                              0) {
+                                            await Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LandingSearchPage()),
+                                              (route) => false,
+                                            );
+                                          } else if (body['data']['user']
+                                                  ['user_type'] ==
+                                              1) {
+                                            await Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrgAdminHome()),
+                                              (route) => false,
+                                            );
+                                          }
+                                        }
+                                      }, (error) {
+                                        EasyLoading.dismiss();
+                                        EasyLoading.showError(error);
+                                      });
                                     }
                                   },
                                   fillColor: kPurpleColor,
@@ -328,129 +416,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  Future<void> _handleSignIn() async {
-    try {
-      GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-      if (googleSignInAccount == null) {
-        print('Google Signin ERROR! googleAccount: null!');
-        return null;
-      }
-      GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
-
-      //this is user access token from google that is retrieved with the plugin
-      print("User Access Token: ${googleSignInAuthentication.accessToken}");
-      String accessToken = googleSignInAuthentication.accessToken;
-      googleAuth(accessToken);
-    } catch (error) {
-      EasyLoading.showError(error);
-    }
-  }
-
-  void _login() async {
-    try {
-      var data = {'email': email, 'password': password, 'fcm_token': fcmToken};
-      EasyLoading.show(status: kLoading);
-      var res = await Network().authData(data, SIGN_IN_URL);
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body : ${body['data']['user']}");
-      if (res.statusCode == 200) {
-        print("get token : ${body['data']['token']}");
-        SharedPreferences localStorage = await SharedPreferences.getInstance();
-        localStorage.setString('token', body['data']['token']);
-        localStorage.setString('user', json.encode(body['data']['user']));
-        EasyLoading.dismiss();
-        int regCompleted = body['data']['user']['reg_completed'];
-        print("regCompleted $regCompleted");
-        if (regCompleted == 0) {
-          await Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => SelectAccountType()),
-            (route) => false,
-          );
-        } else {
-          if (body['data']['user']['user_type'] == 0) {
-            await Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => LandingSearchPage()),
-              (route) => false,
-            );
-          } else if (body['data']['user']['user_type'] == 1) {
-            await Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => OrgAdminHome()),
-              (route) => false,
-            );
-          }
-        }
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
-  }
-
-  void googleAuth(String token) async {
-    try {
-      EasyLoading.show(status: kLoading);
-      var data = {"google_token": token};
-      // EasyLoading.show(status: kLoading);
-      var res = await Network().postData(data, GOOGLE_AUTH_URL);
-      var body = json.decode(res.body);
-      // log("res ${res.statusCode}");
-      log("body : ${body}");
-      if (res.statusCode == 200) {
-        print("get token : ${body['data']['token']}");
-        SharedPreferences localStorage = await SharedPreferences.getInstance();
-        localStorage.setString('token', body['data']['token']);
-        await localStorage.setString('user', json.encode(body['data']['user']));
-        EasyLoading.dismiss();
-
-        var user = jsonDecode(localStorage.getString('user'));
-        int regCompleted = user['reg_completed'];
-        if (regCompleted < 2) {
-          if (regCompleted < 1) {
-            await Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => SelectAccountType()),
-              (route) => false,
-            );
-          } else {
-            int userType = user['user_type'];
-            if (userType == 1) {
-              await Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => PlansList()),
-                (route) => false,
-              );
-            } else {
-              await Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => LandingSearchPage()),
-                (route) => false,
-              );
-            }
-          }
-        } else {
-          await Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => LandingSearchPage()),
-            (route) => false,
-          );
-        }
-      } else {
-        EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
-      }
-    } catch (e) {
-      EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
-    }
   }
 }

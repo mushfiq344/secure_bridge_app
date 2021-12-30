@@ -12,6 +12,7 @@ import 'package:secure_bridges_app/features/enrollment/pending_approval_list.dar
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -49,18 +50,25 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   }
 
   void loadOpportunityDetail() {
-    _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,
-        (Map<String, dynamic> body) {
-      log("body model ${body['data']['opportunity']}");
-      setState(() {
-        opportunityStatus = body['data']['opportunity']['status'];
-        userEnrolled = body['data']['is_user_enrolled'];
-        inUserWithList = body['data']['in_user_wish_list'];
-        userCode = body['data']['user_code'];
-        userEnrollmentStatus = body['data']['enrollment_status'];
-      });
-    }, (error) {
-      EasyLoading.showError(error);
+    Utils.checkInternetAvailability().then((value) {
+      if (value) {
+        _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,
+            (Map<String, dynamic> body) {
+          log("body model ${body['data']['opportunity']}");
+          setState(() {
+            opportunityStatus = body['data']['opportunity']['status'];
+            userEnrolled = body['data']['is_user_enrolled'];
+            inUserWithList = body['data']['in_user_wish_list'];
+            userCode = body['data']['user_code'];
+            userEnrollmentStatus = body['data']['enrollment_status'];
+          });
+        }, (error) {
+          EasyLoading.showError(error);
+        });
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showInfo(kNoInternetAvailable);
+      }
     });
   }
 
@@ -465,7 +473,9 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                       ],
                                     ),
                                   ))),
-                          onTap: () {
+                          onTap: () async {
+                            bool callApi = await shouldMakeApiCall(context);
+                            if (!callApi) return;
                             if (!inUserWithList) {
                               _opportunityViewModel.addToWishList(
                                   context, widget.opportunity, () {
@@ -603,7 +613,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                 ],
                                               ),
                                             )),
-                                        onTap: () {
+                                        onTap: () async {
+                                          bool callApi =
+                                              await shouldMakeApiCall(context);
+                                          if (!callApi) return;
                                           _opportunityViewModel.enrollUser(
                                               context, widget.opportunity, () {
                                             showDialog(
@@ -710,7 +723,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                           children: [
                             Expanded(
                               flex: 1,
-                              child: PAButton("View Enrolled User", true, () {
+                              child: PAButton("View Enrolled User", true,
+                                  () async {
+                                bool callApi = await shouldMakeApiCall(context);
+                                if (!callApi) return;
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
@@ -732,7 +748,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                           children: [
                             Expanded(
                               flex: 1,
-                              child: PAButton("View Approved Users", true, () {
+                              child: PAButton("View Approved Users", true,
+                                  () async {
+                                bool callApi = await shouldMakeApiCall(context);
+                                if (!callApi) return;
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
@@ -755,7 +774,9 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                             Expanded(
                               flex: 1,
                               child: PAButton("View Participated User", true,
-                                  () {
+                                  () async {
+                                bool callApi = await shouldMakeApiCall(context);
+                                if (!callApi) return;
                                 Navigator.push(
                                     context,
                                     new MaterialPageRoute(
@@ -787,7 +808,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                     'Published']
                                             ? "Run"
                                             : "STOP",
-                                        true, () {
+                                        true, () async {
+                                      bool callApi =
+                                          await shouldMakeApiCall(context);
+                                      if (!callApi) return;
                                       if (opportunityStatus ==
                                           OPPORTUNITY_STATUS_VALUES[
                                               'Published']) {

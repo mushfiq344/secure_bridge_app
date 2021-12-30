@@ -20,6 +20,7 @@ import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart'
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
 
 import 'package:secure_bridges_app/network_utils/api.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
@@ -106,20 +107,28 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   }
 
   _loadOpportunitiesStats() async {
-    _landingViewModel.loadHomeScreenData((Map<dynamic, dynamic> body) {
-      List<Opportunity> _opportunities = List<Opportunity>.from(
-          body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
-      setState(() {
-        opportunities = _opportunities;
-        opportunitiesAll = _opportunities;
-        searchedOpportunities = _opportunities;
-        opportunityUploadPath = body["data"]["upload_path"];
-        userWishes = body['data']['user_wishes'].cast<int>();
-        userEnrollments = body['data']['user_enrollments'].cast<int>();
-        hasUnreadNotification = body['data']['has_active_notifications'];
-      });
-    }, (error) {
-      EasyLoading.showError(error);
+    Utils.checkInternetAvailability().then((value) {
+      if (value) {
+        _landingViewModel.loadHomeScreenData((Map<dynamic, dynamic> body) {
+          List<Opportunity> _opportunities = List<Opportunity>.from(body['data']
+                  ['opportunities']
+              .map((i) => Opportunity.fromJson(i)));
+          setState(() {
+            opportunities = _opportunities;
+            opportunitiesAll = _opportunities;
+            searchedOpportunities = _opportunities;
+            opportunityUploadPath = body["data"]["upload_path"];
+            userWishes = body['data']['user_wishes'].cast<int>();
+            userEnrollments = body['data']['user_enrollments'].cast<int>();
+            hasUnreadNotification = body['data']['has_active_notifications'];
+          });
+        }, (error) {
+          EasyLoading.showError(error);
+        });
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showInfo(kNoInternetAvailable);
+      }
     });
   }
 
@@ -140,8 +149,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   }
 
   @override
-  update(Observable observable, String notifyName, Map map) {
-    ///do your work
+  update(Observable observable, String notifyName, Map map) async {
     _loadOpportunitiesStats();
   }
 
@@ -201,12 +209,15 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
     String coverUrl = "${BASE_URL}${opportunityUploadPath}${item.coverImage}";
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        bool callApi = await shouldMakeApiCall(context);
+        if (!callApi) return;
         Navigator.push(
-            context,
-            new MaterialPageRoute(
-                builder: (context) => OpportunityDetail(
-                    item, opportunityUploadPath, currentUser))).then((value) {
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => OpportunityDetail(
+                        item, opportunityUploadPath, currentUser)))
+            .then((value) async {
           _loadUserData();
           _loadOpportunitiesStats();
         });
@@ -295,7 +306,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                           image: AssetImage(kIconLovePath),
                                         ),
                                 ),
-                                onTap: () {
+                                onTap: () async {
+                                  bool callApi =
+                                      await shouldMakeApiCall(context);
+                                  if (!callApi) return;
                                   if (userWishes.contains(item.id)) {
                                     _opportunityViewModel.removeFromWithList(
                                         context, item, (success) {
@@ -304,6 +318,9 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                       EasyLoading.showError(error);
                                     });
                                   } else {
+                                    bool callApi =
+                                        await shouldMakeApiCall(context);
+                                    if (!callApi) return;
                                     _opportunityViewModel
                                         .addToWishList(context, item, () {
                                       showDialog(
@@ -421,7 +438,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                           image: AssetImage(kIconAdditionPath),
                                         ),
                                 ),
-                                onTap: () {
+                                onTap: () async {
+                                  bool callApi =
+                                      await shouldMakeApiCall(context);
+                                  if (!callApi) return;
                                   if (userEnrollments.contains(item.id)) {
                                     _opportunityViewModel.removeFromEnrollments(
                                         context, item, (success) {
@@ -608,12 +628,14 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                     ? kActiveNotificationIconPath
                     : kInactiveNotificationIconPath),
               ),
-              onTap: () {
+              onTap: () async {
+                bool callApi = await shouldMakeApiCall(context);
+                if (!callApi) return;
                 Navigator.push(
                         context,
                         new MaterialPageRoute(
                             builder: (context) => Notifications(currentUser)))
-                    .then((value) {
+                    .then((value) async {
                   _loadOpportunitiesStats();
                 });
               },

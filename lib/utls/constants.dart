@@ -109,3 +109,5 @@ The navigation delegate is set to block navigation to the youtube website.
 const kRequested = "Requested";
 const kParticipated = "Participated";
 const kPlanModes = {0: "Basic", 1: "Pro"};
+const kSomethingWentWrong = "Something went wrong";
+const kNoInternetAvailable = "No Internet Available";

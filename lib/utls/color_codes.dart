@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-const kPurpleColor = Color(0xFF573353);
+const kPurpleColor = Color(0xFF5B1C78);
 const kPurpleBackGround = Color(0xFF5A189A);
 const kLightPurpleBackgroundColor = Color(0xFFB1AFE9);
 const kAlertDialogBackgroundColor = Color(0xFFDDDCFE);

@@ -14,6 +14,7 @@ import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/features/profile/profile_view_model.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -139,6 +140,71 @@ class _ProfileFormState extends State<ProfileForm> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Center(
+                          child: Container(
+                            padding: EdgeInsets.all(kMargin14),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: kBorderColor,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(kRadius10),
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                _showCoverPicker(context);
+                              },
+                              child: _profileImage != null
+                                  ? Image.file(
+                                      File(_profileImage.path),
+                                      fit: BoxFit.fitHeight,
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              2 /
+                                              3,
+                                      width: MediaQuery.of(context).size.width,
+                                    )
+                                  : Container(
+                                      child: profile == null
+                                          ? Image(
+                                              image:
+                                                  AssetImage(kAddUserImagePath),
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  2 /
+                                                  3,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                            )
+                                          : CachedNetworkImage(
+                                              imageUrl:
+                                                  "${BASE_URL}${userProfileImagePath}${profile.photo}",
+                                              placeholder: (context, url) =>
+                                                  Image(
+                                                      image: AssetImage(
+                                                          kPlaceholderImagePath)),
+                                              errorWidget: (context, url,
+                                                      error) =>
+                                                  Image(
+                                                      image: AssetImage(
+                                                          kPlaceholderImagePath)),
+                                              fit: BoxFit.fill,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  2 /
+                                                  3,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                            ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
                         RichText(
                           text: TextSpan(
                             text: "Full Name",
@@ -218,69 +284,6 @@ class _ProfileFormState extends State<ProfileForm> {
                               .toList(),
                         ),
                         SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(kMargin14),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: kBorderColor,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(kRadius10),
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  _showCoverPicker(context);
-                                },
-                                child: _profileImage != null
-                                    ? Image.file(
-                                        File(_profileImage.path),
-                                        height: 100,
-                                        width: 100,
-                                        fit: BoxFit.fitHeight,
-                                      )
-                                    : Container(
-                                        child: profile == null
-                                            ? Image(
-                                                image:
-                                                    AssetImage(kAvatarIconPath),
-                                                width: 100,
-                                                height: 100,
-                                              )
-                                            : CachedNetworkImage(
-                                                imageUrl:
-                                                    "${BASE_URL}${userProfileImagePath}${profile.photo}",
-                                                placeholder: (context, url) =>
-                                                    Image(
-                                                        image: AssetImage(
-                                                            kPlaceholderImagePath)),
-                                                errorWidget: (context, url,
-                                                        error) =>
-                                                    Image(
-                                                        image: AssetImage(
-                                                            kPlaceholderImagePath)),
-                                                fit: BoxFit.fill,
-                                                height: 100,
-                                                width: 100,
-                                              ),
-                                      ),
-                              ),
-                            ),
-                            SizedBox(width: kMargin24),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                kUploadProfile,
-                                style: TextStyle(
-                                  color: kLabelColor,
-                                  fontSize: kMargin14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
                       ])),
               Row(
                 children: <Widget>[
@@ -288,7 +291,9 @@ class _ProfileFormState extends State<ProfileForm> {
                       child: PAButton(
                     profile == null ? "Create Profile" : "Update Profile",
                     true,
-                    () {
+                    () async {
+                      bool callApi = await shouldMakeApiCall(context);
+                      if (!callApi) return;
                       _formKey.currentState.save();
                       if (_formKey.currentState.validate()) {
                         print(_formKey.currentState.value);

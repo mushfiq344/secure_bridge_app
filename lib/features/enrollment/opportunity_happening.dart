@@ -9,6 +9,7 @@ import 'package:secure_bridges_app/features/enrollment/code_check_modal.dart';
 import 'package:secure_bridges_app/features/enrollment/enrollment_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -40,22 +41,29 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
   }
 
   fetchApprovedOpportunityUsers(int opportunityId) async {
-    _enrollmentViewModel.fetchOpportunityUsers(opportunityId, 1,
-        (Map<dynamic, dynamic> body) {
-      List<EnrolledUser> _enrolledUsers = List<EnrolledUser>.from(body['data']
-              ['opportunity_users']
-          .map((i) => EnrolledUser.fromJson(i)));
-      int _totalRequest = body['data']['total_request'];
-      int _totalConfirm = body['data']['total_confirmed'];
-      setState(() {
-        _searchController.text = "";
-        enrolledUsersAll = _enrolledUsers;
-        enrolledUsers = _enrolledUsers;
-        totalRequest = _totalRequest;
-        totalConfirm = _totalConfirm;
-      });
-    }, (error) {
-      EasyLoading.showError(error);
+    Utils.checkInternetAvailability().then((value) {
+      if (value) {
+        _enrollmentViewModel.fetchOpportunityUsers(opportunityId, 1,
+            (Map<dynamic, dynamic> body) {
+          List<EnrolledUser> _enrolledUsers = List<EnrolledUser>.from(
+              body['data']['opportunity_users']
+                  .map((i) => EnrolledUser.fromJson(i)));
+          int _totalRequest = body['data']['total_request'];
+          int _totalConfirm = body['data']['total_confirmed'];
+          setState(() {
+            _searchController.text = "";
+            enrolledUsersAll = _enrolledUsers;
+            enrolledUsers = _enrolledUsers;
+            totalRequest = _totalRequest;
+            totalConfirm = _totalConfirm;
+          });
+        }, (error) {
+          EasyLoading.showError(error);
+        });
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showInfo(kNoInternetAvailable);
+      }
     });
   }
 
@@ -147,7 +155,9 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
               PAButton(
                 "End the Event",
                 true,
-                () {
+                () async {
+                  bool callApi = await shouldMakeApiCall(context);
+                  if (!callApi) return;
                   var data = widget.opportunity.toJson();
                   data['status'] = OPPORTUNITY_STATUS_VALUES['Ended'];
                   _opportunityViewModel.updateOpportunity(data, () {
@@ -229,6 +239,8 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                               image: AssetImage(kEnrollmentIconPath),
                             ),
                             onTap: () async {
+                              bool callApi = await shouldMakeApiCall(context);
+                              if (!callApi) return;
                               await _enrollmentViewModel
                                   .changeUserOpportunityStatus(e.enrollmentId,
                                       e.userId, e.opportunityId, 3, (success) {

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
 
@@ -51,7 +52,9 @@ class _CodeCheckModalState extends State<CodeCheckModal> {
             PAButton(
               'Check',
               true,
-              () {
+              () async {
+                bool callApi = await shouldMakeApiCall(context);
+                if (!callApi) return;
                 if (_formKey.currentState.validate()) {
                   // _confirmUser(
                   //     widget.opportunity.id,

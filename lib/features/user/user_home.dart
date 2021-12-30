@@ -11,6 +11,7 @@ import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart'
 
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -40,6 +41,12 @@ class _UserHomeState extends State<UserHome> {
   List<int> userEnrollments = [];
   @override
   void initState() {
+    loadUserData();
+    loadUserOpportunitiesData();
+    super.initState();
+  }
+
+  void loadUserData() {
     _userViewModel.loadUserData((Map<dynamic, dynamic> user) {
       setState(() {
         userId = user['id'];
@@ -52,21 +59,31 @@ class _UserHomeState extends State<UserHome> {
     }, (error) {
       EasyLoading.showError(error);
     });
-    _userViewModel.getOpportunities((Map<dynamic, dynamic> body) {
-      log("body in class ${body}");
-      List<Opportunity> _opportunities = List<Opportunity>.from(
-          body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
-      setState(() {
-        allOpportunities = _opportunities;
-        opportunities = _opportunities;
-        opportunityUploadPath = body["data"]["upload_path"];
-        userWishes = body['data']['user_wishes'].cast<int>();
-        userEnrollments = body['data']['user_enrollments'].cast<int>();
-      });
-    }, (error) {
-      EasyLoading.showError(error);
+  }
+
+  void loadUserOpportunitiesData() {
+    Utils.checkInternetAvailability().then((value) {
+      if (value) {
+        _userViewModel.getOpportunities((Map<dynamic, dynamic> body) {
+          log("body in class ${body}");
+          List<Opportunity> _opportunities = List<Opportunity>.from(body['data']
+                  ['opportunities']
+              .map((i) => Opportunity.fromJson(i)));
+          setState(() {
+            allOpportunities = _opportunities;
+            opportunities = _opportunities;
+            opportunityUploadPath = body["data"]["upload_path"];
+            userWishes = body['data']['user_wishes'].cast<int>();
+            userEnrollments = body['data']['user_enrollments'].cast<int>();
+          });
+        }, (error) {
+          EasyLoading.showError(error);
+        });
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showInfo(kNoInternetAvailable);
+      }
     });
-    super.initState();
   }
 
   @override
@@ -286,28 +303,16 @@ class _UserHomeState extends State<UserHome> {
     String coverUrl = "${BASE_URL}${opportunityUploadPath}${item.coverImage}";
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        bool callApi = await shouldMakeApiCall(context);
+        if (!callApi) return;
         Navigator.push(
                 context,
                 new MaterialPageRoute(
                     builder: (context) => OpportunityDetail(
                         item, opportunityUploadPath, widget.currentUser)))
             .then((value) {
-          _userViewModel.getOpportunities((Map<dynamic, dynamic> body) {
-            log("body in class ${body}");
-            List<Opportunity> _opportunities = List<Opportunity>.from(
-                body['data']['opportunities']
-                    .map((i) => Opportunity.fromJson(i)));
-            setState(() {
-              opportunities = _opportunities;
-              opportunities = _opportunities;
-              opportunityUploadPath = body["data"]["upload_path"];
-              userWishes = body['data']['user_wishes'].cast<int>();
-              userEnrollments = body['data']['user_enrollments'].cast<int>();
-            });
-          }, (error) {
-            EasyLoading.showError(error);
-          });
+          loadUserOpportunitiesData();
         });
       },
       child: Padding(
@@ -392,34 +397,11 @@ class _UserHomeState extends State<UserHome> {
                                     image: AssetImage(kIconLovePath),
                                   ),
                           ),
-                          onTap: () {
+                          onTap: () async {
+                            bool callApi = await shouldMakeApiCall(context);
+                            if (!callApi) return;
                             if (userWishes.contains(item.id)) {
-                              _opportunityViewModel
-                                  .removeFromWithList(context, item, (success) {
-                                _userViewModel.getOpportunities(
-                                    (Map<dynamic, dynamic> body) {
-                                  log("body in class ${body}");
-                                  List<Opportunity> _opportunities =
-                                      List<Opportunity>.from(body['data']
-                                              ['opportunities']
-                                          .map((i) => Opportunity.fromJson(i)));
-                                  setState(() {
-                                    opportunities = _opportunities;
-                                    opportunities = _opportunities;
-                                    opportunityUploadPath =
-                                        body["data"]["upload_path"];
-                                    userWishes =
-                                        body['data']['user_wishes'].cast<int>();
-                                    userEnrollments = body['data']
-                                            ['user_enrollments']
-                                        .cast<int>();
-                                  });
-                                }, (error) {
-                                  EasyLoading.showError(error);
-                                });
-                              }, (error) {
-                                EasyLoading.showError(error);
-                              });
+                              loadUserOpportunitiesData();
                             } else {
                               _opportunityViewModel.addToWishList(context, item,
                                   () {
@@ -497,28 +479,7 @@ class _UserHomeState extends State<UserHome> {
                                             },
                                           ),
                                         )).then((value) {
-                                  _userViewModel.getOpportunities(
-                                      (Map<dynamic, dynamic> body) {
-                                    log("body in class ${body}");
-                                    List<Opportunity> _opportunities =
-                                        List<Opportunity>.from(body['data']
-                                                ['opportunities']
-                                            .map((i) =>
-                                                Opportunity.fromJson(i)));
-                                    setState(() {
-                                      opportunities = _opportunities;
-                                      opportunities = _opportunities;
-                                      opportunityUploadPath =
-                                          body["data"]["upload_path"];
-                                      userWishes = body['data']['user_wishes']
-                                          .cast<int>();
-                                      userEnrollments = body['data']
-                                              ['user_enrollments']
-                                          .cast<int>();
-                                    });
-                                  }, (error) {
-                                    EasyLoading.showError(error);
-                                  });
+                                  loadUserOpportunitiesData();
                                 });
                               }, (error) {
                                 EasyLoading.showError(error);
@@ -551,48 +512,15 @@ class _UserHomeState extends State<UserHome> {
                                           image: AssetImage(kIconAdditionPath),
                                         ),
                                 ),
-                                onTap: () {
+                                onTap: () async {
+                                  bool callApi =
+                                      await shouldMakeApiCall(context);
+                                  if (!callApi) return;
                                   if (userEnrollments.contains(item.id)) {
                                     _opportunityViewModel.removeFromEnrollments(
                                         context, item, (success) {
-                                      _userViewModel.loadUserData(
-                                          (Map<dynamic, dynamic> user) {
-                                        setState(() {
-                                          userId = user['id'];
-                                          name = user['name'];
-                                          email = user['email'];
-                                          profilePictureUrl =
-                                              user['profile_image'];
-                                          print(
-                                              "user type ${user['user_type']}");
-                                          userType = user['user_type'];
-                                        });
-                                      }, (error) {
-                                        EasyLoading.showError(error);
-                                      });
-                                      _userViewModel.getOpportunities(
-                                          (Map<dynamic, dynamic> body) {
-                                        log("body in class ${body}");
-                                        List<Opportunity> _opportunities =
-                                            List<Opportunity>.from(body['data']
-                                                    ['opportunities']
-                                                .map((i) =>
-                                                    Opportunity.fromJson(i)));
-                                        setState(() {
-                                          opportunities = _opportunities;
-                                          opportunities = _opportunities;
-                                          opportunityUploadPath =
-                                              body["data"]["upload_path"];
-                                          userWishes = body['data']
-                                                  ['user_wishes']
-                                              .cast<int>();
-                                          userEnrollments = body['data']
-                                                  ['user_enrollments']
-                                              .cast<int>();
-                                        });
-                                      }, (error) {
-                                        EasyLoading.showError(error);
-                                      });
+                                      loadUserData();
+                                      loadUserOpportunitiesData();
                                     }, (error) {
                                       EasyLoading.showError(error);
                                     });
@@ -682,44 +610,8 @@ class _UserHomeState extends State<UserHome> {
                                                   },
                                                 ),
                                               )).then((value) {
-                                        _userViewModel.loadUserData(
-                                            (Map<dynamic, dynamic> user) {
-                                          setState(() {
-                                            userId = user['id'];
-                                            name = user['name'];
-                                            email = user['email'];
-                                            profilePictureUrl =
-                                                user['profile_image'];
-                                            print(
-                                                "user type ${user['user_type']}");
-                                            userType = user['user_type'];
-                                          });
-                                        }, (error) {
-                                          EasyLoading.showError(error);
-                                        });
-                                        _userViewModel.getOpportunities(
-                                            (Map<dynamic, dynamic> body) {
-                                          log("body in class ${body}");
-                                          List<Opportunity> _opportunities =
-                                              List<Opportunity>.from(body[
-                                                      'data']['opportunities']
-                                                  .map((i) =>
-                                                      Opportunity.fromJson(i)));
-                                          setState(() {
-                                            opportunities = _opportunities;
-                                            opportunities = _opportunities;
-                                            opportunityUploadPath =
-                                                body["data"]["upload_path"];
-                                            userWishes = body['data']
-                                                    ['user_wishes']
-                                                .cast<int>();
-                                            userEnrollments = body['data']
-                                                    ['user_enrollments']
-                                                .cast<int>();
-                                          });
-                                        }, (error) {
-                                          EasyLoading.showError(error);
-                                        });
+                                        loadUserData();
+                                        loadUserOpportunitiesData();
                                       });
                                     }, (error) {
                                       EasyLoading.showError(error);
