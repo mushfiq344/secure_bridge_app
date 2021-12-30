@@ -127,6 +127,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
         });
       } else {
         EasyLoading.dismiss();
+        EasyLoading.showInfo(kNoInternetAvailable);
       }
     });
   }

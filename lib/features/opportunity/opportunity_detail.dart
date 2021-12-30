@@ -50,18 +50,25 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   }
 
   void loadOpportunityDetail() {
-    _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,
-        (Map<String, dynamic> body) {
-      log("body model ${body['data']['opportunity']}");
-      setState(() {
-        opportunityStatus = body['data']['opportunity']['status'];
-        userEnrolled = body['data']['is_user_enrolled'];
-        inUserWithList = body['data']['in_user_wish_list'];
-        userCode = body['data']['user_code'];
-        userEnrollmentStatus = body['data']['enrollment_status'];
-      });
-    }, (error) {
-      EasyLoading.showError(error);
+    Utils.checkInternetAvailability().then((value) {
+      if (value) {
+        _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,
+            (Map<String, dynamic> body) {
+          log("body model ${body['data']['opportunity']}");
+          setState(() {
+            opportunityStatus = body['data']['opportunity']['status'];
+            userEnrolled = body['data']['is_user_enrolled'];
+            inUserWithList = body['data']['in_user_wish_list'];
+            userCode = body['data']['user_code'];
+            userEnrollmentStatus = body['data']['enrollment_status'];
+          });
+        }, (error) {
+          EasyLoading.showError(error);
+        });
+      } else {
+        EasyLoading.dismiss();
+        EasyLoading.showInfo(kNoInternetAvailable);
+      }
     });
   }
 

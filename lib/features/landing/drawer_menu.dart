@@ -46,7 +46,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   @override
-  update(Observable observable, String notifyName, Map map) {
+  update(Observable observable, String notifyName, Map map) async {
     ///do your work
     loadUserData();
   }

@@ -81,6 +81,7 @@ class _UserHomeState extends State<UserHome> {
         });
       } else {
         EasyLoading.dismiss();
+        EasyLoading.showInfo(kNoInternetAvailable);
       }
     });
   }
