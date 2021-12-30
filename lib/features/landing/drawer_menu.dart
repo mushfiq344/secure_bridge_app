@@ -16,6 +16,7 @@ import 'package:secure_bridges_app/features/profile/profile_form.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/features/user/user_home.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/screen/secure_bridge_web_view.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
@@ -144,7 +145,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
               title: Text('Profile',
                   style: TextStyle(
                       fontSize: kMargin22, fontWeight: FontWeight.w400)),
-              onTap: () {
+              onTap: () async {
+                bool callApi = await shouldMakeApiCall(context);
+                if (!callApi) return;
                 Navigator.push(context,
                     new MaterialPageRoute(builder: (context) => ProfileForm()));
                 // Here you can give your route to navigate
