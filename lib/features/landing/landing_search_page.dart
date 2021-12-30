@@ -107,20 +107,27 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   }
 
   _loadOpportunitiesStats() async {
-    _landingViewModel.loadHomeScreenData((Map<dynamic, dynamic> body) {
-      List<Opportunity> _opportunities = List<Opportunity>.from(
-          body['data']['opportunities'].map((i) => Opportunity.fromJson(i)));
-      setState(() {
-        opportunities = _opportunities;
-        opportunitiesAll = _opportunities;
-        searchedOpportunities = _opportunities;
-        opportunityUploadPath = body["data"]["upload_path"];
-        userWishes = body['data']['user_wishes'].cast<int>();
-        userEnrollments = body['data']['user_enrollments'].cast<int>();
-        hasUnreadNotification = body['data']['has_active_notifications'];
-      });
-    }, (error) {
-      EasyLoading.showError(error);
+    Utils.checkInternetAvailability().then((value) {
+      if (value) {
+        _landingViewModel.loadHomeScreenData((Map<dynamic, dynamic> body) {
+          List<Opportunity> _opportunities = List<Opportunity>.from(body['data']
+                  ['opportunities']
+              .map((i) => Opportunity.fromJson(i)));
+          setState(() {
+            opportunities = _opportunities;
+            opportunitiesAll = _opportunities;
+            searchedOpportunities = _opportunities;
+            opportunityUploadPath = body["data"]["upload_path"];
+            userWishes = body['data']['user_wishes'].cast<int>();
+            userEnrollments = body['data']['user_enrollments'].cast<int>();
+            hasUnreadNotification = body['data']['has_active_notifications'];
+          });
+        }, (error) {
+          EasyLoading.showError(error);
+        });
+      } else {
+        EasyLoading.dismiss();
+      }
     });
   }
 
@@ -141,8 +148,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   }
 
   @override
-  update(Observable observable, String notifyName, Map map) {
-    ///do your work
+  update(Observable observable, String notifyName, Map map) async {
     _loadOpportunitiesStats();
   }
 
