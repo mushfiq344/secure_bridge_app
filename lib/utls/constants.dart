@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 const kLoading = "Loading...";
 const kComingSoon = "Coming Soon";
 const kAppName = "Secure Bridges";
@@ -111,3 +113,41 @@ const kParticipated = "Participated";
 const kPlanModes = {0: "Basic", 1: "Pro"};
 const kSomethingWentWrong = "Something went wrong";
 const kNoInternetAvailable = "No Internet Available";
+
+// final List<BarChartModel> data = [
+//   BarChartModel(
+//     year: "2014",
+//     financial: 250,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2015",
+//     financial: 300,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2016",
+//     financial: 100,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2017",
+//     financial: 450,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2018",
+//     financial: 630,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2019",
+//     financial: 1000,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2020",
+//     financial: 400,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+// ];

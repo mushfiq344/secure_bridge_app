@@ -42,6 +42,45 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
   User currentUser;
   bool hasUnreadNotification = false;
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  List<BarChartModel> weekLyEngagements = [];
+  String startDate;
+  String endDate;
+
+  Map<String, dynamic> engagementData = {
+    "start_date": "2021-12-23",
+    "end_date": "2021-12-31",
+    "weekly_engagements": [
+      {
+        "day": "Sat",
+        "count": 7,
+      },
+      {
+        "day": "Sun",
+        "count": 6,
+      },
+      {
+        "day": "Mon",
+        "count": 5,
+      },
+      {
+        "day": "Tues",
+        "count": 4,
+      },
+      {
+        "day": "Wed",
+        "count": 3,
+      },
+      {
+        "day": "Thurs",
+        "count": 2,
+      },
+      {
+        "day": "Fri",
+        "count": 1,
+      }
+    ]
+  };
+
   @override
   void initState() {
     getOpportunities();
@@ -78,23 +117,38 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
     });
   }
 
-  void getOpportunities() {
-    Utils.checkInternetAvailability().then((value) {
+  void getOpportunities() async {
+    await Utils.checkInternetAvailability().then((value) {
       if (value) {
         _orgAdminViewModel.getOpportunities((Map<dynamic, dynamic> body) {
           log("body in class ${body}");
           List<Opportunity> _opportunities = List<Opportunity>.from(body['data']
                   ['opportunities']
               .map((i) => Opportunity.fromJson(i)));
-          setState(() {
-            opportunities = _opportunities
-                .where((element) =>
-                    element.status == OPPORTUNITY_STATUS_VALUES['Published'])
-                .toList();
-            opportunityUploadPath = body["data"]["upload_path"];
-            totalReward = body["data"]["total_reward"];
-            totalEnrolledUser = body["data"]["total_enrolled_users"];
-            totalPendingApproval = body["data"]["total_pending_approval"];
+
+          List<BarChartModel> _data =
+              engagementData['weekly_engagements'].map<BarChartModel>((e) {
+            return BarChartModel(
+              year: e["day"],
+              financial: e["count"],
+              color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+            );
+          }).toList();
+          print("date : ${engagementData["start_date"]}");
+          Future.delayed(const Duration(), () {
+            setState(() {
+              startDate = engagementData["start_date"];
+              endDate = engagementData["end_date"];
+              weekLyEngagements = _data;
+              opportunities = _opportunities
+                  .where((element) =>
+                      element.status == OPPORTUNITY_STATUS_VALUES['Published'])
+                  .toList();
+              opportunityUploadPath = body["data"]["upload_path"];
+              totalReward = body["data"]["total_reward"];
+              totalEnrolledUser = body["data"]["total_enrolled_users"];
+              totalPendingApproval = body["data"]["total_pending_approval"];
+            });
           });
         }, (error) {
           EasyLoading.showError(error);
@@ -117,43 +171,6 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
     });
   }
 
-  final List<BarChartModel> data = [
-    BarChartModel(
-      year: "2014",
-      financial: 250,
-      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
-    ),
-    BarChartModel(
-      year: "2015",
-      financial: 300,
-      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
-    ),
-    BarChartModel(
-      year: "2016",
-      financial: 100,
-      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
-    ),
-    BarChartModel(
-      year: "2017",
-      financial: 450,
-      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
-    ),
-    BarChartModel(
-      year: "2018",
-      financial: 630,
-      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
-    ),
-    BarChartModel(
-      year: "2019",
-      financial: 1000,
-      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
-    ),
-    BarChartModel(
-      year: "2020",
-      financial: 400,
-      color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
-    ),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -415,7 +432,8 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                           height: kMargin8,
                         ),
                         BarChartGraph(
-                          data: data,
+                          title: "From ${startDate} To ${endDate}",
+                          data: weekLyEngagements,
                         ),
                         SizedBox(
                           height: kMargin8,
