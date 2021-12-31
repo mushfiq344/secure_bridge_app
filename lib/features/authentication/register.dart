@@ -227,6 +227,7 @@ class _RegisterState extends State<Register> {
                 padding: const EdgeInsets.symmetric(horizontal: kMargin10),
                 child: Row(
                   children: [
+                    Expanded(child: SizedBox()),
                     Expanded(
                       flex: 1,
                       child: GestureDetector(
@@ -305,70 +306,71 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(kMargin12)),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Image(
-                                  height: 40,
-                                  width: 40,
-                                  image: AssetImage(kFacebookIconPath),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text("Facebook",
-                                    style: TextStyle(
-                                        fontSize: kMargin14,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          EasyLoading.showToast(kComingSoon);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(kMargin12)),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Image(
-                                  height: 40,
-                                  width: 40,
-                                  image: AssetImage(kAppleIconPath),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text("Apple",
-                                    style: TextStyle(
-                                        fontSize: kMargin14,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          EasyLoading.showToast(kComingSoon);
-                        },
-                      ),
-                    ),
+                    Expanded(child: SizedBox())
+                    // Expanded(
+                    //   flex: 1,
+                    //   child: GestureDetector(
+                    //     child: Card(
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(kMargin12)),
+                    //       child: Row(
+                    //         crossAxisAlignment: CrossAxisAlignment.center,
+                    //         children: [
+                    //           Expanded(
+                    //             flex: 1,
+                    //             child: Image(
+                    //               height: 40,
+                    //               width: 40,
+                    //               image: AssetImage(kFacebookIconPath),
+                    //             ),
+                    //           ),
+                    //           Expanded(
+                    //             flex: 1,
+                    //             child: Text("Facebook",
+                    //                 style: TextStyle(
+                    //                     fontSize: kMargin14,
+                    //                     fontWeight: FontWeight.bold)),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     onTap: () {
+                    //       EasyLoading.showToast(kComingSoon);
+                    //     },
+                    //   ),
+                    // ),
+                    // Expanded(
+                    //   flex: 1,
+                    //   child: GestureDetector(
+                    //     child: Card(
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(kMargin12)),
+                    //       child: Row(
+                    //         crossAxisAlignment: CrossAxisAlignment.center,
+                    //         children: [
+                    //           Expanded(
+                    //             flex: 1,
+                    //             child: Image(
+                    //               height: 40,
+                    //               width: 40,
+                    //               image: AssetImage(kAppleIconPath),
+                    //             ),
+                    //           ),
+                    //           Expanded(
+                    //             flex: 1,
+                    //             child: Text("Apple",
+                    //                 style: TextStyle(
+                    //                     fontSize: kMargin14,
+                    //                     fontWeight: FontWeight.bold)),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     onTap: () {
+                    //       EasyLoading.showToast(kComingSoon);
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

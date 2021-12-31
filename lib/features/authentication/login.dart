@@ -194,48 +194,48 @@ class _LoginState extends State<Login> {
                         });
                       },
                     ),
-                    SizedBox(
-                      height: kMargin4,
-                    ),
-                    GestureDetector(
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(kMargin12)),
-                        child: ListTile(
-                          leading: Image(
-                            image: AssetImage(kFacebookIconPath),
-                          ),
-                          title: Text("Continue With Facebook",
-                              style: TextStyle(
-                                  fontSize: kMargin14,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                      onTap: () {
-                        EasyLoading.showToast(kComingSoon);
-                      },
-                    ),
-                    SizedBox(
-                      height: kMargin4,
-                    ),
-                    GestureDetector(
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(kMargin12)),
-                        child: ListTile(
-                          leading: Image(
-                            image: AssetImage(kAppleIconPath),
-                          ),
-                          title: Text("Continue With Apple ID",
-                              style: TextStyle(
-                                  fontSize: kMargin14,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                      onTap: () {
-                        EasyLoading.showToast(kComingSoon);
-                      },
-                    ),
+                    // SizedBox(
+                    //   height: kMargin4,
+                    // ),
+                    // GestureDetector(
+                    //   child: Card(
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(kMargin12)),
+                    //     child: ListTile(
+                    //       leading: Image(
+                    //         image: AssetImage(kFacebookIconPath),
+                    //       ),
+                    //       title: Text("Continue With Facebook",
+                    //           style: TextStyle(
+                    //               fontSize: kMargin14,
+                    //               fontWeight: FontWeight.bold)),
+                    //     ),
+                    //   ),
+                    //   onTap: () {
+                    //     EasyLoading.showToast(kComingSoon);
+                    //   },
+                    // ),
+                    // SizedBox(
+                    //   height: kMargin4,
+                    // ),
+                    // GestureDetector(
+                    //   child: Card(
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(kMargin12)),
+                    //     child: ListTile(
+                    //       leading: Image(
+                    //         image: AssetImage(kAppleIconPath),
+                    //       ),
+                    //       title: Text("Continue With Apple ID",
+                    //           style: TextStyle(
+                    //               fontSize: kMargin14,
+                    //               fontWeight: FontWeight.bold)),
+                    //     ),
+                    //   ),
+                    //   onTap: () {
+                    //     EasyLoading.showToast(kComingSoon);
+                    //   },
+                    // ),
                   ],
                 ),
               ),
