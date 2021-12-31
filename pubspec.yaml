@@ -56,10 +56,23 @@ dependencies:
   google_map_location_picker: ^4.1.7
   flutter_summernote: ^1.0.0
   flutter_html: ^0.8.2
+  flutter_launcher_icons: "0.7.3"
+  flutter_launcher_name: any
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+flutter_icons:
+  image_path: "icon/icon.png"
+  android: true
+  ios: true
+flutter_launcher_name:
+  name: "Secure Bridges"
+  android: true
+  ios: true
+  # optionally, as transparency is not allowed on app store
+  # remove_alpha_ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
