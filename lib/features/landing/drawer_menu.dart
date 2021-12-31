@@ -76,53 +76,65 @@ class _CustomDrawerState extends State<CustomDrawer> {
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: kPurpleColor,
-                          border: Border.all(
+              child: GestureDetector(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
                             color: kPurpleColor,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(100))),
-                      child: AspectRatio(
-                        aspectRatio: 1 / 1,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                "${BASE_URL}${widget.currentUser.profileImage}",
-                            placeholder: (context, url) =>
-                                Image(image: AssetImage(kPlaceholderImagePath)),
-                            errorWidget: (context, url, error) =>
-                                Image(image: AssetImage(kPlaceholderImagePath)),
-                            fit: BoxFit.fill,
-                            width: 88,
-                            height: 88,
+                            border: Border.all(
+                              color: kPurpleColor,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(100))),
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "${BASE_URL}${widget.currentUser.profileImage}",
+                              placeholder: (context, url) => Image(
+                                  image: AssetImage(kPlaceholderImagePath)),
+                              errorWidget: (context, url, error) => Image(
+                                  image: AssetImage(kPlaceholderImagePath)),
+                              fit: BoxFit.fill,
+                              width: 88,
+                              height: 88,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: kMargin8),
-                      child: Text(
-                        '${widget.currentUser.name}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: kMargin18),
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: kMargin8),
+                        child: Text(
+                          '${widget.currentUser.name}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: kMargin18),
+                        ),
                       ),
                     ),
-                  ),
-                  Image(
-                      width: 19,
-                      height: 27,
-                      image: AssetImage(kRightArrowIconPath))
-                ],
+                    Image(
+                        width: 19,
+                        height: 27,
+                        image: AssetImage(kRightArrowIconPath))
+                  ],
+                ),
+                onTap: () async {
+                  bool callApi = await shouldMakeApiCall(context);
+                  if (!callApi) return;
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => ProfileForm()));
+                  // Here you can give your route to navigate
+                },
               ),
             ),
             widget.currentUser.userType == 1
@@ -146,23 +158,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 : SizedBox(),
 
             //Here you place your menu items
-            ListTile(
-              leading: Image(
-                height: 25,
-                width: 25,
-                image: AssetImage(kProfileIconPath),
-              ),
-              title: Text('Profile',
-                  style: TextStyle(
-                      fontSize: kMargin22, fontWeight: FontWeight.w400)),
-              onTap: () async {
-                bool callApi = await shouldMakeApiCall(context);
-                if (!callApi) return;
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => ProfileForm()));
-                // Here you can give your route to navigate
-              },
-            ),
+            // ListTile(
+            //   leading: Image(
+            //     height: 25,
+            //     width: 25,
+            //     image: AssetImage(kProfileIconPath),
+            //   ),
+            //   title: Text('Profile',
+            //       style: TextStyle(
+            //           fontSize: kMargin22, fontWeight: FontWeight.w400)),
+            //   onTap: () async {
+            //     bool callApi = await shouldMakeApiCall(context);
+            //     if (!callApi) return;
+            //     Navigator.push(context,
+            //         new MaterialPageRoute(builder: (context) => ProfileForm()));
+            //     // Here you can give your route to navigate
+            //   },
+            // ),
             widget.currentUser.userType == 0
                 ? ListTile(
                     leading: Image(
