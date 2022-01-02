@@ -60,6 +60,7 @@ dependencies:
   flutter_launcher_name: any
   flutter_exif_rotation: ^0.4.3
   material_tag_editor: ^0.1.1
+  carousel_slider: ^4.0.0
 
 
 dev_dependencies:

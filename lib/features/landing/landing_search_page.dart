@@ -17,6 +17,7 @@ import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart'
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart';
+import 'package:secure_bridges_app/features/slider.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
 
 import 'package:secure_bridges_app/network_utils/api.dart';
@@ -51,6 +52,8 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   bool hasUnreadNotification = false;
   User currentUser;
   int opportunityTypeSelected = -1; // -1 means all
+  List<String> imgList = [];
+
   @override
   void initState() {
     Observable.instance.addObserver(this);
@@ -124,6 +127,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                   ['opportunities']
               .map((i) => Opportunity.fromJson(i)));
           setState(() {
+            imgList = _opportunities
+                .map<String>((e) =>
+                    "${BASE_URL}${body["data"]["upload_path"]}${e.coverImage}")
+                .toList();
             opportunities = _opportunities;
             allOpportunities = _opportunities;
             searchedOpportunities = _opportunities;
@@ -232,6 +239,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
 
   _buildListItem(Opportunity item) {
     String coverUrl = "${BASE_URL}${opportunityUploadPath}${item.coverImage}";
+    print("cover url $coverUrl");
 
     return GestureDetector(
       onTap: () async {
@@ -701,32 +709,37 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
             },
             child: Column(
               children: [
+                // Container(
+                //   decoration: BoxDecoration(
+                //       color: kPinkBackground,
+                //       borderRadius: BorderRadius.all(Radius.circular(29))),
+                //   child: Padding(
+                //     padding: const EdgeInsets.symmetric(
+                //         vertical: kMargin48, horizontal: kMargin32),
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Text(
+                //           "AWARENESS TOGETHER",
+                //           style: TextStyle(
+                //               fontSize: 36,
+                //               color: kPurpleColor,
+                //               fontWeight: FontWeight.w400),
+                //         ),
+                //         Text(
+                //           "Find what fascinates you as you explore these habit courses.",
+                //           style: TextStyle(
+                //               fontSize: 10,
+                //               color: kPurpleColor,
+                //               fontWeight: FontWeight.w700),
+                //         )
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 Container(
-                  decoration: BoxDecoration(
-                      color: kPinkBackground,
-                      borderRadius: BorderRadius.all(Radius.circular(29))),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: kMargin48, horizontal: kMargin32),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "AWARENESS TOGETHER",
-                          style: TextStyle(
-                              fontSize: 36,
-                              color: kPurpleColor,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        Text(
-                          "Find what fascinates you as you explore these habit courses.",
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: kPurpleColor,
-                              fontWeight: FontWeight.w700),
-                        )
-                      ],
-                    ),
+                  child: SliderDemo(
+                    imgList: imgList,
                   ),
                 ),
                 _setUpSearchBar(),

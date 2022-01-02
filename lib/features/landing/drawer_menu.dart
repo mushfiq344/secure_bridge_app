@@ -23,6 +23,8 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 
+import '../slider.dart';
+
 class CustomDrawer extends StatefulWidget {
   final User currentUser;
 
