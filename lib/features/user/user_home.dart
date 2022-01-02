@@ -90,7 +90,7 @@ class _UserHomeState extends State<UserHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("User Home"),
+        title: Text("My Opportunity"),
         backgroundColor: kPurpleColor,
       ),
       body: Container(

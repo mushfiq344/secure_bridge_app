@@ -32,7 +32,7 @@ dependencies:
   cached_network_image: any
   webview_flutter: any
   flutter_webview_plugin: ^0.4.0
-  image_picker: any
+  image_picker: 0.8.0+3
   intl: ^0.17.0
   google_sign_in: any
   flutter_signin_button: ^2.0.0
@@ -58,6 +58,7 @@ dependencies:
   flutter_html: ^0.8.2
   flutter_launcher_icons: "0.7.3"
   flutter_launcher_name: any
+  flutter_exif_rotation: ^0.4.3
 
 
 dev_dependencies:

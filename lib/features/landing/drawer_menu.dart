@@ -182,7 +182,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       width: 25,
                       image: AssetImage(kHomeIconPath),
                     ),
-                    title: Text('Home',
+                    title: Text('My Opportunity',
                         style: TextStyle(
                             fontSize: kMargin22, fontWeight: FontWeight.w400)),
                     onTap: () async {
