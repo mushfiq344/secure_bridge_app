@@ -166,7 +166,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   _setUpSearchBar() {
     return Container(
       decoration: BoxDecoration(
-        color: kLiteBackgroundColor,
+        color: kLightPurpleBackgroundColor,
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(10),
             topRight: Radius.circular(10),
@@ -197,13 +197,13 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                   prefixIcon: Icon(Icons.search),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: kBorderColor,
+                      color: Colors.transparent,
                     ),
                     borderRadius: BorderRadius.circular(kRadius10),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: kAccentColor,
+                      color: Colors.transparent,
                     ),
                     borderRadius: BorderRadius.circular(kRadius10),
                   ),
@@ -235,6 +235,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
 
     return GestureDetector(
       onTap: () async {
+        FocusScope.of(context).unfocus();
         bool callApi = await shouldMakeApiCall(context);
         if (!callApi) return;
         Navigator.push(
@@ -249,7 +250,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
       },
       child: Padding(
         padding: const EdgeInsets.only(
-            left: kMargin20, right: kMargin20, bottom: kMargin20),
+            left: kMargin5, right: kMargin5, bottom: kMargin5),
         child: Card(
           elevation: 4.0,
           color: Colors.white,
@@ -257,6 +258,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
                 children: [
@@ -280,11 +282,14 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                   ))
                 ],
               ),
-              Text(item.title,
-                  style: TextStyle(
-                      fontSize: kMargin18,
-                      fontWeight: FontWeight.w400,
-                      color: kPurpleColor)),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: Text(item.title,
+                    style: TextStyle(
+                        fontSize: kMargin18,
+                        fontWeight: FontWeight.w400,
+                        color: kPurpleColor)),
+              ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
@@ -320,15 +325,22 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                     ),
                                   ),
                                   child: userWishes.contains(item.id)
-                                      ? Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(kIconLoveWhitePath),
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image:
+                                                AssetImage(kIconLoveWhitePath),
+                                          ),
                                         )
-                                      : Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(kIconLovePath),
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image: AssetImage(kIconLovePath),
+                                          ),
                                         ),
                                 ),
                                 onTap: () async {
@@ -451,16 +463,23 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                     ),
                                   ),
                                   child: userEnrollments.contains(item.id)
-                                      ? Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(
-                                              kIconAdditionWhitePath),
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image: AssetImage(
+                                                kIconAdditionWhitePath),
+                                          ),
                                         )
-                                      : Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(kIconAdditionPath),
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image:
+                                                AssetImage(kIconAdditionPath),
+                                          ),
                                         ),
                                 ),
                                 onTap: () async {
@@ -584,10 +603,14 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                             fit: BoxFit.cover,
                                           ),
                                         ),
-                                        child: Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(kIconWhiteEditPath),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image:
+                                                AssetImage(kIconWhiteEditPath),
+                                          ),
                                         ),
                                       ),
                                       onTap: () {
@@ -616,10 +639,13 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                               fit: BoxFit.cover,
                                             ),
                                           ),
-                                          child: Image(
-                                            width: 32,
-                                            height: 32,
-                                            image: AssetImage(kTrashIconPath),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Image(
+                                              width: 16,
+                                              height: 16,
+                                              image: AssetImage(kTrashIconPath),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -675,6 +701,34 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
             },
             child: Column(
               children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: kPinkBackground,
+                      borderRadius: BorderRadius.all(Radius.circular(29))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: kMargin48, horizontal: kMargin32),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "AWARENESS TOGETHER",
+                          style: TextStyle(
+                              fontSize: 36,
+                              color: kPurpleColor,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        Text(
+                          "Find what fascinates you as you explore these habit courses.",
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: kPurpleColor,
+                              fontWeight: FontWeight.w700),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
                 _setUpSearchBar(),
                 setUpFilterArea(),
                 _buildOpportunityList(context),
@@ -762,6 +816,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                 ),
               ),
               onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
                 List<Opportunity> filteredOpportunities =
                     allOpportunities.where((element) {
                   return element.title
@@ -807,6 +862,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                 ),
               ),
               onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
                 List<Opportunity> filteredOpportunities =
                     allOpportunities.where((element) {
                   return element.type == 0 &&
@@ -853,6 +909,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                 ),
               ),
               onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
                 List<Opportunity> filteredOpportunities =
                     allOpportunities.where((element) {
                   return element.type == 1 &&
@@ -899,6 +956,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                 ),
               ),
               onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
                 List<Opportunity> filteredOpportunities =
                     allOpportunities.where((element) {
                   return element.type == 2 &&

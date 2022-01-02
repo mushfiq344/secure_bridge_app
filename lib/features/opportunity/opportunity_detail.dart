@@ -121,13 +121,15 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                     ],
                   ),
                   SizedBox(
-                    height: kMargin12,
+                    height: kMargin24,
                   ),
                   Row(
                     children: [
                       Expanded(
                           flex: 1,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             color: kPurpleBackGround,
                             child: Row(
                               children: [
@@ -165,6 +167,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       Expanded(
                           flex: 1,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             color: kPurpleBackGround,
                             child: Row(
                               children: [
@@ -199,14 +203,13 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                           )),
                     ],
                   ),
-                  SizedBox(
-                    height: kMargin12,
-                  ),
                   Row(
                     children: [
                       Expanded(
                           flex: 1,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             color: kPurpleBackGround,
                             child: Row(
                               children: [
@@ -243,34 +246,43 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       Expanded(
                           flex: 1,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             color: kPurpleBackGround,
                             child: Row(
                               children: [
-                                Container(
-                                    child: Image(
-                                  width: 50,
-                                  height: 50,
-                                  image: AssetImage(kIconLocationPath),
-                                )),
-                                Padding(
-                                  padding: EdgeInsets.only(left: kMargin4),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Location",
-                                        style: TextStyle(
-                                            fontSize: kMargin12,
-                                            color: Colors.white),
-                                      ),
-                                      Text(
-                                          "${widget.opportunity.location ?? ''}",
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                      child: Image(
+                                    width: 50,
+                                    height: 50,
+                                    image: AssetImage(kIconLocationPath),
+                                  )),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: kMargin4),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Location",
                                           style: TextStyle(
                                               fontSize: kMargin12,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold))
-                                    ],
+                                              color: Colors.white),
+                                        ),
+                                        Text(
+                                            "${widget.opportunity.location ?? ''}",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: kMargin12,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold))
+                                      ],
+                                    ),
                                   ),
                                 )
                               ],
@@ -284,45 +296,50 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                   userEnrolled && userEnrollmentStatus == kApproved
                       ? Container(
                           child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(kRadius10)),
+                          ),
                           color: kOrangeBackgroundColor,
                           child: Padding(
                             padding: const EdgeInsets.all(17),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: "PARTICIPATION CODE:",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: kMargin14,
+                            child: GestureDetector(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "PARTICIPATION CODE:",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: kMargin14,
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: " ${userCode}",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: kMargin14,
+                                                fontWeight: FontWeight.bold)),
+                                      ],
                                     ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: " ${userCode}",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: kMargin14,
-                                              fontWeight: FontWeight.bold)),
-                                    ],
                                   ),
-                                ),
-                                GestureDetector(
-                                  child: Icon(
+                                  Icon(
                                     Icons.copy,
                                     color: Colors.white,
                                   ),
-                                  onTap: () {
-                                    Clipboard.setData(
-                                        ClipboardData(text: "$userCode"));
+                                ],
+                              ),
+                              onTap: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: "$userCode"));
 
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text("Copied to clipboard!"),
-                                    ));
-                                  },
-                                )
-                              ],
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text("Copied to clipboard!"),
+                                ));
+                              },
                             ),
                           ),
                         ))
@@ -370,6 +387,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                   textColor: kLabelColor,
                                   capitalText: false,
                                   hMargin: 5,
+                                  bouttonHeight: kMargin10,
                                 ),
                               ),
                               Expanded(
@@ -383,6 +401,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                   fillColor: kGreyBackgroundColor,
                                   textColor: kLabelColor,
                                   capitalText: false,
+                                  bouttonHeight: kMargin10,
                                   hMargin: 5,
                                 ),
                               ),
@@ -446,6 +465,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       ? GestureDetector(
                           child: Container(
                               child: Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
                                   color: inUserWithList
                                       ? kLightPurpleBackgroundColor
                                       : kPurpleBackGround,
@@ -589,6 +610,9 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                 "Published"]
                                     ? GestureDetector(
                                         child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
                                             color: kPurpleColor,
                                             child: Padding(
                                               padding:

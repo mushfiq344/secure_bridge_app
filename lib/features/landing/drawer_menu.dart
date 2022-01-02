@@ -86,6 +86,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         decoration: BoxDecoration(
                             color: kPurpleColor,
                             border: Border.all(
+                              width: 2,
                               color: kPurpleColor,
                             ),
                             borderRadius:
@@ -120,10 +121,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         ),
                       ),
                     ),
-                    Image(
-                        width: 19,
-                        height: 27,
-                        image: AssetImage(kRightArrowIconPath))
+                    // Image(
+                    //     width: 19,
+                    //     height: 27,
+                    //     image: AssetImage(kRightArrowIconPath))
                   ],
                 ),
                 onTap: () async {
@@ -158,23 +159,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 : SizedBox(),
 
             //Here you place your menu items
-            // ListTile(
-            //   leading: Image(
-            //     height: 25,
-            //     width: 25,
-            //     image: AssetImage(kProfileIconPath),
-            //   ),
-            //   title: Text('Profile',
-            //       style: TextStyle(
-            //           fontSize: kMargin22, fontWeight: FontWeight.w400)),
-            //   onTap: () async {
-            //     bool callApi = await shouldMakeApiCall(context);
-            //     if (!callApi) return;
-            //     Navigator.push(context,
-            //         new MaterialPageRoute(builder: (context) => ProfileForm()));
-            //     // Here you can give your route to navigate
-            //   },
-            // ),
+            ListTile(
+              leading: Image(
+                height: 25,
+                width: 25,
+                image: AssetImage(kProfileIconPath),
+              ),
+              title: Text('Profile',
+                  style: TextStyle(
+                      fontSize: kMargin22, fontWeight: FontWeight.w400)),
+              onTap: () async {
+                bool callApi = await shouldMakeApiCall(context);
+                if (!callApi) return;
+                Navigator.push(context,
+                    new MaterialPageRoute(builder: (context) => ProfileForm()));
+                // Here you can give your route to navigate
+              },
+            ),
             widget.currentUser.userType == 0
                 ? ListTile(
                     leading: Image(

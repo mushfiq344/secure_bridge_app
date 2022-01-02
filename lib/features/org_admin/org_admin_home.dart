@@ -204,14 +204,16 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
           alignment: Alignment.center,
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: kMargin32),
+              padding: EdgeInsets.only(bottom: 5),
               child: Column(
                 children: [
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       color: kPurpleColor,
-                      borderRadius: BorderRadius.circular(kMargin35),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(35),
+                          bottomRight: Radius.circular(35)),
                     ),
                     child: Column(
                       children: [
@@ -229,7 +231,8 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                       borderRadius:
                                           BorderRadius.circular(kMargin16),
                                     ),
-                                    color: kLightPurpleBackgroundColor,
+                                    color: kLightPurpleBackgroundColor
+                                        .withOpacity(.5),
                                     child: Padding(
                                       padding: const EdgeInsets.all(kMargin10),
                                       child: Column(
@@ -262,7 +265,8 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                       borderRadius:
                                           BorderRadius.circular(kMargin16),
                                     ),
-                                    color: kLightPurpleBackgroundColor,
+                                    color: kLightPurpleBackgroundColor
+                                        .withOpacity(.5),
                                     child: Padding(
                                       padding: const EdgeInsets.all(kMargin10),
                                       child: Column(
@@ -295,7 +299,8 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                       borderRadius:
                                           BorderRadius.circular(kMargin16),
                                     ),
-                                    color: kLightPurpleBackgroundColor,
+                                    color: kLightPurpleBackgroundColor
+                                        .withOpacity(.5),
                                     child: Padding(
                                       padding: const EdgeInsets.all(kMargin10),
                                       child: Column(
@@ -303,7 +308,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "\$ ${totalReward}",
+                                            "${totalReward}",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: kMargin30,
@@ -336,7 +341,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: kMargin32, vertical: kMargin14),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   "Updates",
@@ -364,9 +369,10 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                                 vertical: kMargin8,
                                                 horizontal: kMargin24),
                                             child: Text(
-                                              "Pending Approvals[${totalPendingApproval}]",
+                                              "Pending Approvals [${totalPendingApproval}]",
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                                  fontWeight: FontWeight.bold,
+                                                  color: kInactiveColor),
                                             ),
                                           ),
                                         ),
@@ -388,9 +394,10 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                               vertical: kMargin8,
                                               horizontal: kMargin24),
                                           child: Text(
-                                            "reward request[10]",
+                                            "reward request [10]",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                color: kInactiveColor),
                                           ),
                                         ),
                                       ),
@@ -407,38 +414,43 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(kMargin35),
-                    ),
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: kMargin32, vertical: kMargin14),
-                          child: Text(
-                            "Participation Growth",
-                            style: TextStyle(
-                                fontSize: kMargin14,
-                                fontWeight: FontWeight.bold,
-                                color: kPurpleColor),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      // decoration: BoxDecoration(
+                      //   shape: BoxShape.rectangle,
+                      //   color: Colors.white,
+                      //   borderRadius: BorderRadius.circular(kMargin35),
+                      // ),
+                      // width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: kMargin32, vertical: kMargin14),
+                            child: Text(
+                              "Participation Growth",
+                              style: TextStyle(
+                                  fontSize: kMargin14,
+                                  fontWeight: FontWeight.bold,
+                                  color: kPurpleColor),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: kMargin8,
-                        ),
-                        BarChartGraph(
-                          title: "From ${startDate} To ${endDate}",
-                          data: weekLyEngagements,
-                        ),
-                        SizedBox(
-                          height: kMargin8,
-                        ),
-                      ],
+                          SizedBox(
+                            height: kMargin8,
+                          ),
+                          BarChartGraph(
+                            title: "From ${startDate} To ${endDate}",
+                            data: weekLyEngagements,
+                          ),
+                          SizedBox(
+                            height: kMargin8,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -451,17 +463,20 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                             "${BASE_URL}${opportunityUploadPath}${opportunity.coverImage}";
                         return GestureDetector(
                           child: Padding(
-                            padding: const EdgeInsets.only(bottom: kMargin10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(kMargin35),
-                              ),
-                              width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.only(
+                                bottom: kMargin10, left: 10, right: 10),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              // decoration: BoxDecoration(
+                              //   shape: BoxShape.rectangle,
+                              //   color: Colors.white,
+                              //   borderRadius: BorderRadius.circular(kMargin35),
+                              // ),
+                              // width: MediaQuery.of(context).size.width,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: kMargin32, vertical: kMargin14),
+                                    horizontal: kMargin24, vertical: kMargin14),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
