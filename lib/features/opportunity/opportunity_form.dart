@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:material_tag_editor/tag_editor.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/features/org_admin/my_opportunity.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
@@ -32,6 +33,30 @@ class OpportunityForm extends StatefulWidget {
 }
 
 class _OpportunityFormState extends State<OpportunityForm> {
+  List<String> tagValues = [];
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _textEditingController = TextEditingController();
+
+  _onDelete(index) {
+    setState(() {
+      tagValues.removeAt(index);
+    });
+  }
+
+  /// This is just an example for using `TextEditingController` to manipulate
+  /// the the `TextField` just like a normal `TextField`.
+  _onPressedModifyTextField() {
+    final text = 'Test';
+    _textEditingController.text = text;
+    _textEditingController.value = _textEditingController.value.copyWith(
+      text: text,
+      selection: TextSelection(
+        baseOffset: text.length,
+        extentOffset: text.length,
+      ),
+    );
+  }
+
   final _formKey = GlobalKey<FormBuilderState>();
   GlobalKey<FlutterSummernoteState> _descriptionKeyEditor =
       GlobalKey<FlutterSummernoteState>();
@@ -556,6 +581,45 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         ],
                       ),
                       SizedBox(height: kMargin16),
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: TagEditor(
+                            length: tagValues.length,
+                            controller: _textEditingController,
+                            focusNode: _focusNode,
+                            delimiters: [',', ' '],
+                            hasAddButton: true,
+
+                            resetTextOnSubmitted: true,
+                            // This is set to grey just to illustrate the `textStyle` prop
+                            textStyle: const TextStyle(
+                              color: kPurpleColor,
+                            ),
+                            onSubmitted: (outstandingValue) {
+                              setState(() {
+                                tagValues.add(outstandingValue);
+                              });
+                            },
+                            inputDecoration: const InputDecoration(
+                              fillColor: kPurpleColor,
+                              border: InputBorder.none,
+                              hintText: 'Hint Text...',
+                            ),
+                            onTagChanged: (newValue) {
+                              setState(() {
+                                tagValues.add(newValue);
+                              });
+                              print("tagValues $tagValues");
+                            },
+                            tagBuilder: (context, index) => _Chip(
+                              index: index,
+                              label: tagValues[index],
+                              onDeleted: _onDelete,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -654,7 +718,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                             ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -825,5 +889,32 @@ class _OpportunityFormState extends State<OpportunityForm> {
       EasyLoading.dismiss();
       EasyLoading.showError(e.toString());
     }
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    this.label,
+    this.onDeleted,
+    this.index,
+  });
+
+  final String label;
+  final ValueChanged<int> onDeleted;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      labelPadding: const EdgeInsets.only(left: 8.0),
+      label: Text(label),
+      deleteIcon: const Icon(
+        Icons.close,
+        size: 18,
+      ),
+      onDeleted: () {
+        onDeleted(index);
+      },
+    );
   }
 }

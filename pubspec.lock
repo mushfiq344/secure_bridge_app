@@ -595,6 +595,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10"
+  material_tag_editor:
+    dependency: "direct main"
+    description:
+      name: material_tag_editor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   meta:
     dependency: transitive
     description:

@@ -59,6 +59,7 @@ dependencies:
   flutter_launcher_icons: "0.7.3"
   flutter_launcher_name: any
   flutter_exif_rotation: ^0.4.3
+  material_tag_editor: ^0.1.1
 
 
 dev_dependencies:

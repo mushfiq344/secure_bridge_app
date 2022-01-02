@@ -165,7 +165,22 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
 
   _setUpSearchBar() {
     return Container(
-      color: kLiteBackgroundColor,
+      decoration: BoxDecoration(
+        color: kLiteBackgroundColor,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
       padding: EdgeInsets.symmetric(vertical: kMargin18, horizontal: kMargin18),
       child: Row(
         children: [
@@ -720,12 +735,29 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
             child: GestureDetector(
               child: AspectRatio(
                 aspectRatio: 1 / 1,
-                child: Card(
-                  color: kPurpleBackGround,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(26)),
-                  child: Image(
-                    image: AssetImage(kStarconPath),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: -3,
+                        blurRadius: 5,
+                        offset: Offset(1, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Card(
+                    color: kPurpleBackGround,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26)),
+                    child: Image(
+                      image: AssetImage(kStarconPath),
+                    ),
                   ),
                 ),
               ),
@@ -746,12 +778,24 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
           Expanded(
             flex: 1,
             child: GestureDetector(
-              child: Card(
-                color: kPurpleBackGround,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(26)),
-                child: AspectRatio(
-                  aspectRatio: 1 / 1,
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: -3,
+                        blurRadius: 5,
+                        offset: Offset(1, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
                   child: Card(
                     color: kPurpleBackGround,
                     shape: RoundedRectangleBorder(
@@ -780,12 +824,24 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
           Expanded(
             flex: 1,
             child: GestureDetector(
-              child: Card(
-                color: kPurpleBackGround,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(26)),
-                child: AspectRatio(
-                  aspectRatio: 1 / 1,
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: -3,
+                        blurRadius: 5,
+                        offset: Offset(1, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
                   child: Card(
                     color: kPurpleBackGround,
                     shape: RoundedRectangleBorder(
@@ -814,12 +870,24 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
           Expanded(
             flex: 1,
             child: GestureDetector(
-              child: Card(
-                color: kPurpleBackGround,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(26)),
-                child: AspectRatio(
-                  aspectRatio: 1 / 1,
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: -3,
+                        blurRadius: 5,
+                        offset: Offset(1, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
                   child: Card(
                     color: kPurpleBackGround,
                     shape: RoundedRectangleBorder(
