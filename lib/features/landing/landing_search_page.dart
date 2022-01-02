@@ -40,7 +40,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   List<int> userEnrollments = [];
   List<int> usersEnrollment = [];
   List<Opportunity> opportunities = <Opportunity>[];
-  List<Opportunity> opportunitiesAll = <Opportunity>[];
+  List<Opportunity> allOpportunities = <Opportunity>[];
   static List<Opportunity> searchedOpportunities = [];
   TextEditingController _searchController = TextEditingController();
   OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
@@ -50,6 +50,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool hasUnreadNotification = false;
   User currentUser;
+  int opportunityTypeSelected = -1; // -1 means all
   @override
   void initState() {
     Observable.instance.addObserver(this);
@@ -91,12 +92,21 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
 
   void _applySearchOnOpportunityeList() {
     List<Opportunity> _tempSearchedList = [];
-    for (Opportunity opportunity in opportunitiesAll) {
+    for (Opportunity opportunity in allOpportunities) {
       if (opportunity.title != null) {
-        if (opportunity.title
-            .toLowerCase()
-            .contains(_searchController.text.toLowerCase())) {
-          _tempSearchedList.add(opportunity);
+        if (opportunityTypeSelected != -1) {
+          if (opportunity.title
+                  .toLowerCase()
+                  .contains(_searchController.text.toLowerCase()) &&
+              opportunity.type == opportunityTypeSelected) {
+            _tempSearchedList.add(opportunity);
+          }
+        } else {
+          if (opportunity.title
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase())) {
+            _tempSearchedList.add(opportunity);
+          }
         }
       }
     }
@@ -115,7 +125,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
               .map((i) => Opportunity.fromJson(i)));
           setState(() {
             opportunities = _opportunities;
-            opportunitiesAll = _opportunities;
+            allOpportunities = _opportunities;
             searchedOpportunities = _opportunities;
             opportunityUploadPath = body["data"]["upload_path"];
             userWishes = body['data']['user_wishes'].cast<int>();
@@ -651,7 +661,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
             child: Column(
               children: [
                 _setUpSearchBar(),
-                SizedBox(height: kMargin12),
+                setUpFilterArea(),
                 _buildOpportunityList(context),
                 SizedBox(height: kMargin300),
               ],
@@ -697,6 +707,146 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
       builder: (BuildContext context) {
         return alert;
       },
+    );
+  }
+
+  Widget setUpFilterArea() {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: Card(
+                  color: kPurpleBackGround,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(26)),
+                  child: Image(
+                    image: AssetImage(kStarconPath),
+                  ),
+                ),
+              ),
+              onTap: () {
+                List<Opportunity> filteredOpportunities =
+                    allOpportunities.where((element) {
+                  return element.title
+                      .toLowerCase()
+                      .contains(_searchController.text.toLowerCase());
+                }).toList();
+                setState(() {
+                  opportunities = filteredOpportunities;
+                  opportunityTypeSelected = -1;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              child: Card(
+                color: kPurpleBackGround,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26)),
+                child: AspectRatio(
+                  aspectRatio: 1 / 1,
+                  child: Card(
+                    color: kPurpleBackGround,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26)),
+                    child: Image(
+                      image: AssetImage(kHomeWhiteIconPath),
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                List<Opportunity> filteredOpportunities =
+                    allOpportunities.where((element) {
+                  return element.type == 0 &&
+                      element.title
+                          .toLowerCase()
+                          .contains(_searchController.text.toLowerCase());
+                }).toList();
+                setState(() {
+                  opportunities = filteredOpportunities;
+                  opportunityTypeSelected = 0;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              child: Card(
+                color: kPurpleBackGround,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26)),
+                child: AspectRatio(
+                  aspectRatio: 1 / 1,
+                  child: Card(
+                    color: kPurpleBackGround,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26)),
+                    child: Image(
+                      image: AssetImage(kMultipleUsersIconPath),
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                List<Opportunity> filteredOpportunities =
+                    allOpportunities.where((element) {
+                  return element.type == 1 &&
+                      element.title
+                          .toLowerCase()
+                          .contains(_searchController.text.toLowerCase());
+                }).toList();
+                setState(() {
+                  opportunities = filteredOpportunities;
+                  opportunityTypeSelected = 1;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              child: Card(
+                color: kPurpleBackGround,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26)),
+                child: AspectRatio(
+                  aspectRatio: 1 / 1,
+                  child: Card(
+                    color: kPurpleBackGround,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26)),
+                    child: Image(
+                      image: AssetImage(kPizzaIconPath),
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                List<Opportunity> filteredOpportunities =
+                    allOpportunities.where((element) {
+                  return element.type == 2 &&
+                      element.title
+                          .toLowerCase()
+                          .contains(_searchController.text.toLowerCase());
+                }).toList();
+                setState(() {
+                  opportunities = filteredOpportunities;
+                  opportunityTypeSelected = 2;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
