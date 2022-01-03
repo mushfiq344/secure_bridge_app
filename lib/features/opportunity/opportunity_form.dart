@@ -78,6 +78,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
   var _imageNameWithExtension;
   var _coverImageBase64String;
   var _iconImageBase64String;
+  Opportunity opportunity;
 
   PickedFile _coverImage;
   PickedFile _iconImage;
@@ -189,6 +190,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         });
       }
       setState(() {
+        opportunity = _opprtunity;
         tagValues = _tags.map<String>((e) => e.title).toList();
       });
     }, (error) {
@@ -206,510 +208,703 @@ class _OpportunityFormState extends State<OpportunityForm> {
           backgroundColor: kPurpleColor,
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                FormBuilder(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      RichText(
-                        text: TextSpan(
-                          text: "Title",
-                          style: TextStyle(
-                              color: Colors.black, fontSize: kMargin14),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '*', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      FormBuilderTextField(
-                        decoration: customInputDecoration('Title',
-                            fillColor: kLightPurpleBackgroundColor,
-                            borderColor: kBorderColor),
-                        controller: titleController,
-                        name: 'title',
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context),
-                        ]),
-                        keyboardType: TextInputType.text,
-                      ),
-                      SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: "Sub Title",
-                          style: TextStyle(
-                              color: Colors.black, fontSize: kMargin14),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      FormBuilderTextField(
-                        decoration: customInputDecoration('Sub Title',
-                            fillColor: kLightPurpleBackgroundColor,
-                            borderColor: kBorderColor),
-                        controller: subTitleController,
-                        name: 'subtitle',
-                        validator: FormBuilderValidators.compose([
-                          /* FormBuilderValidators.required(context),*/
-                        ]),
-                        keyboardType: TextInputType.text,
-                      ),
-                      SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: "Description",
-                          style: TextStyle(
-                              color: Colors.black, fontSize: kMargin14),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      // FormBuilderTextField(
-                      //   decoration: _inputDecoration('Description'),
-                      //   controller: descriptionController,
-                      //   name: 'description',
-                      //   validator: FormBuilderValidators.compose([
-                      //     /*FormBuilderValidators.required(context),*/
-                      //   ]),
-                      //   keyboardType: TextInputType.text,
-                      // ),
-                      Container(
-                        height: 400,
-                        child: FlutterSummernote(
-                            hasAttachment: false,
-                            showBottomToolbar: false,
-                            hint: "Your text here...",
-                            key: _descriptionKeyEditor),
-                      ),
-                      SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: "Opportunity Date",
-                          style: TextStyle(
-                              color: Colors.black, fontSize: kMargin14),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      FormBuilderTextField(
-                        readOnly: true,
-                        controller: opportunityDateController,
-                        name: 'opportunity_date',
-                        decoration: customInputDecoration(
-                            !opportunityDateController.text.isEmpty
-                                ? opportunityDateController.text
-                                : 'Opportunity Date',
-                            fillColor: kLightPurpleBackgroundColor,
-                            borderColor: kBorderColor),
-                        onTap: () async {
-                          DateTime date = DateTime(1900);
-                          FocusScope.of(context).requestFocus(new FocusNode());
-
-                          date = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(2100));
-
-                          opportunityDateController.text =
-                              DateFormat('yyyy-MM-dd').format(date);
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: "Duration In Days",
-                          style: TextStyle(
-                              color: Colors.black, fontSize: kMargin14),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      FormBuilderTextField(
-                        decoration: customInputDecoration('Duration In Days',
-                            fillColor: kLightPurpleBackgroundColor,
-                            borderColor: kBorderColor),
-                        controller: durationController,
-                        name: 'duration',
-                        validator: FormBuilderValidators.compose([
-                          /*  FormBuilderValidators.required(context),*/
-                          FormBuilderValidators.integer(context)
-                        ]),
-                        keyboardType: TextInputType.number,
-                      ),
-                      SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: "Reward",
-                          style: TextStyle(
-                              color: Colors.black, fontSize: kMargin14),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      FormBuilderTextField(
-                        decoration: customInputDecoration('Reward',
-                            fillColor: kLightPurpleBackgroundColor,
-                            borderColor: kBorderColor),
-                        controller: rewardController,
-                        name: 'reward',
-                        validator: FormBuilderValidators.compose([
-                          /*FormBuilderValidators.required(context),*/
-                          FormBuilderValidators.integer(context)
-                        ]),
-                        keyboardType: TextInputType.number,
-                      ),
-                      SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: "Location",
-                          style: TextStyle(
-                              color: Colors.black, fontSize: kMargin14),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      FormBuilderTextField(
-                        decoration: customInputDecoration('Location',
-                            fillColor: kLightPurpleBackgroundColor,
-                            borderColor: kBorderColor),
-                        controller: locationController,
-                        name: 'location',
-                        validator: FormBuilderValidators.compose([
-                          /*  FormBuilderValidators.required(context),*/
-                        ]),
-                        keyboardType: TextInputType.text,
-                      ),
-                      SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: "Type",
-                          style: TextStyle(
-                              color: Colors.black, fontSize: kMargin14),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: '*', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      FormBuilderDropdown(
-                        key: _opportunityTypeKey,
-                        name: 'type',
-                        decoration: customInputDecoration("Type",
-                            fillColor: kLightPurpleBackgroundColor,
-                            borderColor: kBorderColor),
-                        // initialValue: 'Male',
-                        allowClear: true,
-
-                        validator: FormBuilderValidators.compose(
-                            [FormBuilderValidators.required(context)]),
-                        items: OPPORTUNITY_TYPES
-                            .map((type) => DropdownMenuItem(
-                                  value: type,
-                                  child: Text('$type'),
-                                ))
-                            .toList(),
-                      ),
-                      SizedBox(height: 10),
-                      SizedBox(height: kMargin16),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding: EdgeInsets.all(kMargin14),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: kBorderColor,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(kRadius10),
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  _showCoverPicker(context);
-                                },
-                                child: _coverImage != null
-                                    ? AspectRatio(
-                                        aspectRatio: 16 / 9,
-                                        child: Image.file(
-                                            File(_coverImage.path),
-                                            fit: BoxFit.cover),
-                                      )
-                                    : Container(
-                                        child: widget.oppotunity == null
-                                            ? AspectRatio(
-                                                aspectRatio: 16 / 9,
-                                                child: Image(
-                                                  image: AssetImage(
-                                                      kAvatarIconPath),
-                                                  fit: BoxFit
-                                                      .fitHeight, // use this
-                                                ),
-                                              )
-                                            : CachedNetworkImage(
-                                                imageUrl:
-                                                    "${BASE_URL}${widget.uploadPath}${widget.oppotunity.coverImage}",
-                                                placeholder: (context, url) =>
-                                                    Image(
-                                                        image: AssetImage(
-                                                            kPlaceholderImagePath)),
-                                                errorWidget: (context, url,
-                                                        error) =>
-                                                    Image(
-                                                        image: AssetImage(
-                                                            kPlaceholderImagePath)),
-                                                fit: BoxFit.fill,
-                                                height: 100,
-                                                width: 100,
-                                              ),
-                                      ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: kMargin10),
-                              child: Text(
-                                kUploadCover,
-                                style: TextStyle(
-                                  color: kLabelColor,
-                                  fontSize: kMargin14,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: kMargin16),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(kMargin14),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: kBorderColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(kRadius10),
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                _showIconPicker(context);
-                              },
-                              child: _iconImage != null
-                                  ? Image.file(
-                                      File(_iconImage.path),
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.fitHeight,
-                                    )
-                                  : Container(
-                                      child: widget.oppotunity == null
-                                          ? Image(
-                                              image:
-                                                  AssetImage(kAvatarIconPath),
-                                              width: 100,
-                                              height: 100,
-                                            )
-                                          : CachedNetworkImage(
-                                              imageUrl:
-                                                  "${BASE_URL}${widget.uploadPath}${widget.oppotunity.iconImage}",
-                                              placeholder: (context, url) =>
-                                                  Image(
-                                                      image: AssetImage(
-                                                          kPlaceholderImagePath)),
-                                              errorWidget: (context, url,
-                                                      error) =>
-                                                  Image(
-                                                      image: AssetImage(
-                                                          kPlaceholderImagePath)),
-                                              fit: BoxFit.fill,
-                                              height: 100,
-                                              width: 100,
-                                            ),
-                                    ),
-                            ),
-                          ),
-                          SizedBox(width: kMargin24),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              kUploadIcon,
-                              style: TextStyle(
-                                color: kLabelColor,
-                                fontSize: kMargin14,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: kMargin16),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: TagEditor(
-                            length: tagValues.length,
-                            controller: _textEditingController,
-                            focusNode: _focusNode,
-                            delimiters: [',', ' '],
-                            hasAddButton: true,
-
-                            resetTextOnSubmitted: true,
-                            // This is set to grey just to illustrate the `textStyle` prop
-                            textStyle: const TextStyle(
-                              color: kPurpleColor,
-                            ),
-                            onSubmitted: (outstandingValue) {
-                              setState(() {
-                                tagValues.add(outstandingValue);
-                              });
-                            },
-                            inputDecoration: const InputDecoration(
-                              fillColor: kPurpleColor,
-                              border: InputBorder.none,
-                              hintText: 'Add Tag...',
-                            ),
-                            onTagChanged: (newValue) {
-                              setState(() {
-                                tagValues.add(newValue);
-                              });
-                              print("tagValues $tagValues");
-                            },
-                            tagBuilder: (context, index) => _Chip(
-                              index: index,
-                              label: tagValues[index],
-                              onDeleted: _onDelete,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: widget.oppotunity == null
-                          ? Column(
-                              children: [
-                                PAButton(
-                                  "Submit",
-                                  true,
-                                  () async {
-                                    bool callApi =
-                                        await shouldMakeApiCall(context);
-                                    if (!callApi) return;
-                                    _formKey.currentState.save();
-                                    if (_formKey.currentState.validate()) {
-                                      print(_formKey.currentState.value);
-
-                                      _createOpportunity(
-                                          OPPORTUNITY_STATUS_VALUES["Drafted"]);
-                                    } else {
-                                      EasyLoading.showError(
-                                          "validation failed");
-                                    }
-                                  },
-                                  fillColor: kPurpleColor,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                PAButton(
-                                  "Submit & Publish",
-                                  true,
-                                  () async {
-                                    bool callApi =
-                                        await shouldMakeApiCall(context);
-                                    if (!callApi) return;
-                                    _formKey.currentState.save();
-                                    if (_formKey.currentState.validate()) {
-                                      print(_formKey.currentState.value);
-
-                                      _createOpportunity(
-                                          OPPORTUNITY_STATUS_VALUES[
-                                              "Published"]);
-                                    } else {
-                                      EasyLoading.showError(
-                                          "validation failed");
-                                    }
-                                  },
-                                  fillColor: kPurpleColor,
-                                ),
-                              ],
+          child: Stack(
+            children: [
+              Container(
+                  child: Center(
+                child: GestureDetector(
+                  child: ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.5), BlendMode.dstATop),
+                      child: _coverImage != null
+                          ? Image.file(
+                              File(_coverImage.path),
+                              fit: BoxFit.fitHeight,
+                              height: MediaQuery.of(context).size.height / 2,
+                              width: MediaQuery.of(context).size.width,
                             )
-                          : Column(
-                              children: [
-                                PAButton(
-                                  "Update",
-                                  true,
-                                  () {
-                                    _formKey.currentState.save();
-                                    if (_formKey.currentState.validate()) {
-                                      print(_formKey.currentState.value);
+                          : Container(
+                              child: opportunity == null
+                                  ? Image(
+                                      image: AssetImage(kAddUserImagePath),
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              2,
+                                      width: MediaQuery.of(context).size.width,
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl:
+                                          "${BASE_URL}${widget.uploadPath}${opportunity.coverImage}",
+                                      placeholder: (context, url) => Image(
+                                          image: AssetImage(
+                                              kPlaceholderImagePath)),
+                                      errorWidget: (context, url, error) =>
+                                          Image(
+                                              image: AssetImage(
+                                                  kPlaceholderImagePath)),
+                                      fit: BoxFit.fill,
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              2,
+                                      width: MediaQuery.of(context).size.width,
+                                    ),
+                            )),
+                  onTap: () {
+                    _showCoverPicker(context);
+                  },
+                ),
+              )),
+              Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 3,
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(kMargin12)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            children: <Widget>[
+                              FormBuilder(
+                                key: _formKey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Title",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: kMargin14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: '*',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    FormBuilderTextField(
+                                      decoration: customInputDecoration('Title',
+                                          fillColor:
+                                              kLightPurpleBackgroundColor,
+                                          borderColor: kBorderColor),
+                                      controller: titleController,
+                                      name: 'title',
+                                      validator: FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(context),
+                                      ]),
+                                      keyboardType: TextInputType.text,
+                                    ),
+                                    SizedBox(height: 10),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Sub Title",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: kMargin14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: '',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    FormBuilderTextField(
+                                      decoration: customInputDecoration(
+                                          'Sub Title',
+                                          fillColor:
+                                              kLightPurpleBackgroundColor,
+                                          borderColor: kBorderColor),
+                                      controller: subTitleController,
+                                      name: 'subtitle',
+                                      validator: FormBuilderValidators.compose([
+                                        /* FormBuilderValidators.required(context),*/
+                                      ]),
+                                      keyboardType: TextInputType.text,
+                                    ),
+                                    SizedBox(height: 10),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Description",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: kMargin14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: '',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    // FormBuilderTextField(
+                                    //   decoration: _inputDecoration('Description'),
+                                    //   controller: descriptionController,
+                                    //   name: 'description',
+                                    //   validator: FormBuilderValidators.compose([
+                                    //     /*FormBuilderValidators.required(context),*/
+                                    //   ]),
+                                    //   keyboardType: TextInputType.text,
+                                    // ),
+                                    Container(
+                                      height: 400,
+                                      child: FlutterSummernote(
+                                          hasAttachment: false,
+                                          showBottomToolbar: false,
+                                          hint: "Your text here...",
+                                          key: _descriptionKeyEditor),
+                                    ),
+                                    SizedBox(height: 10),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Opportunity Date",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: kMargin14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: '',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    FormBuilderTextField(
+                                      readOnly: true,
+                                      controller: opportunityDateController,
+                                      name: 'opportunity_date',
+                                      decoration: customInputDecoration(
+                                          !opportunityDateController
+                                                  .text.isEmpty
+                                              ? opportunityDateController.text
+                                              : 'Opportunity Date',
+                                          fillColor:
+                                              kLightPurpleBackgroundColor,
+                                          borderColor: kBorderColor),
+                                      onTap: () async {
+                                        DateTime date = DateTime(1900);
+                                        FocusScope.of(context)
+                                            .requestFocus(new FocusNode());
 
-                                      _updateOpportunity();
-                                    } else {
-                                      EasyLoading.showError(
-                                          "validation failed");
-                                    }
-                                  },
-                                  fillColor: kPurpleColor,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                PAButton(
-                                  "Publish",
-                                  true,
-                                  () {
-                                    _formKey.currentState.save();
-                                    if (_formKey.currentState.validate()) {
-                                      print(_formKey.currentState.value);
+                                        date = await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime(2100));
 
-                                      _updateOpportunity(
-                                          status: OPPORTUNITY_STATUS_VALUES[
-                                              'Published']);
-                                    } else {
-                                      EasyLoading.showError(
-                                          "validation failed");
-                                    }
-                                  },
-                                  fillColor: kPurpleColor,
+                                        opportunityDateController.text =
+                                            DateFormat('yyyy-MM-dd')
+                                                .format(date);
+                                      },
+                                    ),
+                                    SizedBox(height: 10),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Duration In Days",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: kMargin14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: '',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    FormBuilderTextField(
+                                      decoration: customInputDecoration(
+                                          'Duration In Days',
+                                          fillColor:
+                                              kLightPurpleBackgroundColor,
+                                          borderColor: kBorderColor),
+                                      controller: durationController,
+                                      name: 'duration',
+                                      validator: FormBuilderValidators.compose([
+                                        /*  FormBuilderValidators.required(context),*/
+                                        FormBuilderValidators.integer(context)
+                                      ]),
+                                      keyboardType: TextInputType.number,
+                                    ),
+                                    SizedBox(height: 10),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Reward",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: kMargin14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: '',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    FormBuilderTextField(
+                                      decoration: customInputDecoration(
+                                          'Reward',
+                                          fillColor:
+                                              kLightPurpleBackgroundColor,
+                                          borderColor: kBorderColor),
+                                      controller: rewardController,
+                                      name: 'reward',
+                                      validator: FormBuilderValidators.compose([
+                                        /*FormBuilderValidators.required(context),*/
+                                        FormBuilderValidators.integer(context)
+                                      ]),
+                                      keyboardType: TextInputType.number,
+                                    ),
+                                    SizedBox(height: 10),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Location",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: kMargin14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: '',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    FormBuilderTextField(
+                                      decoration: customInputDecoration(
+                                          'Location',
+                                          fillColor:
+                                              kLightPurpleBackgroundColor,
+                                          borderColor: kBorderColor),
+                                      controller: locationController,
+                                      name: 'location',
+                                      validator: FormBuilderValidators.compose([
+                                        /*  FormBuilderValidators.required(context),*/
+                                      ]),
+                                      keyboardType: TextInputType.text,
+                                    ),
+                                    SizedBox(height: 10),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Type",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: kMargin14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: '*',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    FormBuilderDropdown(
+                                      key: _opportunityTypeKey,
+                                      name: 'type',
+                                      decoration: customInputDecoration("Type",
+                                          fillColor:
+                                              kLightPurpleBackgroundColor,
+                                          borderColor: kBorderColor),
+                                      // initialValue: 'Male',
+                                      allowClear: true,
+
+                                      validator: FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(context)
+                                      ]),
+                                      items: OPPORTUNITY_TYPES
+                                          .map((type) => DropdownMenuItem(
+                                                value: type,
+                                                child: Text('$type'),
+                                              ))
+                                          .toList(),
+                                    ),
+                                    SizedBox(height: 10),
+                                    // SizedBox(height: kMargin16),
+                                    // Row(
+                                    //   children: [
+                                    //     Expanded(
+                                    //       flex: 1,
+                                    //       child: Container(
+                                    //         padding: EdgeInsets.all(kMargin14),
+                                    //         decoration: BoxDecoration(
+                                    //           border: Border.all(
+                                    //             color: kBorderColor,
+                                    //             width: 1.0,
+                                    //           ),
+                                    //           borderRadius:
+                                    //               BorderRadius.circular(
+                                    //                   kRadius10),
+                                    //         ),
+                                    //         child: GestureDetector(
+                                    //           onTap: () {
+                                    //             _showCoverPicker(context);
+                                    //           },
+                                    //           child: _coverImage != null
+                                    //               ? AspectRatio(
+                                    //                   aspectRatio: 16 / 9,
+                                    //                   child: Image.file(
+                                    //                       File(
+                                    //                           _coverImage.path),
+                                    //                       fit: BoxFit.cover),
+                                    //                 )
+                                    //               : Container(
+                                    //                   child: opportunity == null
+                                    //                       ? AspectRatio(
+                                    //                           aspectRatio:
+                                    //                               16 / 9,
+                                    //                           child: Image(
+                                    //                             image: AssetImage(
+                                    //                                 kAvatarIconPath),
+                                    //                             fit: BoxFit
+                                    //                                 .fitHeight, // use this
+                                    //                           ),
+                                    //                         )
+                                    //                       : CachedNetworkImage(
+                                    //                           imageUrl:
+                                    //                               "${BASE_URL}${widget.uploadPath}${opportunity.coverImage}",
+                                    //                           placeholder: (context,
+                                    //                                   url) =>
+                                    //                               Image(
+                                    //                                   image: AssetImage(
+                                    //                                       kPlaceholderImagePath)),
+                                    //                           errorWidget: (context,
+                                    //                                   url,
+                                    //                                   error) =>
+                                    //                               Image(
+                                    //                                   image: AssetImage(
+                                    //                                       kPlaceholderImagePath)),
+                                    //                           fit: BoxFit.fill,
+                                    //                           height: 100,
+                                    //                           width: 100,
+                                    //                         ),
+                                    //                 ),
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //     Expanded(
+                                    //       flex: 1,
+                                    //       child: Padding(
+                                    //         padding: const EdgeInsets.only(
+                                    //             left: kMargin10),
+                                    //         child: Text(
+                                    //           kUploadCover,
+                                    //           style: TextStyle(
+                                    //             color: kLabelColor,
+                                    //             fontSize: kMargin14,
+                                    //           ),
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    // SizedBox(height: kMargin16),
+                                    // Row(
+                                    //   children: [
+                                    //     Container(
+                                    //       padding: EdgeInsets.all(kMargin14),
+                                    //       decoration: BoxDecoration(
+                                    //         border: Border.all(
+                                    //           color: kBorderColor,
+                                    //           width: 1.0,
+                                    //         ),
+                                    //         borderRadius: BorderRadius.circular(
+                                    //             kRadius10),
+                                    //       ),
+                                    //       child: GestureDetector(
+                                    //         onTap: () {
+                                    //           _showIconPicker(context);
+                                    //         },
+                                    //         child: _iconImage != null
+                                    //             ? Image.file(
+                                    //                 File(_iconImage.path),
+                                    //                 height: 100,
+                                    //                 width: 100,
+                                    //                 fit: BoxFit.fitHeight,
+                                    //               )
+                                    //             : Container(
+                                    //                 child: opportunity == null
+                                    //                     ? Image(
+                                    //                         image: AssetImage(
+                                    //                             kAvatarIconPath),
+                                    //                         width: 100,
+                                    //                         height: 100,
+                                    //                       )
+                                    //                     : CachedNetworkImage(
+                                    //                         imageUrl:
+                                    //                             "${BASE_URL}${widget.uploadPath}${opportunity.iconImage}",
+                                    //                         placeholder: (context,
+                                    //                                 url) =>
+                                    //                             Image(
+                                    //                                 image: AssetImage(
+                                    //                                     kPlaceholderImagePath)),
+                                    //                         errorWidget: (context,
+                                    //                                 url,
+                                    //                                 error) =>
+                                    //                             Image(
+                                    //                                 image: AssetImage(
+                                    //                                     kPlaceholderImagePath)),
+                                    //                         fit: BoxFit.fill,
+                                    //                         height: 100,
+                                    //                         width: 100,
+                                    //                       ),
+                                    //               ),
+                                    //       ),
+                                    //     ),
+                                    //     SizedBox(width: kMargin24),
+                                    //     Expanded(
+                                    //       flex: 1,
+                                    //       child: Text(
+                                    //         kUploadIcon,
+                                    //         style: TextStyle(
+                                    //           color: kLabelColor,
+                                    //           fontSize: kMargin14,
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    // SizedBox(height: kMargin16),
+                                    Container(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: TagEditor(
+                                          length: tagValues.length,
+                                          controller: _textEditingController,
+                                          focusNode: _focusNode,
+                                          delimiters: [',', ' '],
+                                          hasAddButton: true,
+
+                                          resetTextOnSubmitted: true,
+                                          // This is set to grey just to illustrate the `textStyle` prop
+                                          textStyle: const TextStyle(
+                                            color: kPurpleColor,
+                                          ),
+                                          onSubmitted: (outstandingValue) {
+                                            setState(() {
+                                              tagValues.add(outstandingValue);
+                                            });
+                                          },
+                                          inputDecoration:
+                                              const InputDecoration(
+                                            fillColor: kPurpleColor,
+                                            border: InputBorder.none,
+                                            hintText: 'Add Tag...',
+                                          ),
+                                          onTagChanged: (newValue) {
+                                            setState(() {
+                                              tagValues.add(newValue);
+                                            });
+                                            print("tagValues $tagValues");
+                                          },
+                                          tagBuilder: (context, index) => _Chip(
+                                            index: index,
+                                            label: tagValues[index],
+                                            onDeleted: _onDelete,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: opportunity == null
+                                        ? Column(
+                                            children: [
+                                              PAButton(
+                                                "Submit",
+                                                true,
+                                                () async {
+                                                  bool callApi =
+                                                      await shouldMakeApiCall(
+                                                          context);
+                                                  if (!callApi) return;
+                                                  _formKey.currentState.save();
+                                                  if (_formKey.currentState
+                                                      .validate()) {
+                                                    print(_formKey
+                                                        .currentState.value);
+
+                                                    _createOpportunity(
+                                                        OPPORTUNITY_STATUS_VALUES[
+                                                            "Drafted"]);
+                                                  } else {
+                                                    EasyLoading.showError(
+                                                        "validation failed");
+                                                  }
+                                                },
+                                                fillColor: kPurpleColor,
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              PAButton(
+                                                "Submit & Publish",
+                                                true,
+                                                () async {
+                                                  bool callApi =
+                                                      await shouldMakeApiCall(
+                                                          context);
+                                                  if (!callApi) return;
+                                                  _formKey.currentState.save();
+                                                  if (_formKey.currentState
+                                                      .validate()) {
+                                                    print(_formKey
+                                                        .currentState.value);
+
+                                                    _createOpportunity(
+                                                        OPPORTUNITY_STATUS_VALUES[
+                                                            "Published"]);
+                                                  } else {
+                                                    EasyLoading.showError(
+                                                        "validation failed");
+                                                  }
+                                                },
+                                                fillColor: kPurpleColor,
+                                              ),
+                                            ],
+                                          )
+                                        : Column(
+                                            children: [
+                                              PAButton(
+                                                "Update",
+                                                true,
+                                                () {
+                                                  _formKey.currentState.save();
+                                                  if (_formKey.currentState
+                                                      .validate()) {
+                                                    print(_formKey
+                                                        .currentState.value);
+
+                                                    _updateOpportunity();
+                                                  } else {
+                                                    EasyLoading.showError(
+                                                        "validation failed");
+                                                  }
+                                                },
+                                                fillColor: kPurpleColor,
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              PAButton(
+                                                "Publish",
+                                                true,
+                                                () {
+                                                  _formKey.currentState.save();
+                                                  if (_formKey.currentState
+                                                      .validate()) {
+                                                    print(_formKey
+                                                        .currentState.value);
+
+                                                    _updateOpportunity(
+                                                        status:
+                                                            OPPORTUNITY_STATUS_VALUES[
+                                                                'Published']);
+                                                  } else {
+                                                    EasyLoading.showError(
+                                                        "validation failed");
+                                                  }
+                                                },
+                                                fillColor: kPurpleColor,
+                                              ),
+                                            ],
+                                          ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 12,
+                    ),
+                    Center(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(kMargin12)),
+                        child: GestureDetector(
+                          onTap: () {
+                            _showIconPicker(context);
+                          },
+                          child: _iconImage != null
+                              ? Image.file(
+                                  File(_iconImage.path),
+                                  fit: BoxFit.fitHeight,
+                                  height:
+                                      MediaQuery.of(context).size.height / 6,
+                                  width: MediaQuery.of(context).size.width / 3,
+                                )
+                              : Container(
+                                  child: opportunity == null
+                                      ? Image(
+                                          image: AssetImage(kAddUserImagePath),
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              6,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3,
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(kMargin12),
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                "${BASE_URL}${widget.uploadPath}${opportunity.iconImage}",
+                                            placeholder: (context, url) =>
+                                                Image(
+                                                    image: AssetImage(
+                                                        kPlaceholderImagePath)),
+                                            errorWidget:
+                                                (context, url, error) => Image(
+                                                    image: AssetImage(
+                                                        kPlaceholderImagePath)),
+                                            fit: BoxFit.fill,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                6,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                3,
+                                          ),
+                                        ),
+                                ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }
