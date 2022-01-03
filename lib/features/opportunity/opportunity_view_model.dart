@@ -167,4 +167,28 @@ class OpportunityViewModel {
       EasyLoading.showError(e.toString());
     }
   }
+
+  void getOpportunityFormDetail(int oppurtunityId, _onSuccess, _onError) async {
+    try {
+      EasyLoading.show(status: kLoading);
+
+      // EasyLoading.show(status: kLoading);
+      var res = await Network()
+          .getData("${ORG_ADMIN_OPPORTUNITIES_URL}/${oppurtunityId}");
+      var body = json.decode(res.body);
+      // log("res ${res.statusCode}");
+
+      if (res.statusCode == 200) {
+        EasyLoading.dismiss();
+        _onSuccess(body);
+      } else {
+        EasyLoading.dismiss();
+        _onError(body['message']);
+      }
+    } catch (e) {
+      print(e);
+      EasyLoading.dismiss();
+      _onError(e.toString());
+    }
+  }
 }

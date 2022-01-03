@@ -12,6 +12,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/Models/Tag.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/org_admin/my_opportunity.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
@@ -22,6 +24,7 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 
 class OpportunityForm extends StatefulWidget {
@@ -36,6 +39,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
   List<String> tagValues = [];
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _textEditingController = TextEditingController();
+  OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
 
   _onDelete(index) {
     setState(() {
@@ -182,28 +186,40 @@ class _OpportunityFormState extends State<OpportunityForm> {
 
   @override
   void initState() {
-    if (widget.oppotunity != null) {
-      try {
+    if (widget.oppotunity != null)
+      getOpportunityFormDetails(widget.oppotunity.id);
+
+    super.initState();
+  }
+
+  void getOpportunityFormDetails(int opportunityId) {
+    _opportunityViewModel.getOpportunityFormDetail(opportunityId,
+        (Map<String, dynamic> body) {
+      print(body);
+      Opportunity _opprtunity =
+          Opportunity.fromJson(body['data']['opportunity']);
+      List<Tag> _tags = List<Tag>.from(
+          body['data']['opportunity']['tags'].map((i) => Tag.fromJson(i)));
+      if (_opprtunity != null) {
         EasyLoading.show(status: kLoading);
         Future.delayed(const Duration(), () async {
-          titleController.text = widget.oppotunity.title;
-          subTitleController.text = widget.oppotunity.subTitle;
-          descriptionController.text = widget.oppotunity.description;
-          opportunityDateController.text = widget.oppotunity.opportunityDate;
-          durationController.text = widget.oppotunity.duration.toString();
-          rewardController.text = widget.oppotunity.reward;
+          titleController.text = _opprtunity.title;
+          subTitleController.text = _opprtunity.subTitle;
+          descriptionController.text = _opprtunity.description;
+          opportunityDateController.text = _opprtunity.opportunityDate;
+          durationController.text = _opprtunity.duration.toString();
+          rewardController.text = _opprtunity.reward;
           _opportunityTypeKey.currentState
-              .setValue(OPPORTUNITY_TYPES[widget.oppotunity.type]);
-          locationController.text = widget.oppotunity.location;
+              .setValue(OPPORTUNITY_TYPES[_opprtunity.type]);
+          locationController.text = _opprtunity.location;
 
           await Future.delayed(Duration(milliseconds: 500));
-          if (widget.oppotunity.description != null) {
-            _descriptionKeyEditor.currentState
-                .setText(widget.oppotunity.description);
+          if (_opprtunity.description != null) {
+            _descriptionKeyEditor.currentState.setText(_opprtunity.description);
           }
 
           await Future.delayed(Duration(milliseconds: 500));
-          if (widget.oppotunity.description == null) {
+          if (_opprtunity.description == null) {
             _descriptionKeyEditor.currentState.setHint(
               "Your text here...",
             );
@@ -214,12 +230,15 @@ class _OpportunityFormState extends State<OpportunityForm> {
           await Future.delayed(Duration(milliseconds: 500));
           EasyLoading.dismiss();
         });
-      } catch (e) {
-        EasyLoading.dismiss();
-        EasyLoading.showError(e.toString());
       }
-    }
-    super.initState();
+      setState(() {
+        tagValues = _tags.map<String>((e) => e.title).toList();
+      });
+    }, (error) {
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
+    });
   }
 
   @override
@@ -812,7 +831,8 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'type':
             OPPORTUNITY_TYPES_VALUES[_opportunityTypeKey.currentState.value],
         'status': status,
-        'location': locationController.text
+        'location': locationController.text,
+        'tag_values': tagValues
       };
       EasyLoading.show(status: kLoading);
       var res = await Network().postData(data, ORG_ADMIN_OPPORTUNITIES_URL);
@@ -857,7 +877,8 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'type':
             OPPORTUNITY_TYPES_VALUES[_opportunityTypeKey.currentState.value],
         'status': status,
-        'location': locationController.text
+        'location': locationController.text,
+        'tag_values': tagValues
       };
       if (_coverImageAreaMap[kImage] != null) {
         data['cover_image'] = _coverImageAreaMap[kImage];
