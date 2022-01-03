@@ -15,6 +15,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
@@ -327,7 +328,11 @@ class _RegisterState extends State<Register> {
                               );
                             }
                           }, (error) {
-                            EasyLoading.showError(error);
+                            // EasyLoading.showError(error);
+                            showDialog(
+                                context: context,
+                                builder: (_) =>
+                                    CustomAlertDialogue("Error!", error));
                           });
                         },
                       ),

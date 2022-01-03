@@ -1,5 +1,5 @@
-const BASE_URL = "http://securebridges.ubitrixbd.com/";
-// const BASE_URL = "https://eccf-103-98-106-1.ngrok.io/";
+//const BASE_URL = "http://securebridges.ubitrixbd.com/";
+const BASE_URL = "https://b875-103-98-106-1.ngrok.io/";
 const SIGN_IN_URL = "api/login";
 const OPPORTUNITIES_URL = "api/opportunities";
 const FETCH_OPPORTUNITIES_URL = "api/fetch-opportunities";

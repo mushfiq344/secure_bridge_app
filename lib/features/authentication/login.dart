@@ -19,6 +19,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -190,7 +191,12 @@ class _LoginState extends State<Login> {
                             );
                           }
                         }, (error) {
-                          EasyLoading.showError(error);
+                          EasyLoading.dismiss();
+                          // EasyLoading.showError(error);
+                          showDialog(
+                              context: context,
+                              builder: (_) =>
+                                  CustomAlertDialogue("Login Failed!", error));
                         });
                       },
                     ),
@@ -366,7 +372,13 @@ class _LoginState extends State<Login> {
                                           }
                                         }, (error) {
                                           EasyLoading.dismiss();
-                                          EasyLoading.showError(error);
+                                          // EasyLoading.showError(error);
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Login Failed!", error));
+                                          ;
                                         });
                                       }
                                     },

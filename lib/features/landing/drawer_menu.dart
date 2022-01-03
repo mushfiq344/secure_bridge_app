@@ -22,8 +22,9 @@ import 'package:secure_bridges_app/utility/urls.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 
-import '../slider.dart';
+import '../../widgets/slider.dart';
 
 class CustomDrawer extends StatefulWidget {
   final User currentUser;
@@ -64,7 +65,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
         hasPermissionToCreate = false;
       }
     }, (error) {
-      EasyLoading.showError(error);
+      // EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
     });
   }
 

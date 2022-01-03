@@ -16,6 +16,7 @@ import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlansList extends StatefulWidget {
@@ -48,7 +49,10 @@ class _PlansListState extends State<PlansList> {
         currentUser = User.fromJson(user);
       });
     }, (error) {
-      EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
+      // EasyLoading.showError(error);
     });
   }
 
@@ -220,7 +224,12 @@ class _PlansListState extends State<PlansList> {
             ),
             onTap: () async {
               if (userSubscribedPlans.contains(e.id)) {
-                EasyLoading.showInfo('You are already subscribed to this plan');
+                EasyLoading.dismiss();
+                // EasyLoading.showInfo('You are already subscribed to this plan');
+                showDialog(
+                    context: context,
+                    builder: (_) =>
+                        CustomAlertDialogue("Error!", kNoInternetAvailable));
                 return;
               }
               String amount = (e.amount * 100).toString();
@@ -306,7 +315,11 @@ class _PlansListState extends State<PlansList> {
                               (route) => false,
                             );
                           }, (error) {
-                            EasyLoading.showError(error);
+                            showDialog(
+                                context: context,
+                                builder: (_) =>
+                                    CustomAlertDialogue("Error!", error));
+                            /* EasyLoading.showError(error);*/
                           });
                         } else {
                           Navigator.pushAndRemoveUntil(

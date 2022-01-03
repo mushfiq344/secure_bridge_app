@@ -9,6 +9,8 @@ import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
+import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 
 class Notifications extends StatefulWidget {
   final User currentUser;
@@ -35,7 +37,10 @@ class _NotificationsState extends State<Notifications> {
         notifications = _notifications;
       });
     }, (error) {
-      EasyLoading.showError(error);
+      // EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Login Failed!", error));
     });
   }
 
@@ -92,22 +97,36 @@ class _NotificationsState extends State<Notifications> {
                           if (e.notifiableType == "opportunity") {
                             String opportunityUploadPath =
                                 body['data']['upload_path'];
-
-                            Opportunity opportunity = Opportunity.fromJson(
-                                body['data']['opportunity']);
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) => OpportunityDetail(
-                                        opportunity,
-                                        opportunityUploadPath,
-                                        widget.currentUser))).then((value) {
-                              getNotifications();
-                            });
+                            if (body['data']['opportunity'] != null) {
+                              Opportunity opportunity = Opportunity.fromJson(
+                                  body['data']['opportunity']);
+                              Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) => OpportunityDetail(
+                                          opportunity,
+                                          opportunityUploadPath,
+                                          widget.currentUser))).then((value) {
+                                getNotifications();
+                              });
+                            } else {
+                              showDialog(
+                                      context: context,
+                                      builder: (_) => CustomAlertDialogue(
+                                          "Unavailable",
+                                          "The opportunity is not available"))
+                                  .then((value) {
+                                getNotifications();
+                              });
+                            }
                           }
                           // EasyLoading.showSuccess(success);
                         }, (error) {
-                          EasyLoading.showError(error);
+                          // EasyLoading.showError(error);
+                          showDialog(
+                              context: context,
+                              builder: (_) =>
+                                  CustomAlertDialogue("Error!", error));
                         });
                       },
                     ),

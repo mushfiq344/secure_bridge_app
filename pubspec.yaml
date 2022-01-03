@@ -61,6 +61,7 @@ dependencies:
   flutter_exif_rotation: ^0.4.3
   material_tag_editor: ^0.1.1
   carousel_slider: ^4.0.0
+  flutter_tags: "^0.4.9+1"
 
 
 dev_dependencies:

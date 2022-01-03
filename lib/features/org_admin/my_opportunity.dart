@@ -23,6 +23,7 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/Models/User.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 
 class MyOpportunity extends StatefulWidget {
   @override
@@ -67,7 +68,11 @@ class _MyOpportunityState extends State<MyOpportunity> {
         });
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showInfo(kNoInternetAvailable);
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
       }
     });
   }

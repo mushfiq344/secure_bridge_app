@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/Models/Tag.dart';
 import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/enrollment/opportunity_happening.dart';
 import 'package:secure_bridges_app/features/enrollment/participated_user_list.dart';
@@ -19,6 +20,8 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/utls/styles.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
+import 'package:secure_bridges_app/widgets/display_tag.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
@@ -43,6 +46,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   final _formKey = GlobalKey<FormState>();
   String code;
   int opportunityStatus = OPPORTUNITY_STATUS_VALUES["Drafted"];
+  List<Tag> tags = [];
   @override
   initState() {
     super.initState();
@@ -54,20 +58,27 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
       if (value) {
         _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,
             (Map<String, dynamic> body) {
-          log("body model ${body['data']['opportunity']}");
+          log("body model ${body['data']}");
+          List<Tag> _tags = List<Tag>.from(
+              body['data']['opportunity_tags'].map((i) => Tag.fromJson(i)));
           setState(() {
             opportunityStatus = body['data']['opportunity']['status'];
             userEnrolled = body['data']['is_user_enrolled'];
             inUserWithList = body['data']['in_user_wish_list'];
             userCode = body['data']['user_code'];
             userEnrollmentStatus = body['data']['enrollment_status'];
+            tags = _tags;
           });
         }, (error) {
           EasyLoading.showError(error);
         });
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showInfo(kNoInternetAvailable);
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
       }
     });
   }
@@ -368,52 +379,55 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                   SizedBox(
                     height: kMargin10,
                   ),
+                  // Container(
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         flex: 3,
+                  //         child: Row(
+                  //           children: [
+                  //             Expanded(
+                  //               flex: 1,
+                  //               child: PAButton(
+                  //                 "habits",
+                  //                 true,
+                  //                 () {
+                  //                   EasyLoading.showToast(kComingSoon);
+                  //                 },
+                  //                 fillColor: kGreyBackgroundColor,
+                  //                 textColor: kLabelColor,
+                  //                 capitalText: false,
+                  //                 hMargin: 5,
+                  //                 bouttonHeight: kMargin10,
+                  //               ),
+                  //             ),
+                  //             Expanded(
+                  //               flex: 1,
+                  //               child: PAButton(
+                  //                 "productivity",
+                  //                 true,
+                  //                 () {
+                  //                   EasyLoading.showToast(kComingSoon);
+                  //                 },
+                  //                 fillColor: kGreyBackgroundColor,
+                  //                 textColor: kLabelColor,
+                  //                 capitalText: false,
+                  //                 bouttonHeight: kMargin10,
+                  //                 hMargin: 5,
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       Expanded(
+                  //         child: SizedBox(),
+                  //         flex: 1,
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
                   Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: PAButton(
-                                  "habits",
-                                  true,
-                                  () {
-                                    EasyLoading.showToast(kComingSoon);
-                                  },
-                                  fillColor: kGreyBackgroundColor,
-                                  textColor: kLabelColor,
-                                  capitalText: false,
-                                  hMargin: 5,
-                                  bouttonHeight: kMargin10,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: PAButton(
-                                  "productivity",
-                                  true,
-                                  () {
-                                    EasyLoading.showToast(kComingSoon);
-                                  },
-                                  fillColor: kGreyBackgroundColor,
-                                  textColor: kLabelColor,
-                                  capitalText: false,
-                                  bouttonHeight: kMargin10,
-                                  hMargin: 5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: SizedBox(),
-                          flex: 1,
-                        )
-                      ],
-                    ),
+                    child: TagDisplayPage(tags),
                   ),
                   SizedBox(
                     height: kMargin24,

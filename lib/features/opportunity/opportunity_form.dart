@@ -604,7 +604,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                             inputDecoration: const InputDecoration(
                               fillColor: kPurpleColor,
                               border: InputBorder.none,
-                              hintText: 'Hint Text...',
+                              hintText: 'Add Tag...',
                             ),
                             onTagChanged: (newValue) {
                               setState(() {

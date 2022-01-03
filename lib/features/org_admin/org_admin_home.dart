@@ -23,6 +23,7 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/Models/User.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 
 class OrgAdminHome extends StatefulWidget {
   @override
@@ -155,7 +156,11 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
         });
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showInfo(kNoInternetAvailable);
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
       }
     });
   }
