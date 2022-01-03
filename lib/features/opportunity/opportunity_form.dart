@@ -141,49 +141,6 @@ class _OpportunityFormState extends State<OpportunityForm> {
     }
   }
 
-  InputDecoration _inputDecoration(String hintText, {bool showIcon = false}) {
-    return InputDecoration(
-      hintText: hintText,
-      hintStyle: TextStyle(color: kBorderColor),
-      fillColor: Colors.transparent,
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(kRadius10),
-        borderSide: BorderSide(
-          color: kAccentColor,
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(kRadius10),
-        borderSide: BorderSide(
-          color: kBorderColor,
-          width: 1.0,
-        ),
-      ),
-      disabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(kRadius10),
-        borderSide: BorderSide(
-          color: kBorderColor,
-          width: 1.0,
-        ),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(kRadius10),
-        borderSide: BorderSide(
-          color: kBorderColor,
-          width: 1.0,
-        ),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(kRadius10),
-        borderSide: BorderSide(
-          color: kBorderColor,
-          width: 1.0,
-        ),
-      ),
-      suffixIcon: showIcon ? Image.asset(kIconLocationPath) : null,
-    );
-  }
-
   @override
   void initState() {
     if (widget.oppotunity != null)
@@ -271,7 +228,9 @@ class _OpportunityFormState extends State<OpportunityForm> {
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
-                        decoration: _inputDecoration('Title'),
+                        decoration: customInputDecoration('Title',
+                            fillColor: kLightPurpleBackgroundColor,
+                            borderColor: kBorderColor),
                         controller: titleController,
                         name: 'title',
                         validator: FormBuilderValidators.compose([
@@ -293,7 +252,9 @@ class _OpportunityFormState extends State<OpportunityForm> {
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
-                        decoration: _inputDecoration('Sub Title'),
+                        decoration: customInputDecoration('Sub Title',
+                            fillColor: kLightPurpleBackgroundColor,
+                            borderColor: kBorderColor),
                         controller: subTitleController,
                         name: 'subtitle',
                         validator: FormBuilderValidators.compose([
@@ -348,10 +309,12 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         readOnly: true,
                         controller: opportunityDateController,
                         name: 'opportunity_date',
-                        decoration: _inputDecoration(
+                        decoration: customInputDecoration(
                             !opportunityDateController.text.isEmpty
                                 ? opportunityDateController.text
-                                : 'Opportunity Date'),
+                                : 'Opportunity Date',
+                            fillColor: kLightPurpleBackgroundColor,
+                            borderColor: kBorderColor),
                         onTap: () async {
                           DateTime date = DateTime(1900);
                           FocusScope.of(context).requestFocus(new FocusNode());
@@ -380,7 +343,9 @@ class _OpportunityFormState extends State<OpportunityForm> {
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
-                        decoration: _inputDecoration('Duration In Days'),
+                        decoration: customInputDecoration('Duration In Days',
+                            fillColor: kLightPurpleBackgroundColor,
+                            borderColor: kBorderColor),
                         controller: durationController,
                         name: 'duration',
                         validator: FormBuilderValidators.compose([
@@ -403,7 +368,9 @@ class _OpportunityFormState extends State<OpportunityForm> {
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
-                        decoration: _inputDecoration('Reward'),
+                        decoration: customInputDecoration('Reward',
+                            fillColor: kLightPurpleBackgroundColor,
+                            borderColor: kBorderColor),
                         controller: rewardController,
                         name: 'reward',
                         validator: FormBuilderValidators.compose([
@@ -426,7 +393,9 @@ class _OpportunityFormState extends State<OpportunityForm> {
                       ),
                       SizedBox(height: 10),
                       FormBuilderTextField(
-                        decoration: _inputDecoration('Location'),
+                        decoration: customInputDecoration('Location',
+                            fillColor: kLightPurpleBackgroundColor,
+                            borderColor: kBorderColor),
                         controller: locationController,
                         name: 'location',
                         validator: FormBuilderValidators.compose([
@@ -451,6 +420,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                         key: _opportunityTypeKey,
                         name: 'type',
                         decoration: customInputDecoration("Type",
+                            fillColor: kLightPurpleBackgroundColor,
                             borderColor: kBorderColor),
                         // initialValue: 'Male',
                         allowClear: true,
