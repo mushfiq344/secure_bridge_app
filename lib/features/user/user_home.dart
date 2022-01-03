@@ -58,7 +58,10 @@ class _UserHomeState extends State<UserHome> {
         userType = user['user_type'];
       });
     }, (error) {
-      EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
+      // EasyLoading.showError(error);
     });
   }
 
@@ -78,7 +81,10 @@ class _UserHomeState extends State<UserHome> {
             userEnrollments = body['data']['user_enrollments'].cast<int>();
           });
         }, (error) {
-          EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
+          // EasyLoading.showError(error);
         });
       } else {
         EasyLoading.dismiss();
@@ -553,7 +559,11 @@ class _UserHomeState extends State<UserHome> {
                                   loadUserOpportunitiesData();
                                 });
                               }, (error) {
-                                EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
+                                // EasyLoading.showError(error);
                               });
                             }
                           },
@@ -600,7 +610,11 @@ class _UserHomeState extends State<UserHome> {
                                       loadUserData();
                                       loadUserOpportunitiesData();
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
+                                      // EasyLoading.showError(error);
                                     });
                                   } else {
                                     _opportunityViewModel
@@ -692,7 +706,11 @@ class _UserHomeState extends State<UserHome> {
                                         loadUserOpportunitiesData();
                                       });
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   }
                                 },

@@ -120,7 +120,10 @@ class _ProfileFormState extends State<ProfileForm> {
         });
       }
     }, (error) {
-      EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
+      // EasyLoading.showError(error);
     });
   }
 
@@ -328,8 +331,13 @@ class _ProfileFormState extends State<ProfileForm> {
                                       if (profile == null) {
                                         if (_profileImageAreaMap[kImage] ==
                                             null) {
-                                          EasyLoading.showError(
-                                              "please add profile image");
+                                          // EasyLoading.showError(
+                                          //     "please add profile image");
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) => CustomAlertDialogue(
+                                                  "Error!",
+                                                  "please add profile image"));
                                           return;
                                         } else {
                                           data['profile_image'] =
@@ -360,7 +368,12 @@ class _ProfileFormState extends State<ProfileForm> {
                                               );
                                             }
                                           }, (error) {
-                                            EasyLoading.showError(error);
+                                            // EasyLoading.showError(error);
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    CustomAlertDialogue(
+                                                        "Error!", error));
                                           });
                                         }
                                       } else {
@@ -396,12 +409,21 @@ class _ProfileFormState extends State<ProfileForm> {
                                             );
                                           }
                                         }, (error) {
-                                          EasyLoading.showError(error);
+                                          // EasyLoading.showError(error);
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Error!", error));
                                         });
                                       }
                                     } else {
-                                      EasyLoading.showError(
-                                          "validation failed");
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", "validation failed"));
+                                      // EasyLoading.showError(
+                                      //     "validation failed");
                                     }
                                   },
                                   fillColor: kPurpleColor,

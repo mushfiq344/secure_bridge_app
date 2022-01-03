@@ -330,7 +330,11 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                                       widget.opportunity.id);
                                 });
                               }, (error) {
-                                EasyLoading.showError(error);
+                                // EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
                               });
                             },
                           ),

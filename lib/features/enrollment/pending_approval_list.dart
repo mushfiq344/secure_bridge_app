@@ -232,7 +232,11 @@ class _PendingEnrolledOpportunityUserState
                                         widget.opportunity.id);
                                   });
                                 }, (error) {
-                                  EasyLoading.showError(error);
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          CustomAlertDialogue("Error!", error));
+                                  // EasyLoading.showError(error);
                                 });
                               },
                             ),

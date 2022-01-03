@@ -464,7 +464,10 @@ class _RegisterState extends State<Register> {
         );
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showError(body["message"]);
+        // EasyLoading.showError(body["message"]);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Error!", body["message"]));
       }
 
       setState(() {
@@ -472,7 +475,10 @@ class _RegisterState extends State<Register> {
       });
     } catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      // EasyLoading.showError(e.toString());
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", e.toString()));
     }
   }
 

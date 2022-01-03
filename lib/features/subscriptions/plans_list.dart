@@ -69,7 +69,10 @@ class _PlansListState extends State<PlansList> {
         userSubscribedPlans = _userSubscribedPlans;
       });
     }, (error) {
-      EasyLoading.showError(error);
+      // EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
     });
   }
 
@@ -244,7 +247,10 @@ class _PlansListState extends State<PlansList> {
                     (route) => false,
                   );
                 }, (error) {
-                  EasyLoading.showError(error);
+                  // EasyLoading.showError(error);
+                  showDialog(
+                      context: context,
+                      builder: (_) => CustomAlertDialogue("Error!", error));
                 });
               } else {
                 Navigator.push(
@@ -330,7 +336,11 @@ class _PlansListState extends State<PlansList> {
                           );
                         }
                       }, (error) {
-                        EasyLoading.showError(error);
+                        showDialog(
+                            context: context,
+                            builder: (_) =>
+                                CustomAlertDialogue("Error!", error));
+                        // EasyLoading.showError(error);
                       });
                     }
                   }

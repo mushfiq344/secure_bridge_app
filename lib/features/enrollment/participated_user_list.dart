@@ -230,7 +230,11 @@ class _ParticipatedUserListState extends State<ParticipatedUserList> {
                                         widget.opportunity.id);
                                   });
                                 }, (error) {
-                                  EasyLoading.showError(error);
+                                  // EasyLoading.showError(error);
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          CustomAlertDialogue("Error!", error));
                                 });
                               },
                             ),

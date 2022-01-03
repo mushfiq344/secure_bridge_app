@@ -152,7 +152,10 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
             });
           });
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       } else {
         EasyLoading.dismiss();
@@ -172,7 +175,10 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
         currentUser = User.fromJson(user);
       });
     }, (error) {
-      EasyLoading.showError(error);
+      /*EasyLoading.showError(error);*/
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
     });
   }
 

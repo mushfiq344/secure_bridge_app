@@ -64,7 +64,10 @@ class _MyOpportunityState extends State<MyOpportunity> {
             totalPendingApproval = body["data"]["total_pending_approval"];
           });
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       } else {
         EasyLoading.dismiss();
@@ -84,7 +87,10 @@ class _MyOpportunityState extends State<MyOpportunity> {
         currentUser = User.fromJson(user);
       });
     }, (error) {
-      EasyLoading.showError(error);
+      // EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
     });
   }
 

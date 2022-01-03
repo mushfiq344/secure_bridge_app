@@ -141,7 +141,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
             hasUnreadNotification = body['data']['has_active_notifications'];
           });
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       } else {
         EasyLoading.dismiss();
@@ -160,7 +163,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
         currentUser = User.fromJson(user);
       });
     }, (error) {
-      EasyLoading.showError(error);
+      // EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
     });
   }
 
@@ -365,7 +371,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                         context, item, (success) {
                                       _loadOpportunitiesStats();
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   } else {
                                     bool callApi =
@@ -459,7 +469,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                         _loadOpportunitiesStats();
                                       });
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   }
                                 },
@@ -505,7 +519,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                       _loadUserData();
                                       _loadOpportunitiesStats();
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   } else {
                                     _opportunityViewModel
@@ -597,7 +615,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                         _loadOpportunitiesStats();
                                       });
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   }
                                 },
@@ -773,7 +795,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
         _orgAdminViewModel.deleteOpportunity(id, () async {
           _loadOpportunitiesStats();
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       },
     );

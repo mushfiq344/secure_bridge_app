@@ -70,7 +70,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
             tags = _tags;
           });
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       } else {
         EasyLoading.dismiss();
@@ -591,14 +594,22 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                   loadOpportunityDetail();
                                 });
                               }, (error) {
-                                EasyLoading.showError(error);
+                                // EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
                               });
                             } else {
                               _opportunityViewModel.removeFromWithList(
                                   context, widget.opportunity, (success) {
                                 loadOpportunityDetail();
                               }, (error) {
-                                EasyLoading.showError(error);
+                                // EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
                               });
                             }
                           },
@@ -746,7 +757,12 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                               loadOpportunityDetail();
                                             });
                                           }, (error) {
-                                            EasyLoading.showError(error);
+                                            // EasyLoading.showError(error);
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    CustomAlertDialogue(
+                                                        "Error!", error));
                                           });
                                         },
                                       )
@@ -981,17 +997,31 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
         if (body['data']['user_is_enrolled']) {
-          EasyLoading.showSuccess("This Code Is Valid");
+          // EasyLoading.showSuccess("This Code Is Valid");
+          showDialog(
+              context: context,
+              builder: (_) =>
+                  CustomAlertDialogue("Success!", "This Code Is Valid"));
         } else {
-          EasyLoading.showError("This Code Is invalid");
+          // EasyLoading.showError("This Code Is invalid");
+          showDialog(
+              context: context,
+              builder: (_) =>
+                  CustomAlertDialogue("Error!", "This Code Is invalid"));
         }
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
+        // EasyLoading.showError(body['message']);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Error!", body['message']));
       }
     } catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", e.toString()));
+      // EasyLoading.showError(e.toString());
     }
   }
 
@@ -1024,7 +1054,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                     context, widget.opportunity, (success) {
                   loadOpportunityDetail();
                 }, (error) {
-                  EasyLoading.showError(error);
+                  // EasyLoading.showError(error);
+                  showDialog(
+                      context: context,
+                      builder: (_) => CustomAlertDialogue("Error!", error));
                 });
               },
             )
