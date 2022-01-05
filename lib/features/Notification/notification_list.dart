@@ -48,8 +48,12 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Notifications"),
-          backgroundColor: kPurpleColor,
+          title: Text(
+            "Notifications",
+            style: TextStyle(color: kPurpleColor),
+          ),
+          backgroundColor: kAppBarBackgroundColor,
+          iconTheme: IconThemeData(color: kPurpleColor),
         ),
         body: SingleChildScrollView(
           child: Padding(

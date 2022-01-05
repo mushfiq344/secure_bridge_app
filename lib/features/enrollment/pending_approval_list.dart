@@ -74,8 +74,12 @@ class _PendingEnrolledOpportunityUserState
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('pending Requests'),
-          backgroundColor: kPurpleColor,
+          title: Text(
+            'pending Requests',
+            style: TextStyle(color: kPurpleColor),
+          ),
+          backgroundColor: kAppBarBackgroundColor,
+          iconTheme: IconThemeData(color: kPurpleColor),
         ),
         body: SingleChildScrollView(
           child: Padding(

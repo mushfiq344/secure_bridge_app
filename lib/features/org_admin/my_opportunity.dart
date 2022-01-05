@@ -99,8 +99,12 @@ class _MyOpportunityState extends State<MyOpportunity> {
     return Scaffold(
         backgroundColor: Color(0xFFE5E5E5),
         appBar: AppBar(
-          title: Text('My Opportunity'),
-          backgroundColor: kPurpleColor,
+          title: Text(
+            'My Opportunity',
+            style: TextStyle(color: kPurpleColor),
+          ),
+          backgroundColor: kAppBarBackgroundColor,
+          iconTheme: IconThemeData(color: kPurpleColor),
         ),
         drawer: CustomDrawer(currentUser),
         body: Container(

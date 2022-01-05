@@ -663,8 +663,12 @@ class _OpportunitiesState extends State<Opportunities> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(kOpportunities),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          kOpportunities,
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),

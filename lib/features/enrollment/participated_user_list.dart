@@ -72,8 +72,12 @@ class _ParticipatedUserListState extends State<ParticipatedUserList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Participated User List'),
-          backgroundColor: kPurpleColor,
+          title: Text(
+            'Participated User List',
+            style: TextStyle(color: kPurpleColor),
+          ),
+          backgroundColor: kAppBarBackgroundColor,
+          iconTheme: IconThemeData(color: kPurpleColor),
         ),
         body: SingleChildScrollView(
           child: Padding(

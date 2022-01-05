@@ -61,8 +61,12 @@ class PaymentHomeState extends State<PaymentHome> {
     ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('SELECT PAYMENT'),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          'SELECT PAYMENT',
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: Container(
         padding: EdgeInsets.all(20),

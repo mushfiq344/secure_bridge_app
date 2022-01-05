@@ -705,8 +705,12 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(kAppName),
-          backgroundColor: kPurpleColor,
+          title: Text(
+            kAppName,
+            style: TextStyle(color: kPurpleColor),
+          ),
+          backgroundColor: kAppBarBackgroundColor,
+          iconTheme: IconThemeData(color: kPurpleColor),
           actions: [
             GestureDetector(
               child: Image(

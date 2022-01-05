@@ -142,9 +142,12 @@ class _ProfileFormState extends State<ProfileForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
-        backgroundColor: kPurpleColor,
-      ),
+          title: Text(
+            "Profile",
+            style: TextStyle(color: kPurpleColor),
+          ),
+          backgroundColor: kAppBarBackgroundColor,
+          iconTheme: IconThemeData(color: kPurpleColor)),
       body: SingleChildScrollView(
         child: Stack(
           children: [

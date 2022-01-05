@@ -101,8 +101,12 @@ class _UserHomeState extends State<UserHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Opportunity"),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          "My Opportunity",
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: Container(
         alignment: Alignment.center,

@@ -103,8 +103,12 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
     return Scaffold(
       backgroundColor: kGreyBackgroundColor,
       appBar: AppBar(
-        title: Text("Opportunity Happening"),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          "Opportunity Happening",
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: SingleChildScrollView(
         child: Padding(

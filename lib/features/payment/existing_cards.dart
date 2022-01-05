@@ -66,8 +66,12 @@ class ExistingCardsPageState extends State<ExistingCardsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CHOOSE CARD'),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          'CHOOSE CARD',
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: Container(
         padding: EdgeInsets.all(20),

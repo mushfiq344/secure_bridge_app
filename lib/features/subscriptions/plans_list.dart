@@ -94,8 +94,12 @@ class _PlansListState extends State<PlansList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Subscriptions'),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          'Subscriptions',
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: SingleChildScrollView(
         child: Padding(
