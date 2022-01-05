@@ -880,6 +880,12 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                         _opportunityViewModel
                                             .updateOpportunity(data, () {
                                           loadOpportunityDetail();
+                                        }, (error) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Error!", error));
                                         });
                                       } else if (opportunityStatus ==
                                           OPPORTUNITY_STATUS_VALUES[
@@ -890,6 +896,12 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                         _opportunityViewModel
                                             .updateOpportunity(data, () {
                                           loadOpportunityDetail();
+                                        }, (error) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Error!", error));
                                         });
                                       }
                                     },

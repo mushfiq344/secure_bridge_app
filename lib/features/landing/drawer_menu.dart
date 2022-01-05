@@ -302,7 +302,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   style: TextStyle(
                       fontSize: kMargin22, fontWeight: FontWeight.w400)),
               onTap: () {
-                EasyLoading.showToast("Coming Soon!");
+                showDialog(
+                    context: context,
+                    builder: (_) =>
+                        CustomAlertDialogue(kComingSoon, kUnderConstruction));
               },
             ),
             // ListTile(

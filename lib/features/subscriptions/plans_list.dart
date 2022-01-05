@@ -291,8 +291,12 @@ class _PlansListState extends State<PlansList> {
                       //   });
                       //
                       // });
-                      EasyLoading.showSuccess(
-                          'You Have Subscribed To This Plan!');
+                      // EasyLoading.showSuccess(
+                      //     'You Have Subscribed To This Plan!');
+                      showDialog(
+                          context: context,
+                          builder: (_) => CustomAlertDialogue(
+                              "Success!", 'You Have Subscribed To This Plan!'));
                       // if (widget.isRegistering) {
                       //   _authenticationViewModel.completeRegistration(1,
                       //       () async {

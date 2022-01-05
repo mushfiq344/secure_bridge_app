@@ -152,3 +152,6 @@ const kNoInternetAvailable = "No Internet Available";
 //     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
 //   ),
 // ];
+
+const kUnderConstruction = "This feature is under construction";
+const kErrorALert = "Error!";

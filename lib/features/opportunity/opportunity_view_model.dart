@@ -145,7 +145,7 @@ class OpportunityViewModel {
     }
   }
 
-  updateOpportunity(Map<String, dynamic> data, _success) async {
+  updateOpportunity(Map<String, dynamic> data, _success, _error) async {
     try {
       log("data $data");
 
@@ -160,11 +160,11 @@ class OpportunityViewModel {
         _success();
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
+        _error(body['message']);
       }
     } catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      _error(e.toString());
     }
   }
 

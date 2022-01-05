@@ -105,7 +105,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                       if (_formKey.currentState.validate()) {
                                         _authenticationViewModel
                                             .forgotPassword(email, (success) {
-                                          EasyLoading.showSuccess(success);
+                                          // EasyLoading.showSuccess(success);
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Success!", success));
                                         }, (error) {
                                           // EasyLoading.showError(error);
                                           showDialog(

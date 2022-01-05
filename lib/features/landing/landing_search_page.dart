@@ -814,7 +814,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
       child: Text("Continue"),
       onPressed: () {
         Navigator.of(context).pop();
-        _orgAdminViewModel.deleteOpportunity(id, () async {
+        _orgAdminViewModel.deleteOpportunity(id, (success) async {
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Success!", success));
           _loadOpportunitiesStats();
         }, (error) {
           // EasyLoading.showError(error);

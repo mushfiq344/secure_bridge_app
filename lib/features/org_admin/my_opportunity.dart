@@ -337,6 +337,13 @@ class _MyOpportunityState extends State<MyOpportunity> {
                                                         .updateOpportunity(data,
                                                             () {
                                                       getOpportunities();
+                                                    }, (error) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (_) =>
+                                                              CustomAlertDialogue(
+                                                                  "Error!",
+                                                                  error));
                                                     });
                                                   } else if (opportunity
                                                           .status ==
@@ -351,6 +358,13 @@ class _MyOpportunityState extends State<MyOpportunity> {
                                                         .updateOpportunity(data,
                                                             () {
                                                       getOpportunities();
+                                                    }, (error) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (_) =>
+                                                              CustomAlertDialogue(
+                                                                  "Error!",
+                                                                  error));
                                                     });
                                                   } else if (opportunity
                                                           .status ==

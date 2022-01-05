@@ -219,7 +219,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                 child: GestureDetector(
                   child: ColorFiltered(
                       colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.5), BlendMode.dstATop),
+                          Colors.black.withOpacity(0.5), BlendMode.dstOut),
                       child: _coverImage != null
                           ? Image.file(
                               File(_coverImage.path),
@@ -749,8 +749,14 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                                         OPPORTUNITY_STATUS_VALUES[
                                                             "Drafted"]);
                                                   } else {
-                                                    EasyLoading.showError(
-                                                        "validation failed");
+                                                    // EasyLoading.showError(
+                                                    //     "validation failed");
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (_) =>
+                                                            CustomAlertDialogue(
+                                                                kErrorALert,
+                                                                "validation failed"));
                                                   }
                                                 },
                                                 fillColor: kPurpleColor,
@@ -776,8 +782,14 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                                         OPPORTUNITY_STATUS_VALUES[
                                                             "Published"]);
                                                   } else {
-                                                    EasyLoading.showError(
-                                                        "validation failed");
+                                                    // EasyLoading.showError(
+                                                    //     "validation failed");
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (_) =>
+                                                            CustomAlertDialogue(
+                                                                "Error!",
+                                                                "validation failed"));
                                                   }
                                                 },
                                                 fillColor: kPurpleColor,
@@ -798,8 +810,14 @@ class _OpportunityFormState extends State<OpportunityForm> {
 
                                                     _updateOpportunity();
                                                   } else {
-                                                    EasyLoading.showError(
-                                                        "validation failed");
+                                                    // EasyLoading.showError(
+                                                    //     "validation failed");
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (_) =>
+                                                            CustomAlertDialogue(
+                                                                "Error!",
+                                                                "validation failed"));
                                                   }
                                                 },
                                                 fillColor: kPurpleColor,
@@ -822,8 +840,14 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                                             OPPORTUNITY_STATUS_VALUES[
                                                                 'Published']);
                                                   } else {
-                                                    EasyLoading.showError(
-                                                        "validation failed");
+                                                    // EasyLoading.showError(
+                                                    //     "validation failed");
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (_) =>
+                                                            CustomAlertDialogue(
+                                                                "Error!",
+                                                                "validation failed"));
                                                   }
                                                 },
                                                 fillColor: kPurpleColor,
@@ -980,11 +1004,19 @@ class _OpportunityFormState extends State<OpportunityForm> {
     description = await _descriptionKeyEditor.currentState?.getText();
     try {
       if (_coverImageAreaMap[kImage] == null) {
-        EasyLoading.showError("please add cover image");
+        // EasyLoading.showError("please add cover image");
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", "please add cover image"));
         return;
       }
       if (_iconImageAreaMap[kImage] == null) {
-        EasyLoading.showError("please add icon image");
+        // EasyLoading.showError("please add icon image");
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", "please add icon image"));
         return;
       }
 
@@ -1011,7 +1043,10 @@ class _OpportunityFormState extends State<OpportunityForm> {
       if (res.statusCode == 201) {
         print("success");
         EasyLoading.dismiss();
-        EasyLoading.showSuccess(body["message"]);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Success!", body['message']));
+        // EasyLoading.showSuccess(body["message"]);
         await Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => OrgAdminHome()),
@@ -1019,12 +1054,18 @@ class _OpportunityFormState extends State<OpportunityForm> {
         );
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Error!", body['message']));
+        // EasyLoading.showError(body['message']);
       }
     } catch (e) {
       print(e);
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      // EasyLoading.showError(e.toString());
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", e.toString()));
     }
   }
 
@@ -1065,7 +1106,10 @@ class _OpportunityFormState extends State<OpportunityForm> {
       log("body : ${body}");
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
-        EasyLoading.showSuccess(body["message"]);
+        // EasyLoading.showSuccess(body["message"]);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Success!", body["message"]));
         await Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => MyOpportunity()),
@@ -1073,11 +1117,17 @@ class _OpportunityFormState extends State<OpportunityForm> {
         );
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
+        // EasyLoading.showError(body['message']);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Error!", body['message']));
       }
     } catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      // EasyLoading.showError(e.toString());
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", e.toString()));
     }
   }
 }

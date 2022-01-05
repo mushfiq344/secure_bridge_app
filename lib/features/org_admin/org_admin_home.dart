@@ -698,7 +698,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                                         .updateOpportunity(data,
                                                             () {
                                                       getOpportunities();
-                                                    });
+                                                    }, (error) {});
                                                   } else if (opportunity
                                                           .status ==
                                                       OPPORTUNITY_STATUS_VALUES[
@@ -712,6 +712,13 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                                         .updateOpportunity(data,
                                                             () {
                                                       getOpportunities();
+                                                    }, (error) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (_) =>
+                                                              CustomAlertDialogue(
+                                                                  "Error!",
+                                                                  error));
                                                     });
                                                   } else if (opportunity
                                                           .status ==

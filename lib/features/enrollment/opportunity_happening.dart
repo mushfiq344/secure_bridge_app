@@ -177,6 +177,10 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                       context,
                       MaterialPageRoute(builder: (context) => OrgAdminHome()),
                     );
+                  }, (error) {
+                    showDialog(
+                        context: context,
+                        builder: (_) => CustomAlertDialogue("Error!", error));
                   });
                 },
                 fillColor: kPurpleColor,

@@ -348,8 +348,13 @@ class _ProfileFormState extends State<ProfileForm> {
 
                                           _profileViewModel.createProfile(data,
                                               (success) async {
-                                            await EasyLoading.showSuccess(
-                                                success);
+                                            // await EasyLoading.showSuccess(
+                                            //     success);
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    CustomAlertDialogue(
+                                                        "Success!", success));
                                             if (currentUser.userType == 0) {
                                               await Navigator
                                                   .pushAndRemoveUntil(
@@ -390,9 +395,13 @@ class _ProfileFormState extends State<ProfileForm> {
 
                                         _profileViewModel.updateProfile(data,
                                             (success) async {
-                                          await EasyLoading.showSuccess(
-                                              success);
-
+                                          // await EasyLoading.showSuccess(
+                                          //     success);
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Success!", success));
                                           if (currentUser.userType == 0) {
                                             await Navigator.pushAndRemoveUntil(
                                               context,
