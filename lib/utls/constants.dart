@@ -25,6 +25,7 @@ const kIconLovePath = "images/ic_love.png";
 const kIconLoveWhitePath = "images/ic_heart_white.png";
 const kIconAdditionPath = "images/ic_addition.png";
 const kIconAdditionWhitePath = "images/ic_addition_white.png";
+const kIconHamBurgerMenu = "images/ic_hamburger_menu.png";
 const kAppLogoPath = "images/logo.jpg";
 const kImageNameWithExtension = "Image name with extension";
 const kImage = "Image";

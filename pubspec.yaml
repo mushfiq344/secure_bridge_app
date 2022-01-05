@@ -140,6 +140,8 @@ flutter:
     - images/im_verify.png
     - images/ic_star.png
     - images/ic_archive.png
+    - images/im_hamburger_menu_background.png
+    - images/ic_hamburger_menu.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

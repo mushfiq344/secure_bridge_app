@@ -191,6 +191,23 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
     return Scaffold(
         backgroundColor: Color(0xFFE5E5E5),
         appBar: AppBar(
+          leading: Builder(
+            builder: (context) => GestureDetector(
+              child: Container(
+                decoration: BoxDecoration(
+                  image:
+                      DecorationImage(image: AssetImage(kIconBackgroundPath)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image(
+                    image: AssetImage(kIconHamBurgerMenu),
+                  ),
+                ),
+              ),
+              onTap: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
           title: Text(
             kOpportunities,
             style: TextStyle(color: kPurpleColor),

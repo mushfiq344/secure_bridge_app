@@ -701,10 +701,28 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
     );
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: Builder(
+            builder: (context) => GestureDetector(
+              child: Container(
+                decoration: BoxDecoration(
+                  image:
+                      DecorationImage(image: AssetImage(kIconBackgroundPath)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image(
+                    image: AssetImage(kIconHamBurgerMenu),
+                  ),
+                ),
+              ),
+              onTap: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
           title: Text(
             kAppName,
             style: TextStyle(color: kPurpleColor),
