@@ -156,3 +156,5 @@ const kNoInternetAvailable = "No Internet Available";
 const kUnderConstruction = "This feature is under construction";
 const kErrorALert = "Error!";
 const kViewRequests = "View requests";
+const kSaveDraft = "save draft";
+const kHighlights = "Highlights";

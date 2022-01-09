@@ -732,7 +732,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                         ? Column(
                                             children: [
                                               PAButton(
-                                                "Submit",
+                                                kSaveDraft,
                                                 true,
                                                 () async {
                                                   bool callApi =

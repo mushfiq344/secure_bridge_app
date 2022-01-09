@@ -446,7 +446,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                         Expanded(
                           flex: 1,
                           child: Text(
-                            "Heighlights",
+                            kHighlights,
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 fontSize: kMargin14,
