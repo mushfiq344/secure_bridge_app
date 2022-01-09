@@ -136,7 +136,7 @@ class _MyOpportunityState extends State<MyOpportunity> {
                     children: [
                       ...opportunities.map((opportunity) {
                         String coverUrl =
-                            "${BASE_URL}${opportunityUploadPath}${opportunity.coverImage}";
+                            "${BASE_URL}${opportunityUploadPath}${opportunity.iconImage}";
                         return GestureDetector(
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: kMargin10),

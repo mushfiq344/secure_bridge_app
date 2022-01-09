@@ -283,7 +283,8 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                                 fontWeight: FontWeight.w700),
                                           ),
                                           Text(
-                                            "Opportunities",
+                                            "My opportunities",
+                                            overflow: TextOverflow.fade,
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: kMargin14,
@@ -496,7 +497,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                     children: [
                       ...opportunities.map((opportunity) {
                         String coverUrl =
-                            "${BASE_URL}${opportunityUploadPath}${opportunity.coverImage}";
+                            "${BASE_URL}${opportunityUploadPath}${opportunity.iconImage}";
                         return GestureDetector(
                           child: Padding(
                             padding: const EdgeInsets.only(

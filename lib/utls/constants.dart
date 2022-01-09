@@ -64,8 +64,8 @@ const kSearchIconPath = "images/ic_search.png";
 const kVerifyIconPath = "images/im_verify.png";
 const kArchiveIconPath = "images/ic_archive.png";
 const kStarconPath = "images/ic_star.png";
-const GENDER_OPTIONS = ['Male', 'Female', 'Others'];
-const GENDER_VALUES = {"Male": 0, "Female": 1, "Others": 2};
+const GENDER_OPTIONS = ['Male', 'Female', 'Binary', 'Other'];
+const GENDER_VALUES = {"Male": 0, "Female": 1, 'Binary': 2, "Other": 3};
 
 const OPPORTUNITY_TYPES = ['Shelter', 'Counselling', 'Food'];
 const OPPORTUNITY_TYPES_VALUES = {"Shelter": 0, "Counselling": 1, "Food": 2};

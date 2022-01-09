@@ -449,7 +449,7 @@ class _RegisterState extends State<Register> {
 
       var res = await Network().authData(data, REGISTER_URL);
       var body = json.decode(res.body);
-      // log("response $body");
+      log("response $body");
 
       if (res.statusCode == 201) {
         SharedPreferences localStorage = await SharedPreferences.getInstance();
