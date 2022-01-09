@@ -75,7 +75,7 @@ class _PendingEnrolledOpportunityUserState
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'pending Requests',
+            kViewRequests,
             style: TextStyle(color: kPurpleColor),
           ),
           backgroundColor: kAppBarBackgroundColor,

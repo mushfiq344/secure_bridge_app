@@ -87,7 +87,7 @@ const OPPORTUNITY_STATUS_VALUES = {
 };
 const OPPORTUNITY_STATUS_ACTIONS_TEXT = {
   "Drafted": "Update",
-  "Published": "Pending Requests",
+  "Published": kViewRequests,
   "Currently Happening": "End The Event",
   "Ended": "Start Rewarding",
   "Rewarding": "Verify",
@@ -155,3 +155,4 @@ const kNoInternetAvailable = "No Internet Available";
 
 const kUnderConstruction = "This feature is under construction";
 const kErrorALert = "Error!";
+const kViewRequests = "View requests";
