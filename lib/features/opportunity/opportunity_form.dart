@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'dart:io';
+import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -114,13 +115,14 @@ class _OpportunityFormState extends State<OpportunityForm> {
     });
   }
 
-  _getImageNameAndString(String type) {
+  _getImageNameAndString(String type) async {
     if (type == 'cover') {
       if (_coverImage != null) {
         _imageNameWithExtension =
             _coverImage.path.substring(_coverImage.path.lastIndexOf("/") + 1);
-
-        var fileContent = File(_coverImage.path).readAsBytesSync();
+        File image =
+            await FlutterExifRotation.rotateImage(path: _coverImage.path);
+        var fileContent = File(image.path).readAsBytesSync();
         _coverImageBase64String = base64Encode(fileContent);
 
         _coverImageAreaMap[kImageNameWithExtension] = _imageNameWithExtension;
@@ -131,8 +133,9 @@ class _OpportunityFormState extends State<OpportunityForm> {
       if (_iconImage != null) {
         _imageNameWithExtension =
             _iconImage.path.substring(_iconImage.path.lastIndexOf("/") + 1);
-
-        var fileContent = File(_iconImage.path).readAsBytesSync();
+        File image =
+            await FlutterExifRotation.rotateImage(path: _iconImage.path);
+        var fileContent = File(image.path).readAsBytesSync();
         _iconImageBase64String = base64Encode(fileContent);
 
         _iconImageAreaMap[kImageNameWithExtension] = _imageNameWithExtension;

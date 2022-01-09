@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -47,11 +48,8 @@ class _ProfileFormState extends State<ProfileForm> {
 
   final ImagePicker _picker = ImagePicker();
   _imgFromCamera() async {
-    PickedFile image = await _picker.getImage(
-        source: ImageSource.camera,
-        imageQuality: 50,
-        maxWidth: 512,
-        maxHeight: 512);
+    PickedFile image =
+        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
     // image =
     //     (await FlutterExifRotation.rotateImage(path: image.path)) as PickedFile;
 
@@ -75,12 +73,14 @@ class _ProfileFormState extends State<ProfileForm> {
     });
   }
 
-  _getImageNameAndString() {
+  _getImageNameAndString() async {
     if (_profileImage != null) {
       _imageNameWithExtension =
           _profileImage.path.substring(_profileImage.path.lastIndexOf("/") + 1);
+      File image =
+          await FlutterExifRotation.rotateImage(path: _profileImage.path);
 
-      var fileContent = File(_profileImage.path).readAsBytesSync();
+      var fileContent = File(image.path).readAsBytesSync();
       _profileImageBase64String = base64Encode(fileContent);
 
       _profileImageAreaMap[kImageNameWithExtension] = _imageNameWithExtension;

@@ -59,7 +59,7 @@ class ProfileViewModel {
   updateProfile(Map<String, dynamic> data, _success, _error) async {
     try {
       EasyLoading.show(status: kLoading);
-      print("data $data");
+      // print("data $data");
       // EasyLoading.show(status: kLoading);
       var res = await Network().putData(data, "${PROFILE_URL}/${data["id"]}");
       var body = json.decode(res.body);
