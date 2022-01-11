@@ -42,6 +42,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
   int totalReward = 0;
   int totalEnrolledUser = 0;
   int totalPendingApproval = 0;
+  int totalRewardRequests = 0;
   TextEditingController _searchController = TextEditingController();
   UserViewModel _userViewModel = UserViewModel();
   User currentUser;
@@ -50,41 +51,6 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
   List<BarChartModel> weekLyEngagements = [];
   String startDate;
   String endDate;
-
-  Map<String, dynamic> engagementData = {
-    "start_date": "2021-12-23",
-    "end_date": "2021-12-31",
-    "weekly_engagements": [
-      {
-        "day": "Sat",
-        "count": 7,
-      },
-      {
-        "day": "Sun",
-        "count": 6,
-      },
-      {
-        "day": "Mon",
-        "count": 5,
-      },
-      {
-        "day": "Tues",
-        "count": 4,
-      },
-      {
-        "day": "Wed",
-        "count": 3,
-      },
-      {
-        "day": "Thurs",
-        "count": 2,
-      },
-      {
-        "day": "Fri",
-        "count": 1,
-      }
-    ]
-  };
 
   @override
   void initState() {
@@ -131,19 +97,20 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                   ['opportunities']
               .map((i) => Opportunity.fromJson(i)));
 
-          List<BarChartModel> _data =
-              engagementData['weekly_engagements'].map<BarChartModel>((e) {
+          List<BarChartModel> _data = body["data"]["engagement_data"]
+                  ["weekly_engagements"]
+              .map<BarChartModel>((e) {
             return BarChartModel(
               year: e["day"],
               financial: e["count"],
               color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
             );
           }).toList();
-          print("date : ${engagementData["start_date"]}");
+
           Future.delayed(const Duration(), () {
             setState(() {
-              startDate = engagementData["start_date"];
-              endDate = engagementData["end_date"];
+              startDate = body["data"]["engagement_data"]["start_date"];
+              endDate = body["data"]["engagement_data"]["end_date"];
               weekLyEngagements = _data;
               opportunities = _opportunities
                   .where((element) =>
@@ -153,6 +120,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
               totalReward = body["data"]["total_reward"];
               totalEnrolledUser = body["data"]["total_enrolled_users"];
               totalPendingApproval = body["data"]["total_pending_approval"];
+              totalRewardRequests = body["data"]["total_reward_request"];
             });
           });
         }, (error) {
