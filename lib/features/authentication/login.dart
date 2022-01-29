@@ -19,6 +19,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -190,224 +191,244 @@ class _LoginState extends State<Login> {
                             );
                           }
                         }, (error) {
-                          EasyLoading.showError(error);
+                          EasyLoading.dismiss();
+                          // EasyLoading.showError(error);
+                          showDialog(
+                              context: context,
+                              builder: (_) =>
+                                  CustomAlertDialogue("Login Failed!", error));
                         });
                       },
                     ),
-                    SizedBox(
-                      height: kMargin4,
-                    ),
-                    GestureDetector(
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(kMargin12)),
-                        child: ListTile(
-                          leading: Image(
-                            image: AssetImage(kFacebookIconPath),
-                          ),
-                          title: Text("Continue With Facebook",
-                              style: TextStyle(
-                                  fontSize: kMargin14,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                      onTap: () {
-                        EasyLoading.showToast(kComingSoon);
-                      },
-                    ),
-                    SizedBox(
-                      height: kMargin4,
-                    ),
-                    GestureDetector(
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(kMargin12)),
-                        child: ListTile(
-                          leading: Image(
-                            image: AssetImage(kAppleIconPath),
-                          ),
-                          title: Text("Continue With Apple ID",
-                              style: TextStyle(
-                                  fontSize: kMargin14,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                      onTap: () {
-                        EasyLoading.showToast(kComingSoon);
-                      },
-                    ),
+                    // SizedBox(
+                    //   height: kMargin4,
+                    // ),
+                    // GestureDetector(
+                    //   child: Card(
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(kMargin12)),
+                    //     child: ListTile(
+                    //       leading: Image(
+                    //         image: AssetImage(kFacebookIconPath),
+                    //       ),
+                    //       title: Text("Continue With Facebook",
+                    //           style: TextStyle(
+                    //               fontSize: kMargin14,
+                    //               fontWeight: FontWeight.bold)),
+                    //     ),
+                    //   ),
+                    //   onTap: () {
+                    //     EasyLoading.showToast(kComingSoon);
+                    //   },
+                    // ),
+                    // SizedBox(
+                    //   height: kMargin4,
+                    // ),
+                    // GestureDetector(
+                    //   child: Card(
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(kMargin12)),
+                    //     child: ListTile(
+                    //       leading: Image(
+                    //         image: AssetImage(kAppleIconPath),
+                    //       ),
+                    //       title: Text("Continue With Apple ID",
+                    //           style: TextStyle(
+                    //               fontSize: kMargin14,
+                    //               fontWeight: FontWeight.bold)),
+                    //     ),
+                    //   ),
+                    //   onTap: () {
+                    //     EasyLoading.showToast(kComingSoon);
+                    //   },
+                    // ),
                   ],
                 ),
               ),
-              Card(
-                elevation: 4.0,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kMargin20),
-                  child: Column(
-                    children: [
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: kMargin12),
-                              child: Text(
-                                "Log In with email",
-                                style: TextStyle(
-                                    fontSize: kMargin14,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            TextFormField(
-                              initialValue: 'user@itsolutionstuff.com',
-                              style: TextStyle(color: kPurpleColor),
-                              cursorColor: kPurpleColor,
-                              keyboardType: TextInputType.text,
-                              decoration: customInputDecoration('Email',
-                                  fillColor: kLightPurpleBackgroundColor,
-                                  showPrefixIcon: true,
-                                  prefixIconPath: kEmailIconPath),
-                              validator: (emailValue) {
-                                if (emailValue.isEmpty) {
-                                  return 'Please enter email';
-                                }
-                                email = emailValue;
-                                return null;
-                              },
-                            ),
-                            SizedBox(
-                              height: kMargin10,
-                            ),
-                            TextFormField(
-                              initialValue: '12345678',
-                              style: TextStyle(color: kPurpleColor),
-                              cursorColor: kPurpleColor,
-                              keyboardType: TextInputType.text,
-                              obscureText: hidePassword,
-                              decoration: customInputDecoration('Password',
-                                  fillColor: kLightPurpleBackgroundColor,
-                                  showPrefixIcon: true,
-                                  prefixIconPath: kLockIconPath,
-                                  showSuffixIcon: true,
-                                  suffixIconPath: kTextShowIconPath,
-                                  hasSuffixIconCallback: true,
-                                  suffixIconCallback: () {
-                                setState(() {
-                                  hidePassword = !hidePassword;
-                                });
-                              }),
-                              validator: (passwordValue) {
-                                if (passwordValue.isEmpty) {
-                                  return 'Please enter some text';
-                                }
-                                password = passwordValue;
-                                return null;
-                              },
-                            ),
-                            Container(
-                              child: Padding(
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Card(
+                  elevation: 4.0,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: kMargin20),
+                    child: Column(
+                      children: [
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: kMargin20),
-                                child: PAButton(
-                                  "Login",
-                                  true,
-                                  () async {
-                                    bool callApi =
-                                        await shouldMakeApiCall(context);
-                                    if (!callApi) return;
-                                    _formKey.currentState.save();
-                                    if (_formKey.currentState.validate()) {
-                                      _authenticationViewModel.login(
-                                          email, password, (int regCompleted,
-                                              Map<String, dynamic> body) async {
-                                        if (regCompleted == 0) {
-                                          await Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SelectAccountType()),
-                                            (route) => false,
-                                          );
-                                        } else {
-                                          if (body['data']['user']
-                                                  ['user_type'] ==
-                                              0) {
+                                    vertical: kMargin12),
+                                child: Text(
+                                  "Log In with email",
+                                  style: TextStyle(
+                                      fontSize: kMargin14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              TextFormField(
+                                initialValue: 'user@itsolutionstuff.com',
+                                style: TextStyle(color: kPurpleColor),
+                                cursorColor: kPurpleColor,
+                                keyboardType: TextInputType.text,
+                                decoration: customInputDecoration('Email',
+                                    fillColor: kLightPurpleBackgroundColor,
+                                    showPrefixIcon: true,
+                                    prefixIconPath: kEmailIconPath),
+                                validator: (emailValue) {
+                                  if (emailValue.isEmpty) {
+                                    return 'Please enter email';
+                                  }
+                                  email = emailValue;
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: kMargin10,
+                              ),
+                              TextFormField(
+                                initialValue: '12345678',
+                                style: TextStyle(color: kPurpleColor),
+                                cursorColor: kPurpleColor,
+                                keyboardType: TextInputType.text,
+                                obscureText: hidePassword,
+                                decoration: customInputDecoration('Password',
+                                    fillColor: kLightPurpleBackgroundColor,
+                                    showPrefixIcon: true,
+                                    prefixIconPath: kLockIconPath,
+                                    showSuffixIcon: true,
+                                    suffixIconPath: kTextShowIconPath,
+                                    hasSuffixIconCallback: true,
+                                    suffixIconCallback: () {
+                                  setState(() {
+                                    hidePassword = !hidePassword;
+                                  });
+                                }),
+                                validator: (passwordValue) {
+                                  if (passwordValue.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  password = passwordValue;
+                                  return null;
+                                },
+                              ),
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: kMargin20),
+                                  child: PAButton(
+                                    "Login",
+                                    true,
+                                    () async {
+                                      bool callApi =
+                                          await shouldMakeApiCall(context);
+                                      if (!callApi) return;
+                                      _formKey.currentState.save();
+                                      if (_formKey.currentState.validate()) {
+                                        _authenticationViewModel.login(
+                                            email, password, (int regCompleted,
+                                                Map<String, dynamic>
+                                                    body) async {
+                                          if (regCompleted == 0) {
                                             await Navigator.pushAndRemoveUntil(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      LandingSearchPage()),
+                                                      SelectAccountType()),
                                               (route) => false,
                                             );
-                                          } else if (body['data']['user']
-                                                  ['user_type'] ==
-                                              1) {
-                                            await Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OrgAdminHome()),
-                                              (route) => false,
-                                            );
+                                          } else {
+                                            if (body['data']['user']
+                                                    ['user_type'] ==
+                                                0) {
+                                              await Navigator
+                                                  .pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LandingSearchPage()),
+                                                (route) => false,
+                                              );
+                                            } else if (body['data']['user']
+                                                    ['user_type'] ==
+                                                1) {
+                                              await Navigator
+                                                  .pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OrgAdminHome()),
+                                                (route) => false,
+                                              );
+                                            }
                                           }
-                                        }
-                                      }, (error) {
-                                        EasyLoading.dismiss();
-                                        EasyLoading.showError(error);
-                                      });
-                                    }
-                                  },
-                                  fillColor: kPurpleColor,
-                                  hMargin: 0,
+                                        }, (error) {
+                                          EasyLoading.dismiss();
+                                          // EasyLoading.showError(error);
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Login Failed!", error));
+                                          ;
+                                        });
+                                      }
+                                    },
+                                    fillColor: kPurpleColor,
+                                    hMargin: 0,
+                                  ),
                                 ),
                               ),
-                            ),
-                            GestureDetector(
-                              child: Text(
-                                "Forgot Password?",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
+                              GestureDetector(
+                                child: Text(
+                                  "Forgot Password?",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    new MaterialPageRoute(
-                                        builder: (context) =>
-                                            ForgotPassword()));
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: kMargin28, top: 6),
-                              child: InkWell(
                                 onTap: () {
                                   Navigator.push(
                                       context,
                                       new MaterialPageRoute(
-                                          builder: (context) => Register()));
+                                          builder: (context) =>
+                                              ForgotPassword()));
                                 },
-                                child: Text(
-                                  'Don’t have an account? Sign up',
-                                  style: TextStyle(
-                                    color: kPurpleColor,
-                                    fontSize: 15.0,
-                                    decoration: TextDecoration.none,
-                                    fontWeight: FontWeight.normal,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: kMargin28, top: 6),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        new MaterialPageRoute(
+                                            builder: (context) => Register()));
+                                  },
+                                  child: Text(
+                                    'Don’t have an account? Sign up',
+                                    style: TextStyle(
+                                      color: kPurpleColor,
+                                      fontSize: 15.0,
+                                      decoration: TextDecoration.none,
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

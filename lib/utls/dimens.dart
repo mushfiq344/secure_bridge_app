@@ -5,6 +5,7 @@ const kMargin10 = 10.0;
 const kMargin12 = 12.0;
 const kMargin13 = 13.0;
 const kMargin14 = 14.0;
+const kMargin15 = 15.0;
 const kMargin16 = 16.0;
 const kMargin18 = 18.0;
 const kMargin20 = 20.0;

@@ -17,6 +17,7 @@ import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart'
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_view_model.dart';
+import 'package:secure_bridges_app/widgets/slider.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
 
 import 'package:secure_bridges_app/network_utils/api.dart';
@@ -28,6 +29,7 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 
 class LandingSearchPage extends StatefulWidget {
   @override
@@ -40,7 +42,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   List<int> userEnrollments = [];
   List<int> usersEnrollment = [];
   List<Opportunity> opportunities = <Opportunity>[];
-  List<Opportunity> opportunitiesAll = <Opportunity>[];
+  List<Opportunity> allOpportunities = <Opportunity>[];
   static List<Opportunity> searchedOpportunities = [];
   TextEditingController _searchController = TextEditingController();
   OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
@@ -50,6 +52,9 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool hasUnreadNotification = false;
   User currentUser;
+  int opportunityTypeSelected = -1; // -1 means all
+  List<String> imgList = [];
+
   @override
   void initState() {
     Observable.instance.addObserver(this);
@@ -91,12 +96,21 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
 
   void _applySearchOnOpportunityeList() {
     List<Opportunity> _tempSearchedList = [];
-    for (Opportunity opportunity in opportunitiesAll) {
+    for (Opportunity opportunity in allOpportunities) {
       if (opportunity.title != null) {
-        if (opportunity.title
-            .toLowerCase()
-            .contains(_searchController.text.toLowerCase())) {
-          _tempSearchedList.add(opportunity);
+        if (opportunityTypeSelected != -1) {
+          if (opportunity.title
+                  .toLowerCase()
+                  .contains(_searchController.text.toLowerCase()) &&
+              opportunity.type == opportunityTypeSelected) {
+            _tempSearchedList.add(opportunity);
+          }
+        } else {
+          if (opportunity.title
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase())) {
+            _tempSearchedList.add(opportunity);
+          }
         }
       }
     }
@@ -114,8 +128,12 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                   ['opportunities']
               .map((i) => Opportunity.fromJson(i)));
           setState(() {
+            imgList = _opportunities
+                .map<String>((e) =>
+                    "${BASE_URL}${body["data"]["upload_path"]}${e.coverImage}")
+                .toList();
             opportunities = _opportunities;
-            opportunitiesAll = _opportunities;
+            allOpportunities = _opportunities;
             searchedOpportunities = _opportunities;
             opportunityUploadPath = body["data"]["upload_path"];
             userWishes = body['data']['user_wishes'].cast<int>();
@@ -123,11 +141,18 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
             hasUnreadNotification = body['data']['has_active_notifications'];
           });
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showInfo(kNoInternetAvailable);
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
       }
     });
   }
@@ -138,7 +163,10 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
         currentUser = User.fromJson(user);
       });
     }, (error) {
-      EasyLoading.showError(error);
+      // EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
     });
   }
 
@@ -155,7 +183,22 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
 
   _setUpSearchBar() {
     return Container(
-      color: kLiteBackgroundColor,
+      decoration: BoxDecoration(
+        color: kLightPurpleBackgroundColor,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
       padding: EdgeInsets.symmetric(vertical: kMargin18, horizontal: kMargin18),
       child: Row(
         children: [
@@ -172,13 +215,13 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                   prefixIcon: Icon(Icons.search),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: kBorderColor,
+                      color: Colors.transparent,
                     ),
                     borderRadius: BorderRadius.circular(kRadius10),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: kAccentColor,
+                      color: Colors.transparent,
                     ),
                     borderRadius: BorderRadius.circular(kRadius10),
                   ),
@@ -207,9 +250,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
 
   _buildListItem(Opportunity item) {
     String coverUrl = "${BASE_URL}${opportunityUploadPath}${item.coverImage}";
+    print("cover url $coverUrl");
 
     return GestureDetector(
       onTap: () async {
+        FocusScope.of(context).unfocus();
         bool callApi = await shouldMakeApiCall(context);
         if (!callApi) return;
         Navigator.push(
@@ -224,7 +269,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
       },
       child: Padding(
         padding: const EdgeInsets.only(
-            left: kMargin20, right: kMargin20, bottom: kMargin20),
+            left: kMargin5, right: kMargin5, bottom: kMargin5),
         child: Card(
           elevation: 4.0,
           color: Colors.white,
@@ -232,6 +277,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
                 children: [
@@ -255,11 +301,14 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                   ))
                 ],
               ),
-              Text(item.title,
-                  style: TextStyle(
-                      fontSize: kMargin18,
-                      fontWeight: FontWeight.w400,
-                      color: kPurpleColor)),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: Text(item.title,
+                    style: TextStyle(
+                        fontSize: kMargin18,
+                        fontWeight: FontWeight.w400,
+                        color: kPurpleColor)),
+              ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
@@ -295,15 +344,22 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                     ),
                                   ),
                                   child: userWishes.contains(item.id)
-                                      ? Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(kIconLoveWhitePath),
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image:
+                                                AssetImage(kIconLoveWhitePath),
+                                          ),
                                         )
-                                      : Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(kIconLovePath),
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image: AssetImage(kIconLovePath),
+                                          ),
                                         ),
                                 ),
                                 onTap: () async {
@@ -315,7 +371,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                         context, item, (success) {
                                       _loadOpportunitiesStats();
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   } else {
                                     bool callApi =
@@ -409,7 +469,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                         _loadOpportunitiesStats();
                                       });
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   }
                                 },
@@ -426,16 +490,23 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                     ),
                                   ),
                                   child: userEnrollments.contains(item.id)
-                                      ? Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(
-                                              kIconAdditionWhitePath),
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image: AssetImage(
+                                                kIconAdditionWhitePath),
+                                          ),
                                         )
-                                      : Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(kIconAdditionPath),
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image:
+                                                AssetImage(kIconAdditionPath),
+                                          ),
                                         ),
                                 ),
                                 onTap: () async {
@@ -448,7 +519,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                       _loadUserData();
                                       _loadOpportunitiesStats();
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   } else {
                                     _opportunityViewModel
@@ -540,7 +615,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                         _loadOpportunitiesStats();
                                       });
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   }
                                 },
@@ -559,10 +638,14 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                             fit: BoxFit.cover,
                                           ),
                                         ),
-                                        child: Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(kIconWhiteEditPath),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image:
+                                                AssetImage(kIconWhiteEditPath),
+                                          ),
                                         ),
                                       ),
                                       onTap: () {
@@ -591,10 +674,13 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                               fit: BoxFit.cover,
                                             ),
                                           ),
-                                          child: Image(
-                                            width: 32,
-                                            height: 32,
-                                            image: AssetImage(kTrashIconPath),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Image(
+                                              width: 16,
+                                              height: 16,
+                                              image: AssetImage(kTrashIconPath),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -615,12 +701,34 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
     );
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(kAppName),
-          backgroundColor: kPurpleColor,
+          leading: Builder(
+            builder: (context) => GestureDetector(
+              child: Container(
+                decoration: BoxDecoration(
+                  image:
+                      DecorationImage(image: AssetImage(kIconBackgroundPath)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image(
+                    image: AssetImage(kIconHamBurgerMenu),
+                  ),
+                ),
+              ),
+              onTap: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
+          title: Text(
+            kAppName,
+            style: TextStyle(color: kPurpleColor),
+          ),
+          backgroundColor: kAppBarBackgroundColor,
+          iconTheme: IconThemeData(color: kPurpleColor),
           actions: [
             GestureDetector(
               child: Image(
@@ -650,8 +758,41 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
             },
             child: Column(
               children: [
+                // Container(
+                //   decoration: BoxDecoration(
+                //       color: kPinkBackground,
+                //       borderRadius: BorderRadius.all(Radius.circular(29))),
+                //   child: Padding(
+                //     padding: const EdgeInsets.symmetric(
+                //         vertical: kMargin48, horizontal: kMargin32),
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Text(
+                //           "AWARENESS TOGETHER",
+                //           style: TextStyle(
+                //               fontSize: 36,
+                //               color: kPurpleColor,
+                //               fontWeight: FontWeight.w400),
+                //         ),
+                //         Text(
+                //           "Find what fascinates you as you explore these habit courses.",
+                //           style: TextStyle(
+                //               fontSize: 10,
+                //               color: kPurpleColor,
+                //               fontWeight: FontWeight.w700),
+                //         )
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                Container(
+                  child: SliderDemo(
+                    imgList: imgList,
+                  ),
+                ),
                 _setUpSearchBar(),
-                SizedBox(height: kMargin12),
+                setUpFilterArea(),
                 _buildOpportunityList(context),
                 SizedBox(height: kMargin300),
               ],
@@ -673,10 +814,16 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
       child: Text("Continue"),
       onPressed: () {
         Navigator.of(context).pop();
-        _orgAdminViewModel.deleteOpportunity(id, () async {
+        _orgAdminViewModel.deleteOpportunity(id, (success) async {
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Success!", success));
           _loadOpportunitiesStats();
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       },
     );
@@ -697,6 +844,203 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
       builder: (BuildContext context) {
         return alert;
       },
+    );
+  }
+
+  Widget setUpFilterArea() {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: -3,
+                        blurRadius: 5,
+                        offset: Offset(1, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Card(
+                    color: kPurpleBackGround,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26)),
+                    child: Image(
+                      image: AssetImage(kStarconPath),
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                List<Opportunity> filteredOpportunities =
+                    allOpportunities.where((element) {
+                  return element.title
+                      .toLowerCase()
+                      .contains(_searchController.text.toLowerCase());
+                }).toList();
+                setState(() {
+                  opportunities = filteredOpportunities;
+                  opportunityTypeSelected = -1;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: -3,
+                        blurRadius: 5,
+                        offset: Offset(1, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Card(
+                    color: kPurpleBackGround,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26)),
+                    child: Image(
+                      image: AssetImage(kHomeWhiteIconPath),
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                List<Opportunity> filteredOpportunities =
+                    allOpportunities.where((element) {
+                  return element.type == 0 &&
+                      element.title
+                          .toLowerCase()
+                          .contains(_searchController.text.toLowerCase());
+                }).toList();
+                setState(() {
+                  opportunities = filteredOpportunities;
+                  opportunityTypeSelected = 0;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: -3,
+                        blurRadius: 5,
+                        offset: Offset(1, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Card(
+                    color: kPurpleBackGround,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26)),
+                    child: Image(
+                      image: AssetImage(kMultipleUsersIconPath),
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                List<Opportunity> filteredOpportunities =
+                    allOpportunities.where((element) {
+                  return element.type == 1 &&
+                      element.title
+                          .toLowerCase()
+                          .contains(_searchController.text.toLowerCase());
+                }).toList();
+                setState(() {
+                  opportunities = filteredOpportunities;
+                  opportunityTypeSelected = 1;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              child: AspectRatio(
+                aspectRatio: 1 / 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(26),
+                        topRight: Radius.circular(26),
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: -3,
+                        blurRadius: 5,
+                        offset: Offset(1, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Card(
+                    color: kPurpleBackGround,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(26)),
+                    child: Image(
+                      image: AssetImage(kPizzaIconPath),
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                List<Opportunity> filteredOpportunities =
+                    allOpportunities.where((element) {
+                  return element.type == 2 &&
+                      element.title
+                          .toLowerCase()
+                          .contains(_searchController.text.toLowerCase());
+                }).toList();
+                setState(() {
+                  opportunities = filteredOpportunities;
+                  opportunityTypeSelected = 2;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

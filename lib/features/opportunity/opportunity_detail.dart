@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/Models/Tag.dart';
 import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/enrollment/opportunity_happening.dart';
 import 'package:secure_bridges_app/features/enrollment/participated_user_list.dart';
@@ -19,6 +20,8 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/utls/styles.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
+import 'package:secure_bridges_app/widgets/display_tag.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
@@ -43,6 +46,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   final _formKey = GlobalKey<FormState>();
   String code;
   int opportunityStatus = OPPORTUNITY_STATUS_VALUES["Drafted"];
+  List<Tag> tags = [];
   @override
   initState() {
     super.initState();
@@ -54,20 +58,30 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
       if (value) {
         _opportunityViewModel.getOpportunityDetail(widget.opportunity.id,
             (Map<String, dynamic> body) {
-          log("body model ${body['data']['opportunity']}");
+          log("body model ${body['data']}");
+          List<Tag> _tags = List<Tag>.from(
+              body['data']['opportunity_tags'].map((i) => Tag.fromJson(i)));
           setState(() {
             opportunityStatus = body['data']['opportunity']['status'];
             userEnrolled = body['data']['is_user_enrolled'];
             inUserWithList = body['data']['in_user_wish_list'];
             userCode = body['data']['user_code'];
             userEnrollmentStatus = body['data']['enrollment_status'];
+            tags = _tags;
           });
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showInfo(kNoInternetAvailable);
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
       }
     });
   }
@@ -76,8 +90,12 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(kOpportunities),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          kOpportunities,
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),
@@ -121,13 +139,15 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                     ],
                   ),
                   SizedBox(
-                    height: kMargin12,
+                    height: kMargin24,
                   ),
                   Row(
                     children: [
                       Expanded(
                           flex: 1,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             color: kPurpleBackGround,
                             child: Row(
                               children: [
@@ -165,6 +185,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       Expanded(
                           flex: 1,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             color: kPurpleBackGround,
                             child: Row(
                               children: [
@@ -199,14 +221,13 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                           )),
                     ],
                   ),
-                  SizedBox(
-                    height: kMargin12,
-                  ),
                   Row(
                     children: [
                       Expanded(
                           flex: 1,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             color: kPurpleBackGround,
                             child: Row(
                               children: [
@@ -243,34 +264,43 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       Expanded(
                           flex: 1,
                           child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             color: kPurpleBackGround,
                             child: Row(
                               children: [
-                                Container(
-                                    child: Image(
-                                  width: 50,
-                                  height: 50,
-                                  image: AssetImage(kIconLocationPath),
-                                )),
-                                Padding(
-                                  padding: EdgeInsets.only(left: kMargin4),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Location",
-                                        style: TextStyle(
-                                            fontSize: kMargin12,
-                                            color: Colors.white),
-                                      ),
-                                      Text(
-                                          "${widget.opportunity.location ?? ''}",
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                      child: Image(
+                                    width: 50,
+                                    height: 50,
+                                    image: AssetImage(kIconLocationPath),
+                                  )),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: kMargin4),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Location",
                                           style: TextStyle(
                                               fontSize: kMargin12,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold))
-                                    ],
+                                              color: Colors.white),
+                                        ),
+                                        Text(
+                                            "${widget.opportunity.location ?? ''}",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: kMargin12,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold))
+                                      ],
+                                    ),
                                   ),
                                 )
                               ],
@@ -284,45 +314,50 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                   userEnrolled && userEnrollmentStatus == kApproved
                       ? Container(
                           child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(kRadius10)),
+                          ),
                           color: kOrangeBackgroundColor,
                           child: Padding(
                             padding: const EdgeInsets.all(17),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: "PARTICIPATION CODE:",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: kMargin14,
+                            child: GestureDetector(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "PARTICIPATION CODE:",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: kMargin14,
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: " ${userCode}",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: kMargin14,
+                                                fontWeight: FontWeight.bold)),
+                                      ],
                                     ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: " ${userCode}",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: kMargin14,
-                                              fontWeight: FontWeight.bold)),
-                                    ],
                                   ),
-                                ),
-                                GestureDetector(
-                                  child: Icon(
+                                  Icon(
                                     Icons.copy,
                                     color: Colors.white,
                                   ),
-                                  onTap: () {
-                                    Clipboard.setData(
-                                        ClipboardData(text: "$userCode"));
+                                ],
+                              ),
+                              onTap: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: "$userCode"));
 
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text("Copied to clipboard!"),
-                                    ));
-                                  },
-                                )
-                              ],
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text("Copied to clipboard!"),
+                                ));
+                              },
                             ),
                           ),
                         ))
@@ -351,50 +386,55 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                   SizedBox(
                     height: kMargin10,
                   ),
+                  // Container(
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         flex: 3,
+                  //         child: Row(
+                  //           children: [
+                  //             Expanded(
+                  //               flex: 1,
+                  //               child: PAButton(
+                  //                 "habits",
+                  //                 true,
+                  //                 () {
+                  //                   EasyLoading.showToast(kComingSoon);
+                  //                 },
+                  //                 fillColor: kGreyBackgroundColor,
+                  //                 textColor: kLabelColor,
+                  //                 capitalText: false,
+                  //                 hMargin: 5,
+                  //                 bouttonHeight: kMargin10,
+                  //               ),
+                  //             ),
+                  //             Expanded(
+                  //               flex: 1,
+                  //               child: PAButton(
+                  //                 "productivity",
+                  //                 true,
+                  //                 () {
+                  //                   EasyLoading.showToast(kComingSoon);
+                  //                 },
+                  //                 fillColor: kGreyBackgroundColor,
+                  //                 textColor: kLabelColor,
+                  //                 capitalText: false,
+                  //                 bouttonHeight: kMargin10,
+                  //                 hMargin: 5,
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       Expanded(
+                  //         child: SizedBox(),
+                  //         flex: 1,
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
                   Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: PAButton(
-                                  "habits",
-                                  true,
-                                  () {
-                                    EasyLoading.showToast(kComingSoon);
-                                  },
-                                  fillColor: kGreyBackgroundColor,
-                                  textColor: kLabelColor,
-                                  capitalText: false,
-                                  hMargin: 5,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: PAButton(
-                                  "productivity",
-                                  true,
-                                  () {
-                                    EasyLoading.showToast(kComingSoon);
-                                  },
-                                  fillColor: kGreyBackgroundColor,
-                                  textColor: kLabelColor,
-                                  capitalText: false,
-                                  hMargin: 5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: SizedBox(),
-                          flex: 1,
-                        )
-                      ],
-                    ),
+                    child: TagDisplayPage(tags),
                   ),
                   SizedBox(
                     height: kMargin24,
@@ -406,7 +446,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                         Expanded(
                           flex: 1,
                           child: Text(
-                            "Heighlights",
+                            kHighlights,
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 fontSize: kMargin14,
@@ -446,6 +486,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       ? GestureDetector(
                           child: Container(
                               child: Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
                                   color: inUserWithList
                                       ? kLightPurpleBackgroundColor
                                       : kPurpleBackGround,
@@ -556,14 +598,22 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                   loadOpportunityDetail();
                                 });
                               }, (error) {
-                                EasyLoading.showError(error);
+                                // EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
                               });
                             } else {
                               _opportunityViewModel.removeFromWithList(
                                   context, widget.opportunity, (success) {
                                 loadOpportunityDetail();
                               }, (error) {
-                                EasyLoading.showError(error);
+                                // EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
                               });
                             }
                           },
@@ -589,6 +639,9 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                 "Published"]
                                     ? GestureDetector(
                                         child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
                                             color: kPurpleColor,
                                             child: Padding(
                                               padding:
@@ -708,7 +761,12 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                               loadOpportunityDetail();
                                             });
                                           }, (error) {
-                                            EasyLoading.showError(error);
+                                            // EasyLoading.showError(error);
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    CustomAlertDialogue(
+                                                        "Error!", error));
                                           });
                                         },
                                       )
@@ -822,6 +880,12 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                         _opportunityViewModel
                                             .updateOpportunity(data, () {
                                           loadOpportunityDetail();
+                                        }, (error) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Error!", error));
                                         });
                                       } else if (opportunityStatus ==
                                           OPPORTUNITY_STATUS_VALUES[
@@ -832,6 +896,12 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                         _opportunityViewModel
                                             .updateOpportunity(data, () {
                                           loadOpportunityDetail();
+                                        }, (error) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Error!", error));
                                         });
                                       }
                                     },
@@ -943,17 +1013,31 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
         if (body['data']['user_is_enrolled']) {
-          EasyLoading.showSuccess("This Code Is Valid");
+          // EasyLoading.showSuccess("This Code Is Valid");
+          showDialog(
+              context: context,
+              builder: (_) =>
+                  CustomAlertDialogue("Success!", "This Code Is Valid"));
         } else {
-          EasyLoading.showError("This Code Is invalid");
+          // EasyLoading.showError("This Code Is invalid");
+          showDialog(
+              context: context,
+              builder: (_) =>
+                  CustomAlertDialogue("Error!", "This Code Is invalid"));
         }
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
+        // EasyLoading.showError(body['message']);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Error!", body['message']));
       }
     } catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", e.toString()));
+      // EasyLoading.showError(e.toString());
     }
   }
 
@@ -986,7 +1070,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                     context, widget.opportunity, (success) {
                   loadOpportunityDetail();
                 }, (error) {
-                  EasyLoading.showError(error);
+                  // EasyLoading.showError(error);
+                  showDialog(
+                      context: context,
+                      builder: (_) => CustomAlertDialogue("Error!", error));
                 });
               },
             )

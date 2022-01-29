@@ -7,6 +7,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 
 import 'login.dart';
@@ -104,9 +105,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                       if (_formKey.currentState.validate()) {
                                         _authenticationViewModel
                                             .forgotPassword(email, (success) {
-                                          EasyLoading.showSuccess(success);
+                                          // EasyLoading.showSuccess(success);
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Success!", success));
                                         }, (error) {
-                                          EasyLoading.showError(error);
+                                          // EasyLoading.showError(error);
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Error!", error));
                                         });
                                       }
                                     },

@@ -32,7 +32,7 @@ dependencies:
   cached_network_image: any
   webview_flutter: any
   flutter_webview_plugin: ^0.4.0
-  image_picker: any
+  image_picker: 0.8.0+3
   intl: ^0.17.0
   google_sign_in: any
   flutter_signin_button: ^2.0.0
@@ -56,10 +56,27 @@ dependencies:
   google_map_location_picker: ^4.1.7
   flutter_summernote: ^1.0.0
   flutter_html: ^0.8.2
+  flutter_launcher_icons: "0.7.3"
+  flutter_launcher_name: any
+  flutter_exif_rotation: ^0.4.3
+  material_tag_editor: ^0.1.1
+  carousel_slider: ^4.0.0
+  flutter_tags: "^0.4.9+1"
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+flutter_icons:
+  image_path: "icon/icon.png"
+  android: true
+  ios: true
+flutter_launcher_name:
+  name: "Secure Bridges"
+  android: true
+  ios: true
+  # optionally, as transparency is not allowed on app store
+  # remove_alpha_ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -123,6 +140,8 @@ flutter:
     - images/im_verify.png
     - images/ic_star.png
     - images/ic_archive.png
+    - images/im_hamburger_menu_background.png
+    - images/ic_hamburger_menu.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

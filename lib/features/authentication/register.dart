@@ -15,6 +15,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
@@ -74,11 +75,15 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
+                    SizedBox(
+                      height: 20,
+                    ),
                     Image(
-                      height: 200,
+                      height: MediaQuery.of(context).size.height / 4,
+                      width: MediaQuery.of(context).size.width / 2,
                       image: AssetImage(kAddUserImagePath),
                     ),
                     Text(
@@ -89,116 +94,138 @@ class _RegisterState extends State<Register> {
                     SizedBox(
                       height: 20,
                     ),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          TextFormField(
-                            style: TextStyle(color: Color(0xFF000000)),
-                            cursorColor: Color(0xFF9b9b9b),
-                            keyboardType: TextInputType.text,
-                            decoration: customInputDecoration('Email',
-                                showPrefixIcon: true,
-                                prefixIconPath: kEmailIconPath),
-                            validator: (emailValue) {
-                              if (emailValue.isEmpty) {
-                                return 'Please enter email';
-                              }
-                              email = emailValue;
-                              return null;
-                            },
+                    Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Form(
+                        key: _formKey,
+                        child: Padding(
+                          padding: const EdgeInsets.all(kMargin20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: kMargin12),
+                                child: Text(
+                                  "Register In with email",
+                                  style: TextStyle(
+                                      fontSize: kMargin14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              TextFormField(
+                                style: TextStyle(color: Color(0xFF000000)),
+                                cursorColor: Color(0xFF9b9b9b),
+                                keyboardType: TextInputType.text,
+                                decoration: customInputDecoration('Email',
+                                    fillColor: kLightPurpleBackgroundColor,
+                                    showPrefixIcon: true,
+                                    prefixIconPath: kEmailIconPath),
+                                validator: (emailValue) {
+                                  if (emailValue.isEmpty) {
+                                    return 'Please enter email';
+                                  }
+                                  email = emailValue;
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                style: TextStyle(color: Color(0xFF000000)),
+                                cursorColor: Color(0xFF9b9b9b),
+                                keyboardType: TextInputType.text,
+                                decoration: customInputDecoration('Name',
+                                    fillColor: kLightPurpleBackgroundColor,
+                                    showPrefixIcon: true,
+                                    prefixIconPath: kUserIconPath),
+                                validator: (nameValue) {
+                                  if (nameValue.isEmpty) {
+                                    return 'Please enter your first name';
+                                  }
+                                  name = nameValue;
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                style: TextStyle(color: Color(0xFF000000)),
+                                cursorColor: Color(0xFF9b9b9b),
+                                keyboardType: TextInputType.text,
+                                obscureText: hidePassword,
+                                decoration: customInputDecoration('Password',
+                                    fillColor: kLightPurpleBackgroundColor,
+                                    showPrefixIcon: true,
+                                    prefixIconPath: kLockIconPath,
+                                    showSuffixIcon: true,
+                                    suffixIconPath: kTextShowIconPath,
+                                    hasSuffixIconCallback: true,
+                                    suffixIconCallback: () {
+                                  setState(() {
+                                    hidePassword = !hidePassword;
+                                  });
+                                }),
+                                validator: (passwordValue) {
+                                  if (passwordValue.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  password = passwordValue;
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                style: TextStyle(color: Color(0xFF000000)),
+                                cursorColor: Color(0xFF9b9b9b),
+                                keyboardType: TextInputType.text,
+                                obscureText: hideConfirmPassword,
+                                decoration: customInputDecoration(
+                                    'Confirm Password',
+                                    fillColor: kLightPurpleBackgroundColor,
+                                    showPrefixIcon: true,
+                                    prefixIconPath: kLockIconPath,
+                                    showSuffixIcon: true,
+                                    suffixIconPath: kTextShowIconPath,
+                                    hasSuffixIconCallback: true,
+                                    suffixIconCallback: () {
+                                  setState(() {
+                                    hideConfirmPassword = !hideConfirmPassword;
+                                  });
+                                }),
+                                validator: (confirmPasswordValue) {
+                                  if (confirmPasswordValue.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  confirmPassword = confirmPasswordValue;
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              PAButton(
+                                "Create Account",
+                                true,
+                                () async {
+                                  bool callApi =
+                                      await shouldMakeApiCall(context);
+                                  if (!callApi) return;
+                                  if (_formKey.currentState.validate()) {
+                                    _register();
+                                  }
+                                },
+                                fillColor: kPurpleColor,
+                                hMargin: 0,
+                              )
+                            ],
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            style: TextStyle(color: Color(0xFF000000)),
-                            cursorColor: Color(0xFF9b9b9b),
-                            keyboardType: TextInputType.text,
-                            decoration: customInputDecoration('Name',
-                                showPrefixIcon: true,
-                                prefixIconPath: kUserIconPath),
-                            validator: (nameValue) {
-                              if (nameValue.isEmpty) {
-                                return 'Please enter your first name';
-                              }
-                              name = nameValue;
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            style: TextStyle(color: Color(0xFF000000)),
-                            cursorColor: Color(0xFF9b9b9b),
-                            keyboardType: TextInputType.text,
-                            obscureText: hidePassword,
-                            decoration: customInputDecoration('Password',
-                                showPrefixIcon: true,
-                                prefixIconPath: kLockIconPath,
-                                showSuffixIcon: true,
-                                suffixIconPath: kTextShowIconPath,
-                                hasSuffixIconCallback: true,
-                                suffixIconCallback: () {
-                              setState(() {
-                                hidePassword = !hidePassword;
-                              });
-                            }),
-                            validator: (passwordValue) {
-                              if (passwordValue.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                              password = passwordValue;
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            style: TextStyle(color: Color(0xFF000000)),
-                            cursorColor: Color(0xFF9b9b9b),
-                            keyboardType: TextInputType.text,
-                            obscureText: hideConfirmPassword,
-                            decoration: customInputDecoration(
-                                'Confirm Password',
-                                showPrefixIcon: true,
-                                prefixIconPath: kLockIconPath,
-                                showSuffixIcon: true,
-                                suffixIconPath: kTextShowIconPath,
-                                hasSuffixIconCallback: true,
-                                suffixIconCallback: () {
-                              setState(() {
-                                hideConfirmPassword = !hideConfirmPassword;
-                              });
-                            }),
-                            validator: (confirmPasswordValue) {
-                              if (confirmPasswordValue.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                              confirmPassword = confirmPasswordValue;
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          PAButton(
-                            "Create Account",
-                            true,
-                            () async {
-                              bool callApi = await shouldMakeApiCall(context);
-                              if (!callApi) return;
-                              if (_formKey.currentState.validate()) {
-                                _register();
-                              }
-                            },
-                            fillColor: kPurpleColor,
-                            hMargin: 0,
-                          )
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -227,6 +254,7 @@ class _RegisterState extends State<Register> {
                 padding: const EdgeInsets.symmetric(horizontal: kMargin10),
                 child: Row(
                   children: [
+                    Expanded(child: SizedBox()),
                     Expanded(
                       flex: 1,
                       child: GestureDetector(
@@ -300,75 +328,80 @@ class _RegisterState extends State<Register> {
                               );
                             }
                           }, (error) {
-                            EasyLoading.showError(error);
+                            // EasyLoading.showError(error);
+                            showDialog(
+                                context: context,
+                                builder: (_) =>
+                                    CustomAlertDialogue("Error!", error));
                           });
                         },
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(kMargin12)),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Image(
-                                  height: 40,
-                                  width: 40,
-                                  image: AssetImage(kFacebookIconPath),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text("Facebook",
-                                    style: TextStyle(
-                                        fontSize: kMargin14,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          EasyLoading.showToast(kComingSoon);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(kMargin12)),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Image(
-                                  height: 40,
-                                  width: 40,
-                                  image: AssetImage(kAppleIconPath),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text("Apple",
-                                    style: TextStyle(
-                                        fontSize: kMargin14,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          EasyLoading.showToast(kComingSoon);
-                        },
-                      ),
-                    ),
+                    Expanded(child: SizedBox())
+                    // Expanded(
+                    //   flex: 1,
+                    //   child: GestureDetector(
+                    //     child: Card(
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(kMargin12)),
+                    //       child: Row(
+                    //         crossAxisAlignment: CrossAxisAlignment.center,
+                    //         children: [
+                    //           Expanded(
+                    //             flex: 1,
+                    //             child: Image(
+                    //               height: 40,
+                    //               width: 40,
+                    //               image: AssetImage(kFacebookIconPath),
+                    //             ),
+                    //           ),
+                    //           Expanded(
+                    //             flex: 1,
+                    //             child: Text("Facebook",
+                    //                 style: TextStyle(
+                    //                     fontSize: kMargin14,
+                    //                     fontWeight: FontWeight.bold)),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     onTap: () {
+                    //       EasyLoading.showToast(kComingSoon);
+                    //     },
+                    //   ),
+                    // ),
+                    // Expanded(
+                    //   flex: 1,
+                    //   child: GestureDetector(
+                    //     child: Card(
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(kMargin12)),
+                    //       child: Row(
+                    //         crossAxisAlignment: CrossAxisAlignment.center,
+                    //         children: [
+                    //           Expanded(
+                    //             flex: 1,
+                    //             child: Image(
+                    //               height: 40,
+                    //               width: 40,
+                    //               image: AssetImage(kAppleIconPath),
+                    //             ),
+                    //           ),
+                    //           Expanded(
+                    //             flex: 1,
+                    //             child: Text("Apple",
+                    //                 style: TextStyle(
+                    //                     fontSize: kMargin14,
+                    //                     fontWeight: FontWeight.bold)),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     onTap: () {
+                    //       EasyLoading.showToast(kComingSoon);
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -384,12 +417,15 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(
                       color: kPurpleColor,
                       fontSize: kMargin14,
-                      decoration: TextDecoration.underline,
+                      // decoration: TextDecoration.underline,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
               ),
+              SizedBox(
+                height: 40,
+              )
             ],
           ),
         ),
@@ -413,7 +449,7 @@ class _RegisterState extends State<Register> {
 
       var res = await Network().authData(data, REGISTER_URL);
       var body = json.decode(res.body);
-      // log("response $body");
+      log("response $body");
 
       if (res.statusCode == 201) {
         SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -428,7 +464,10 @@ class _RegisterState extends State<Register> {
         );
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showError(body["message"]);
+        // EasyLoading.showError(body["message"]);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Error!", body["message"]));
       }
 
       setState(() {
@@ -436,7 +475,10 @@ class _RegisterState extends State<Register> {
       });
     } catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      // EasyLoading.showError(e.toString());
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", e.toString()));
     }
   }
 

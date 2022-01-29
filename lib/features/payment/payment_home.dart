@@ -5,6 +5,7 @@ import 'package:secure_bridges_app/features/payment/existing_cards.dart';
 import 'package:secure_bridges_app/features/payment/payment_service.dart';
 import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
+import 'package:secure_bridges_app/utls/constants.dart';
 
 class PaymentHome extends StatefulWidget {
   final String amount;
@@ -61,8 +62,12 @@ class PaymentHomeState extends State<PaymentHome> {
     ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('SELECT PAYMENT'),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          'SELECT PAYMENT',
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: Container(
         padding: EdgeInsets.all(20),

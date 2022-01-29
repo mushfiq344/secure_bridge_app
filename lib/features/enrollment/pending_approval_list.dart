@@ -16,6 +16,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 
 import '../opportunity/opportunity_view_model.dart';
 
@@ -53,11 +54,18 @@ class _PendingEnrolledOpportunityUserState
             enrolledUsers = _enrolledUsers;
           });
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showInfo(kNoInternetAvailable);
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
       }
     });
   }
@@ -66,8 +74,12 @@ class _PendingEnrolledOpportunityUserState
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('pending Requests'),
-          backgroundColor: kPurpleColor,
+          title: Text(
+            kViewRequests,
+            style: TextStyle(color: kPurpleColor),
+          ),
+          backgroundColor: kAppBarBackgroundColor,
+          iconTheme: IconThemeData(color: kPurpleColor),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -224,7 +236,11 @@ class _PendingEnrolledOpportunityUserState
                                         widget.opportunity.id);
                                   });
                                 }, (error) {
-                                  EasyLoading.showError(error);
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          CustomAlertDialogue("Error!", error));
+                                  // EasyLoading.showError(error);
                                 });
                               },
                             ),

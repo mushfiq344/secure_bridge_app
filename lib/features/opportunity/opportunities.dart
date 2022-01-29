@@ -11,6 +11,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/utls/styles.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Opportunities extends StatefulWidget {
@@ -62,11 +63,17 @@ class _OpportunitiesState extends State<Opportunities> {
             body["data"]["min_reward"]);
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showError(body["message"]);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Error!", body["message"]));
+        // EasyLoading.showError(body["message"]);
       }
     } catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", e.toString()));
+      // EasyLoading.showError(e.toString());
     }
   }
 
@@ -97,11 +104,17 @@ class _OpportunitiesState extends State<Opportunities> {
         EasyLoading.dismiss();
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showError(body['message']);
+        // EasyLoading.showError(body['message']);
+        showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialogue("Error!", body['message']));
       }
     } catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      // EasyLoading.showError(e.toString());
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", e.toString()));
     }
   }
 
@@ -650,8 +663,12 @@ class _OpportunitiesState extends State<Opportunities> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(kOpportunities),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          kOpportunities,
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),

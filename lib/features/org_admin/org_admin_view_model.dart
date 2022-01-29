@@ -13,6 +13,7 @@ class OrgAdminViewModel {
       EasyLoading.show(status: kLoading);
       var res = await Network().getData(ORG_ADMIN_OPPORTUNITIES_URL);
       var body = json.decode(res.body);
+
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
         _success(body);
@@ -37,8 +38,8 @@ class OrgAdminViewModel {
       log("body : ${body}");
       if (res.statusCode == 200) {
         EasyLoading.dismiss();
-        EasyLoading.showSuccess(body["message"]);
-        _success();
+
+        _success(body["message"]);
       } else {
         EasyLoading.dismiss();
         _error(body['message']);

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 const kLoading = "Loading...";
 const kComingSoon = "Coming Soon";
 const kAppName = "Secure Bridges";
@@ -23,6 +25,7 @@ const kIconLovePath = "images/ic_love.png";
 const kIconLoveWhitePath = "images/ic_heart_white.png";
 const kIconAdditionPath = "images/ic_addition.png";
 const kIconAdditionWhitePath = "images/ic_addition_white.png";
+const kIconHamBurgerMenu = "images/ic_hamburger_menu.png";
 const kAppLogoPath = "images/logo.jpg";
 const kImageNameWithExtension = "Image name with extension";
 const kImage = "Image";
@@ -61,8 +64,8 @@ const kSearchIconPath = "images/ic_search.png";
 const kVerifyIconPath = "images/im_verify.png";
 const kArchiveIconPath = "images/ic_archive.png";
 const kStarconPath = "images/ic_star.png";
-const GENDER_OPTIONS = ['Male', 'Female', 'Others'];
-const GENDER_VALUES = {"Male": 0, "Female": 1, "Others": 2};
+const GENDER_OPTIONS = ['Male', 'Female', 'Binary', 'Other'];
+const GENDER_VALUES = {"Male": 0, "Female": 1, 'Binary': 2, "Other": 3};
 
 const OPPORTUNITY_TYPES = ['Shelter', 'Counselling', 'Food'];
 const OPPORTUNITY_TYPES_VALUES = {"Shelter": 0, "Counselling": 1, "Food": 2};
@@ -84,7 +87,7 @@ const OPPORTUNITY_STATUS_VALUES = {
 };
 const OPPORTUNITY_STATUS_ACTIONS_TEXT = {
   "Drafted": "Update",
-  "Published": "Pending Requests",
+  "Published": kViewRequests,
   "Currently Happening": "End The Event",
   "Ended": "Start Rewarding",
   "Rewarding": "Verify",
@@ -111,3 +114,47 @@ const kParticipated = "Participated";
 const kPlanModes = {0: "Basic", 1: "Pro"};
 const kSomethingWentWrong = "Something went wrong";
 const kNoInternetAvailable = "No Internet Available";
+
+// final List<BarChartModel> data = [
+//   BarChartModel(
+//     year: "2014",
+//     financial: 250,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2015",
+//     financial: 300,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2016",
+//     financial: 100,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2017",
+//     financial: 450,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2018",
+//     financial: 630,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2019",
+//     financial: 1000,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+//   BarChartModel(
+//     year: "2020",
+//     financial: 400,
+//     color: charts.ColorUtil.fromDartColor(Colors.lightBlueAccent),
+//   ),
+// ];
+
+const kUnderConstruction = "This feature is under construction";
+const kErrorALert = "Error!";
+const kViewRequests = "View requests";
+const kSaveDraft = "save draft";
+const kHighlights = "Highlights";

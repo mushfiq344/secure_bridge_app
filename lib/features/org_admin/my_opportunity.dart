@@ -23,6 +23,7 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/Models/User.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 
 class MyOpportunity extends StatefulWidget {
   @override
@@ -63,11 +64,18 @@ class _MyOpportunityState extends State<MyOpportunity> {
             totalPendingApproval = body["data"]["total_pending_approval"];
           });
         }, (error) {
-          EasyLoading.showError(error);
+          // EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
         });
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showInfo(kNoInternetAvailable);
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
       }
     });
   }
@@ -79,7 +87,10 @@ class _MyOpportunityState extends State<MyOpportunity> {
         currentUser = User.fromJson(user);
       });
     }, (error) {
-      EasyLoading.showError(error);
+      // EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
     });
   }
 
@@ -88,8 +99,29 @@ class _MyOpportunityState extends State<MyOpportunity> {
     return Scaffold(
         backgroundColor: Color(0xFFE5E5E5),
         appBar: AppBar(
-          title: Text('My Opportunity'),
-          backgroundColor: kPurpleColor,
+          leading: Builder(
+            builder: (context) => GestureDetector(
+              child: Container(
+                decoration: BoxDecoration(
+                  image:
+                      DecorationImage(image: AssetImage(kIconBackgroundPath)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image(
+                    image: AssetImage(kIconHamBurgerMenu),
+                  ),
+                ),
+              ),
+              onTap: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
+          title: Text(
+            'My Opportunity',
+            style: TextStyle(color: kPurpleColor),
+          ),
+          backgroundColor: kAppBarBackgroundColor,
+          iconTheme: IconThemeData(color: kPurpleColor),
         ),
         drawer: CustomDrawer(currentUser),
         body: Container(
@@ -104,7 +136,7 @@ class _MyOpportunityState extends State<MyOpportunity> {
                     children: [
                       ...opportunities.map((opportunity) {
                         String coverUrl =
-                            "${BASE_URL}${opportunityUploadPath}${opportunity.coverImage}";
+                            "${BASE_URL}${opportunityUploadPath}${opportunity.iconImage}";
                         return GestureDetector(
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: kMargin10),
@@ -305,6 +337,13 @@ class _MyOpportunityState extends State<MyOpportunity> {
                                                         .updateOpportunity(data,
                                                             () {
                                                       getOpportunities();
+                                                    }, (error) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (_) =>
+                                                              CustomAlertDialogue(
+                                                                  "Error!",
+                                                                  error));
                                                     });
                                                   } else if (opportunity
                                                           .status ==
@@ -319,6 +358,13 @@ class _MyOpportunityState extends State<MyOpportunity> {
                                                         .updateOpportunity(data,
                                                             () {
                                                       getOpportunities();
+                                                    }, (error) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (_) =>
+                                                              CustomAlertDialogue(
+                                                                  "Error!",
+                                                                  error));
                                                     });
                                                   } else if (opportunity
                                                           .status ==

@@ -8,7 +8,8 @@ class PAButton extends StatelessWidget {
       {this.hMargin = kMargin24,
       this.fillColor = kAccentColor,
       this.textColor = Colors.white,
-      this.capitalText = true});
+      this.capitalText = true,
+      this.bouttonHeight = kMargin18});
 
   final String buttonText;
   final bool isFilled;
@@ -17,6 +18,7 @@ class PAButton extends StatelessWidget {
   Color fillColor;
   Color textColor;
   bool capitalText;
+  double bouttonHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class PAButton extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(kRadius10)),
         side: BorderSide(color: fillColor),
       ),
-      padding: EdgeInsets.symmetric(vertical: kMargin18, horizontal: 5),
+      padding: EdgeInsets.symmetric(vertical: bouttonHeight, horizontal: 5),
       onPressed: () {
         FocusScope.of(context).requestFocus(FocusNode());
         buttonAction();

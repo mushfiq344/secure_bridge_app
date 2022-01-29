@@ -17,6 +17,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 
 class UserHome extends StatefulWidget {
@@ -57,7 +58,10 @@ class _UserHomeState extends State<UserHome> {
         userType = user['user_type'];
       });
     }, (error) {
-      EasyLoading.showError(error);
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
+      // EasyLoading.showError(error);
     });
   }
 
@@ -77,11 +81,18 @@ class _UserHomeState extends State<UserHome> {
             userEnrollments = body['data']['user_enrollments'].cast<int>();
           });
         }, (error) {
-          EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
+          // EasyLoading.showError(error);
         });
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showInfo(kNoInternetAvailable);
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
       }
     });
   }
@@ -90,8 +101,12 @@ class _UserHomeState extends State<UserHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("User Home"),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          "My Opportunity",
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: Container(
         alignment: Alignment.center,
@@ -139,12 +154,30 @@ class _UserHomeState extends State<UserHome> {
                       child: GestureDetector(
                         child: AspectRatio(
                           aspectRatio: 1 / 1,
-                          child: Card(
-                            color: kPurpleBackGround,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(26)),
-                            child: Image(
-                              image: AssetImage(kStarconPath),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(26),
+                                  topRight: Radius.circular(26),
+                                  bottomLeft: Radius.circular(26),
+                                  bottomRight: Radius.circular(26)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(1),
+                                  spreadRadius: -3,
+                                  blurRadius: 5,
+                                  offset: Offset(
+                                      1, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Card(
+                              color: kPurpleBackGround,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(26)),
+                              child: Image(
+                                image: AssetImage(kStarconPath),
+                              ),
                             ),
                           ),
                         ),
@@ -158,12 +191,25 @@ class _UserHomeState extends State<UserHome> {
                     Expanded(
                       flex: 1,
                       child: GestureDetector(
-                        child: Card(
-                          color: kPurpleBackGround,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(26)),
-                          child: AspectRatio(
-                            aspectRatio: 1 / 1,
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(26),
+                                  topRight: Radius.circular(26),
+                                  bottomLeft: Radius.circular(26),
+                                  bottomRight: Radius.circular(26)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(1),
+                                  spreadRadius: -3,
+                                  blurRadius: 5,
+                                  offset: Offset(
+                                      1, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
                             child: Card(
                               color: kPurpleBackGround,
                               shape: RoundedRectangleBorder(
@@ -188,12 +234,25 @@ class _UserHomeState extends State<UserHome> {
                     Expanded(
                       flex: 1,
                       child: GestureDetector(
-                        child: Card(
-                          color: kPurpleBackGround,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(26)),
-                          child: AspectRatio(
-                            aspectRatio: 1 / 1,
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(26),
+                                  topRight: Radius.circular(26),
+                                  bottomLeft: Radius.circular(26),
+                                  bottomRight: Radius.circular(26)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(1),
+                                  spreadRadius: -3,
+                                  blurRadius: 5,
+                                  offset: Offset(
+                                      1, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
                             child: Card(
                               color: kPurpleBackGround,
                               shape: RoundedRectangleBorder(
@@ -218,12 +277,25 @@ class _UserHomeState extends State<UserHome> {
                     Expanded(
                       flex: 1,
                       child: GestureDetector(
-                        child: Card(
-                          color: kPurpleBackGround,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(26)),
-                          child: AspectRatio(
-                            aspectRatio: 1 / 1,
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(26),
+                                  topRight: Radius.circular(26),
+                                  bottomLeft: Radius.circular(26),
+                                  bottomRight: Radius.circular(26)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(1),
+                                  spreadRadius: -3,
+                                  blurRadius: 5,
+                                  offset: Offset(
+                                      1, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
                             child: Card(
                               color: kPurpleBackGround,
                               shape: RoundedRectangleBorder(
@@ -250,46 +322,46 @@ class _UserHomeState extends State<UserHome> {
                 SizedBox(
                   height: kMargin20,
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: FormBuilderDropdown(
-                        name: 'gender',
-                        decoration: customInputDecoration("Popular"),
-                        // initialValue: 'Male',
-                        allowClear: true,
-
-                        validator: FormBuilderValidators.compose(
-                            [FormBuilderValidators.required(context)]),
-                        items: ["male", "female", "others"]
-                            .map((gender) => DropdownMenuItem(
-                                  value: gender,
-                                  child: Text('$gender'),
-                                ))
-                            .toList(),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: FormBuilderDropdown(
-                        name: 'gender',
-                        decoration: customInputDecoration("Filters"),
-                        // initialValue: 'Male',
-                        allowClear: true,
-
-                        validator: FormBuilderValidators.compose(
-                            [FormBuilderValidators.required(context)]),
-                        items: ["male", "female", "others"]
-                            .map((gender) => DropdownMenuItem(
-                                  value: gender,
-                                  child: Text('$gender'),
-                                ))
-                            .toList(),
-                      ),
-                    )
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       flex: 1,
+                //       child: FormBuilderDropdown(
+                //         name: 'gender',
+                //         decoration: customInputDecoration("Popular"),
+                //         // initialValue: 'Male',
+                //         allowClear: true,
+                //
+                //         validator: FormBuilderValidators.compose(
+                //             [FormBuilderValidators.required(context)]),
+                //         items: ["male", "female", "others"]
+                //             .map((gender) => DropdownMenuItem(
+                //                   value: gender,
+                //                   child: Text('$gender'),
+                //                 ))
+                //             .toList(),
+                //       ),
+                //     ),
+                //     Expanded(
+                //       flex: 1,
+                //       child: FormBuilderDropdown(
+                //         name: 'gender',
+                //         decoration: customInputDecoration("Filters"),
+                //         // initialValue: 'Male',
+                //         allowClear: true,
+                //
+                //         validator: FormBuilderValidators.compose(
+                //             [FormBuilderValidators.required(context)]),
+                //         items: ["male", "female", "others"]
+                //             .map((gender) => DropdownMenuItem(
+                //                   value: gender,
+                //                   child: Text('$gender'),
+                //                 ))
+                //             .toList(),
+                //       ),
+                //     )
+                //   ],
+                // ),
                 _buildOpportunityList(context)
               ],
             ),
@@ -316,8 +388,7 @@ class _UserHomeState extends State<UserHome> {
         });
       },
       child: Padding(
-        padding: const EdgeInsets.only(
-            left: kMargin20, right: kMargin20, bottom: kMargin20),
+        padding: const EdgeInsets.only(bottom: kMargin20),
         child: Card(
           elevation: 4.0,
           color: Colors.white,
@@ -325,6 +396,7 @@ class _UserHomeState extends State<UserHome> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
                 children: [
@@ -348,11 +420,14 @@ class _UserHomeState extends State<UserHome> {
                   ))
                 ],
               ),
-              Text(item.title,
-                  style: TextStyle(
-                      fontSize: kMargin18,
-                      fontWeight: FontWeight.w400,
-                      color: kPurpleColor)),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: Text(item.title,
+                    style: TextStyle(
+                        fontSize: kMargin18,
+                        fontWeight: FontWeight.w400,
+                        color: kPurpleColor)),
+              ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
@@ -386,15 +461,21 @@ class _UserHomeState extends State<UserHome> {
                               ),
                             ),
                             child: userWishes.contains(item.id)
-                                ? Image(
-                                    width: 32,
-                                    height: 32,
-                                    image: AssetImage(kIconLoveWhitePath),
+                                ? Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image(
+                                      width: 16,
+                                      height: 16,
+                                      image: AssetImage(kIconLoveWhitePath),
+                                    ),
                                   )
-                                : Image(
-                                    width: 32,
-                                    height: 32,
-                                    image: AssetImage(kIconLovePath),
+                                : Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image(
+                                      width: 16,
+                                      height: 16,
+                                      image: AssetImage(kIconLovePath),
+                                    ),
                                   ),
                           ),
                           onTap: () async {
@@ -482,7 +563,11 @@ class _UserHomeState extends State<UserHome> {
                                   loadUserOpportunitiesData();
                                 });
                               }, (error) {
-                                EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
+                                // EasyLoading.showError(error);
                               });
                             }
                           },
@@ -500,16 +585,23 @@ class _UserHomeState extends State<UserHome> {
                                     ),
                                   ),
                                   child: userEnrollments.contains(item.id)
-                                      ? Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(
-                                              kIconAdditionWhitePath),
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image: AssetImage(
+                                                kIconAdditionWhitePath),
+                                          ),
                                         )
-                                      : Image(
-                                          width: 32,
-                                          height: 32,
-                                          image: AssetImage(kIconAdditionPath),
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            width: 16,
+                                            height: 16,
+                                            image:
+                                                AssetImage(kIconAdditionPath),
+                                          ),
                                         ),
                                 ),
                                 onTap: () async {
@@ -522,7 +614,11 @@ class _UserHomeState extends State<UserHome> {
                                       loadUserData();
                                       loadUserOpportunitiesData();
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
+                                      // EasyLoading.showError(error);
                                     });
                                   } else {
                                     _opportunityViewModel
@@ -614,7 +710,11 @@ class _UserHomeState extends State<UserHome> {
                                         loadUserOpportunitiesData();
                                       });
                                     }, (error) {
-                                      EasyLoading.showError(error);
+                                      // EasyLoading.showError(error);
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => CustomAlertDialogue(
+                                              "Error!", error));
                                     });
                                   }
                                 },

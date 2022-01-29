@@ -153,3 +153,37 @@ InputDecoration _inputDecoration(String hintText, {bool showIcon = false}) {
     suffixIcon: showIcon ? Image.asset(kIconLocationPath) : null,
   );
 }
+
+Color opportunityColorCodes(int opportunityStatus) {
+  if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Drafted']) {
+    return kInactiveColor.withOpacity(0.8);
+  } else if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Published']) {
+    return kAccentColor.withOpacity(0.8);
+  } else if (opportunityStatus ==
+      OPPORTUNITY_STATUS_VALUES['Currently Happening']) {
+    return kOrangeBackgroundColor.withOpacity(0.8);
+  } else if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Ended']) {
+    return kOrangeBackgroundColor.withOpacity(0.8);
+  } else if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Rewarding']) {
+    return kDarkBlueBackGround.withOpacity(0.8);
+  } else if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Finished']) {
+    return kInactiveColor.withOpacity(0.8);
+  }
+}
+
+String opportunityStatusIcon(int opportunityStatus) {
+  if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Drafted']) {
+    return kIconWhiteEditPath;
+  } else if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Published']) {
+    return kMultipleUsersIconPath;
+  } else if (opportunityStatus ==
+      OPPORTUNITY_STATUS_VALUES['Currently Happening']) {
+    return kRightArrowIconPath;
+  } else if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Ended']) {
+    return kRightArrowIconPath;
+  } else if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Rewarding']) {
+    return kVerifyIconPath;
+  } else if (opportunityStatus == OPPORTUNITY_STATUS_VALUES['Finished']) {
+    return kArchiveIconPath;
+  }
+}

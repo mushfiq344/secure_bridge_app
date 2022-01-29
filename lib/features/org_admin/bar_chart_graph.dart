@@ -4,33 +4,42 @@ import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'package:secure_bridges_app/Models/bar_chart_model.dart';
 
-class BarChartGraph extends StatefulWidget {
+// class BarChartGraph extends StatefulWidget {
+//   final List<BarChartModel> data;
+//   String title;
+//
+//   BarChartGraph({Key key, this.data, this.title});
+//
+//   @override
+//   _BarChartGraphState createState() => _BarChartGraphState();
+// }
+
+class BarChartGraph extends StatelessWidget {
   final List<BarChartModel> data;
+  String title;
 
-  const BarChartGraph({Key key, this.data}) : super(key: key);
-
-  @override
-  _BarChartGraphState createState() => _BarChartGraphState();
-}
-
-class _BarChartGraphState extends State<BarChartGraph> {
+  BarChartGraph({Key key, this.data, this.title});
   List<BarChartModel> _barChartList;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _barChartList = [
-      BarChartModel(month: "Oct"),
-    ];
-  }
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   print("widget.title : ${widget.title}");
+  //   super.initState();
+  //   _barChartList = [
+  //     BarChartModel(month: widget.title),
+  //   ];
+  // }
 
   @override
   Widget build(BuildContext context) {
+    _barChartList = [
+      BarChartModel(month: title),
+    ];
     List<charts.Series<BarChartModel, String>> series = [
       charts.Series(
           id: "Financial",
-          data: widget.data,
+          data: data,
           domainFn: (BarChartModel series, _) => series.year,
           measureFn: (BarChartModel series, _) => series.financial,
           colorFn: (BarChartModel series, _) => series.color),

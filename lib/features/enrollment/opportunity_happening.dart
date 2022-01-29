@@ -15,6 +15,7 @@ import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:secure_bridges_app/widgets/input_decoration.dart';
 
 class OpportunityHappening extends StatefulWidget {
@@ -58,11 +59,18 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
             totalConfirm = _totalConfirm;
           });
         }, (error) {
-          EasyLoading.showError(error);
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
+          // EasyLoading.showError(error);
         });
       } else {
         EasyLoading.dismiss();
-        EasyLoading.showInfo(kNoInternetAvailable);
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
       }
     });
   }
@@ -95,8 +103,12 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
     return Scaffold(
       backgroundColor: kGreyBackgroundColor,
       appBar: AppBar(
-        title: Text("Opportunity Happening"),
-        backgroundColor: kPurpleColor,
+        title: Text(
+          "Opportunity Happening",
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -165,6 +177,10 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                       context,
                       MaterialPageRoute(builder: (context) => OrgAdminHome()),
                     );
+                  }, (error) {
+                    showDialog(
+                        context: context,
+                        builder: (_) => CustomAlertDialogue("Error!", error));
                   });
                 },
                 fillColor: kPurpleColor,
@@ -322,7 +338,11 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                                       widget.opportunity.id);
                                 });
                               }, (error) {
-                                EasyLoading.showError(error);
+                                // EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
                               });
                             },
                           ),
