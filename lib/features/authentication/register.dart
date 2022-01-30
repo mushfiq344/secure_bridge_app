@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
 import 'package:secure_bridges_app/features/authentication/select_account_type.dart';
+import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
@@ -306,7 +307,9 @@ class _RegisterState extends State<Register> {
                                   await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => PlansList()),
+                                        builder: (context) => PlansList(
+                                              isRegistering: true,
+                                            )),
                                     (route) => false,
                                   );
                                 } else {
@@ -323,7 +326,7 @@ class _RegisterState extends State<Register> {
                               await Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LandingSearchPage()),
+                                    builder: (context) => OrgAdminHome()),
                                 (route) => false,
                               );
                             }

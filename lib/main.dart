@@ -80,7 +80,9 @@ class _CheckAuthState extends State<CheckAuth> {
       } else {
         if (userType == 1) {
           if (regCompleted < 2) {
-            child = PlansList();
+            child = PlansList(
+              isRegistering: true,
+            );
           } else {
             child = OrgAdminHome();
           }

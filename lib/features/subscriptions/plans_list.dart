@@ -7,6 +7,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:secure_bridges_app/Models/Plan.dart';
 import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
+import 'package:secure_bridges_app/features/authentication/login.dart';
 import 'package:secure_bridges_app/features/landing/landing_search_page.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 import 'package:secure_bridges_app/features/payment/payment_home.dart';
@@ -16,13 +17,14 @@ import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utls/color_codes.dart';
 import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
+import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlansList extends StatefulWidget {
   final User currentUser;
-  bool isRegistering = false;
-  PlansList({this.currentUser, this.isRegistering});
+  bool isRegistering;
+  PlansList({this.currentUser, this.isRegistering = false});
   @override
   _PlansListState createState() => _PlansListState();
 }
@@ -61,11 +63,14 @@ class _PlansListState extends State<PlansList> {
       print(body);
       List<Plan> _yearlyPlans = List<Plan>.from(
           body['data']['yearly_plans'].map((i) => Plan.fromJson(i)));
+      List<Plan> _monthyPlans = List<Plan>.from(
+          body['data']['monthly_plans'].map((i) => Plan.fromJson(i)));
       List<int> _userSubscribedPlans =
           body['data']['user_subscribed_plans'].cast<int>();
 
       setState(() {
         yearlyPlans = _yearlyPlans;
+        monthlyPlans = _monthyPlans;
         userSubscribedPlans = _userSubscribedPlans;
       });
     }, (error) {
@@ -158,6 +163,27 @@ class _PlansListState extends State<PlansList> {
               isYear
                   ? buildList(context, yearlyPlans)
                   : buildList(context, monthlyPlans),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: kMargin20),
+                  child: PAButton(
+                    "Logout",
+                    true,
+                    () async {
+                      _authenticationViewModel.logout(() async {
+                        await Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                          (route) => false,
+                        );
+                      }, () {});
+                    },
+                    fillColor: kPurpleColor,
+                    hMargin: 0,
+                    capitalText: false,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -236,7 +262,7 @@ class _PlansListState extends State<PlansList> {
                 showDialog(
                     context: context,
                     builder: (_) =>
-                        CustomAlertDialogue("Error!", kNoInternetAvailable));
+                        CustomAlertDialogue("Error!", kSubscriptionExists));
                 return;
               }
               String amount = (e.amount * 100).toString();
@@ -267,58 +293,11 @@ class _PlansListState extends State<PlansList> {
                             ))).then((value) {
                   if (value != null) {
                     if (value) {
-                      // EasyLoading.showSuccess(
-                      //         'You Have Subscribed To This Plan!')
-                      //     .then((value) {
-                      //   _userViewModel.loadUserData(
-                      //       (Map<String, dynamic> userJson) async {
-                      //     Map<String, dynamic> _userJson = userJson;
-                      //
-                      //     _userJson['has_create_opportunity_permission'] =
-                      //         true;
-                      //     SharedPreferences localStorage =
-                      //         await SharedPreferences.getInstance();
-                      //
-                      //     localStorage.setString(
-                      //         'user', json.encode(_userJson));
-                      //     if (e.id == 2) {
-                      //       Navigator.of(context).pop();
-                      //     } else {
-                      //       getPlans();
-                      //     }
-                      //   }, (error) {
-                      //     EasyLoading.showError(error);
-                      //   });
-                      //
-                      // });
-                      // EasyLoading.showSuccess(
-                      //     'You Have Subscribed To This Plan!');
                       showDialog(
-                          context: context,
-                          builder: (_) => CustomAlertDialogue(
-                              "Success!", 'You Have Subscribed To This Plan!'));
-                      // if (widget.isRegistering) {
-                      //   _authenticationViewModel.completeRegistration(1,
-                      //       () async {
-                      //     await Navigator.pushAndRemoveUntil(
-                      //       context,
-                      //       MaterialPageRoute(builder: (context) => Home()),
-                      //       (route) => false,
-                      //     );
-                      //   }, (error) {
-                      //     EasyLoading.showError(error);
-                      //   });
-                      // } else {
-                      _userViewModel.loadUserData(
-                          (Map<String, dynamic> userJson) async {
-                        Map<String, dynamic> _userJson = userJson;
-
-                        _userJson['has_create_opportunity_permission'] = true;
-                        SharedPreferences localStorage =
-                            await SharedPreferences.getInstance();
-
-                        localStorage.setString('user', json.encode(_userJson));
-
+                              context: context,
+                              builder: (_) => CustomAlertDialogue("Success!",
+                                  'You Have Subscribed To This Plan!'))
+                          .then((value) {
                         if (widget.isRegistering) {
                           _authenticationViewModel.completeRegistration(1,
                               () async {
@@ -336,19 +315,29 @@ class _PlansListState extends State<PlansList> {
                             /* EasyLoading.showError(error);*/
                           });
                         } else {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OrgAdminHome()),
-                            (route) => false,
-                          );
+                          _userViewModel.loadUserData(
+                              (Map<String, dynamic> userJson) async {
+                            Map<String, dynamic> _userJson = userJson;
+                            _userJson['has_create_opportunity_permission'] =
+                                true;
+                            SharedPreferences localStorage =
+                                await SharedPreferences.getInstance();
+                            localStorage.setString(
+                                'user', json.encode(_userJson));
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrgAdminHome()),
+                              (route) => false,
+                            );
+                          }, (error) {
+                            showDialog(
+                                context: context,
+                                builder: (_) =>
+                                    CustomAlertDialogue("Error!", error));
+                            // EasyLoading.showError(error);
+                          });
                         }
-                      }, (error) {
-                        showDialog(
-                            context: context,
-                            builder: (_) =>
-                                CustomAlertDialogue("Error!", error));
-                        // EasyLoading.showError(error);
                       });
                     }
                   }

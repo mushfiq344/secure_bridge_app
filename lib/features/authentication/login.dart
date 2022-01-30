@@ -154,7 +154,12 @@ class _LoginState extends State<Login> {
                           SharedPreferences localStorage =
                               await SharedPreferences.getInstance();
                           var user = jsonDecode(localStorage.getString('user'));
+                          print("user here $user");
                           int regCompleted = user['reg_completed'];
+                          int userType = user['user_type'];
+
+                          print(
+                              "regCompleted $regCompleted, userType $userType");
                           if (regCompleted < 2) {
                             if (regCompleted < 1) {
                               await Navigator.pushAndRemoveUntil(
@@ -164,12 +169,13 @@ class _LoginState extends State<Login> {
                                 (route) => false,
                               );
                             } else {
-                              int userType = user['user_type'];
                               if (userType == 1) {
                                 await Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => PlansList()),
+                                      builder: (context) => PlansList(
+                                            isRegistering: true,
+                                          )),
                                   (route) => false,
                                 );
                               } else {
@@ -186,7 +192,7 @@ class _LoginState extends State<Login> {
                             await Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => LandingSearchPage()),
+                                  builder: (context) => OrgAdminHome()),
                               (route) => false,
                             );
                           }
@@ -337,38 +343,49 @@ class _LoginState extends State<Login> {
                                             email, password, (int regCompleted,
                                                 Map<String, dynamic>
                                                     body) async {
-                                          if (regCompleted == 0) {
+                                          int userType =
+                                              body['data']['user']['user_type'];
+                                          if (regCompleted < 2) {
+                                            if (regCompleted < 1) {
+                                              await Navigator
+                                                  .pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SelectAccountType()),
+                                                (route) => false,
+                                              );
+                                            } else {
+                                              if (userType == 1) {
+                                                await Navigator
+                                                    .pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PlansList(
+                                                            isRegistering: true,
+                                                          )),
+                                                  (route) => false,
+                                                );
+                                              } else {
+                                                await Navigator
+                                                    .pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          LandingSearchPage()),
+                                                  (route) => false,
+                                                );
+                                              }
+                                            }
+                                          } else {
                                             await Navigator.pushAndRemoveUntil(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      SelectAccountType()),
+                                                      OrgAdminHome()),
                                               (route) => false,
                                             );
-                                          } else {
-                                            if (body['data']['user']
-                                                    ['user_type'] ==
-                                                0) {
-                                              await Navigator
-                                                  .pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LandingSearchPage()),
-                                                (route) => false,
-                                              );
-                                            } else if (body['data']['user']
-                                                    ['user_type'] ==
-                                                1) {
-                                              await Navigator
-                                                  .pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrgAdminHome()),
-                                                (route) => false,
-                                              );
-                                            }
                                           }
                                         }, (error) {
                                           EasyLoading.dismiss();
