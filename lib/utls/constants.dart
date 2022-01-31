@@ -93,6 +93,14 @@ const OPPORTUNITY_STATUS_ACTIONS_TEXT = {
   "Rewarding": "Verify",
   "Finished": "Archived"
 };
+
+const ORGANIZATION_SIZE = ['below 10', '10 - 40', '40+'];
+const ORGANIZATION_SIZE_VALUES = {
+  "below 10": true,
+  "10 - 40": true,
+  "40+": false,
+};
+
 const userProfileImagePath = 'uploads/images/profiles/';
 const String kNavigationExamplePage = '''
 <!DOCTYPE html><html>

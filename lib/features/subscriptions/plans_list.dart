@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:secure_bridges_app/Models/Plan.dart';
 import 'package:secure_bridges_app/Models/User.dart';
@@ -19,6 +20,7 @@ import 'package:secure_bridges_app/utls/constants.dart';
 import 'package:secure_bridges_app/utls/dimens.dart';
 import 'package:secure_bridges_app/widgets/PAButton.dart';
 import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
+import 'package:secure_bridges_app/widgets/input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlansList extends StatefulWidget {
@@ -38,6 +40,9 @@ class _PlansListState extends State<PlansList> {
   List<int> userSubscribedPlans = [];
   User currentUser;
   bool isYear = true;
+  bool isForProfit = true;
+  bool discountForOrgSize = false;
+  final _organizationSizeKey = GlobalKey<FormBuilderFieldState>();
   @override
   void initState() {
     getPlans();
@@ -111,54 +116,158 @@ class _PlansListState extends State<PlansList> {
           padding: const EdgeInsets.all(kMargin20),
           child: Column(
             children: [
-              Text(
-                "Choose plan",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: kMargin30),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(kMargin10),
+                ),
+                color: kLightYellow,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Choose plan",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: kMargin30),
+                      ),
+                      SizedBox(
+                        height: kMargin30,
+                      ),
+                      FormBuilderDropdown(
+                        allowClear: true,
+                        hint: SizedBox(
+                          width:
+                              MediaQuery.of(context).size.width, // for example
+                          child: Text('Organization Size',
+                              textAlign: TextAlign.center),
+                        ),
+                        key: _organizationSizeKey,
+                        name: 'Organization Size',
+                        decoration: customInputDecoration("",
+                            fillColor: kLightPurpleBackgroundColor,
+                            borderColor: kBorderColor),
+                        // initialValue: 'Male',
+                        onChanged: (String selectedValue) {
+                          if (selectedValue == null) {
+                            setState(() {
+                              discountForOrgSize = false;
+                            });
+                          } else {
+                            setState(() {
+                              discountForOrgSize =
+                                  ORGANIZATION_SIZE_VALUES[selectedValue];
+                            });
+                          }
+                        },
+                        validator: FormBuilderValidators.compose(
+                            [FormBuilderValidators.required(context)]),
+                        items: ORGANIZATION_SIZE
+                            .map((type) => DropdownMenuItem(
+                                  value: type,
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width, // for example
+                                    child:
+                                        Text(type, textAlign: TextAlign.center),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                      SizedBox(
+                        height: kMargin30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Non-profit",
+                            style: TextStyle(
+                                fontSize: kMargin16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black38),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: kMargin10),
+                            child: FlutterSwitch(
+                              width: 70.0,
+                              height: 40.0,
+                              toggleSize: 30.0,
+                              value: isForProfit,
+                              borderRadius: 33.1,
+                              padding: 4.0,
+                              toggleColor: Color.fromRGBO(225, 225, 225, 1),
+                              activeColor: kLightBlack,
+                              inactiveColor: Colors.black38,
+                              onToggle: (val) {
+                                setState(() {
+                                  isForProfit = val;
+                                });
+                              },
+                            ),
+                          ),
+                          Text(
+                            "For-profit",
+                            style: TextStyle(
+                                fontSize: kMargin16,
+                                fontWeight: FontWeight.bold,
+                                color: kLightBlack),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: kMargin30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Monthly",
+                            style: TextStyle(
+                                fontSize: kMargin16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black38),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: kMargin10),
+                            child: FlutterSwitch(
+                              width: 70.0,
+                              height: 40.0,
+                              toggleSize: 30.0,
+                              value: isYear,
+                              borderRadius: 33.1,
+                              padding: 4.0,
+                              toggleColor: Color.fromRGBO(225, 225, 225, 1),
+                              activeColor: kLightBlack,
+                              inactiveColor: Colors.black38,
+                              onToggle: (val) {
+                                setState(() {
+                                  isYear = val;
+                                });
+                              },
+                            ),
+                          ),
+                          Text(
+                            "Yearly",
+                            style: TextStyle(
+                                fontSize: kMargin16,
+                                fontWeight: FontWeight.bold,
+                                color: kLightBlack),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: kMargin30,
+                      ),
+                    ],
+                  ),
+                ),
               ),
               SizedBox(
-                height: kMargin30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Monthly",
-                    style: TextStyle(
-                        fontSize: kMargin16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black38),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: kMargin10),
-                    child: FlutterSwitch(
-                      width: 70.0,
-                      height: 40.0,
-                      toggleSize: 30.0,
-                      value: isYear,
-                      borderRadius: 33.1,
-                      padding: 4.0,
-                      toggleColor: Color.fromRGBO(225, 225, 225, 1),
-                      activeColor: kLightBlack,
-                      inactiveColor: Colors.black38,
-                      onToggle: (val) {
-                        setState(() {
-                          isYear = val;
-                        });
-                      },
-                    ),
-                  ),
-                  Text(
-                    "Yearly",
-                    style: TextStyle(
-                        fontSize: kMargin16,
-                        fontWeight: FontWeight.bold,
-                        color: kLightBlack),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: kMargin30,
+                height: kMargin10,
               ),
               isYear
                   ? buildList(context, yearlyPlans)
@@ -232,12 +341,19 @@ class _PlansListState extends State<PlansList> {
                               SizedBox(
                                 height: kMargin13,
                               ),
-                              Text(
-                                e.title,
-                                style: TextStyle(
-                                    fontSize: kMargin30,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              e.amount == 0 || e.mode == 0
+                                  ? Text(
+                                      e.title,
+                                      style: TextStyle(
+                                          fontSize: kMargin30,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : Text(
+                                      "${!isForProfit || discountForOrgSize ? (e.amount * .8).toStringAsFixed(1) : e.amount}/ ${e.type == 0 ? "month" : "year"}",
+                                      style: TextStyle(
+                                          fontSize: kMargin30,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                               SizedBox(
                                 height: kMargin13,
                               ),
@@ -265,7 +381,12 @@ class _PlansListState extends State<PlansList> {
                         CustomAlertDialogue("Error!", kSubscriptionExists));
                 return;
               }
-              String amount = (e.amount * 100).toString();
+              ;
+              double discountedAmount = double.parse(
+                  !isForProfit || discountForOrgSize
+                      ? (e.amount * .8).toStringAsFixed(1)
+                      : e.amount);
+              String amount = (discountedAmount * 100).toString();
               amount = amount.substring(0, amount.indexOf('.'));
               if (e.mode == 0 || e.amount == 0) {
                 bool callApi = await shouldMakeApiCall(context);
