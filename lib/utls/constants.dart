@@ -67,8 +67,32 @@ const kStarconPath = "images/ic_star.png";
 const GENDER_OPTIONS = ['Male', 'Female', 'Binary', 'Other'];
 const GENDER_VALUES = {"Male": 0, "Female": 1, 'Binary': 2, "Other": 3};
 
-const OPPORTUNITY_TYPES = ['Shelter', 'Counselling', 'Food'];
-const OPPORTUNITY_TYPES_VALUES = {"Shelter": 0, "Counselling": 1, "Food": 2};
+const OPPORTUNITY_TYPES = [
+  'Shelter',
+  'Counselling',
+  'Food',
+  'Forms',
+  'Jobs',
+  'Health',
+  'Mental health',
+  'Therapy',
+  'Mentorship',
+  'Youth activities',
+  'General resources(housing)'
+];
+const OPPORTUNITY_TYPES_VALUES = {
+  "Shelter": 0,
+  "Counselling": 1,
+  "Food": 2,
+  "Forms": 3,
+  "Jobs": 4,
+  "Health": 5,
+  "Mental health": 6,
+  "Therapy": 7,
+  "Mentorship": 8,
+  "Youth activities": 9,
+  "General resources(housing)": 10
+};
 const OPPORTUNITY_STATUS = [
   "Drafted",
   "Published",
