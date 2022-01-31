@@ -385,7 +385,7 @@ class _PlansListState extends State<PlansList> {
               double discountedAmount = double.parse(
                   !isForProfit || discountForOrgSize
                       ? (e.amount * .8).toStringAsFixed(1)
-                      : e.amount);
+                      : e.amount.toString());
               String amount = (discountedAmount * 100).toString();
               amount = amount.substring(0, amount.indexOf('.'));
               if (e.mode == 0 || e.amount == 0) {
