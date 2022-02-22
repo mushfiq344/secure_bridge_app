@@ -128,10 +128,14 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                   ['opportunities']
               .map((i) => Opportunity.fromJson(i)));
           setState(() {
-            imgList = _opportunities
+            List<Opportunity> _featuredOpportunities = _opportunities
+                .where((element) => element.isFeatured == 1)
+                .toList();
+            imgList = _featuredOpportunities
                 .map<String>((e) =>
                     "${BASE_URL}${body["data"]["upload_path"]}${e.coverImage}")
                 .toList();
+
             opportunities = _opportunities;
             allOpportunities = _opportunities;
             searchedOpportunities = _opportunities;

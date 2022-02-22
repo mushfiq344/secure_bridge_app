@@ -20,6 +20,7 @@ class Opportunity {
   String slug;
   int isActive;
   int status;
+  int isFeatured;
   String location;
   bool show = false;
 
@@ -40,6 +41,7 @@ class Opportunity {
       this.slug,
       this.isActive,
       this.status,
+      this.isFeatured,
       this.location});
 
   Opportunity.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class Opportunity {
     iconImage = json['icon_image'];
     isActive = json['is_active'];
     status = json['status'];
+    isFeatured = json['is_featured'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     slug = json['slug'];
@@ -73,6 +76,7 @@ class Opportunity {
       'reward': reward,
       'type': type,
       'status': status,
+      'is_featured': isFeatured,
       'location': location,
     };
     return data;
