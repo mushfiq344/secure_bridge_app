@@ -57,6 +57,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   void loadUserData() {
     _userViewModel.loadUserData((Map<String, dynamic> userJson) {
+      print('user json at org home $userJson');
       if (userJson['has_create_opportunity_permission'] == true) {
         setState(() {
           hasPermissionToCreate = true;

@@ -18,7 +18,7 @@ class AuthenticationViewModel {
       var res = await Network().postData(data, GOOGLE_AUTH_URL);
       var body = json.decode(res.body);
       // log("res ${res.statusCode}");
-      log("body : ${body}");
+      log("body here : ${body}");
       if (res.statusCode == 200) {
         print("get token : ${body['data']['token']}");
         SharedPreferences localStorage = await SharedPreferences.getInstance();

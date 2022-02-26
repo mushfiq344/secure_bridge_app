@@ -67,8 +67,32 @@ const kStarconPath = "images/ic_star.png";
 const GENDER_OPTIONS = ['Male', 'Female', 'Binary', 'Other'];
 const GENDER_VALUES = {"Male": 0, "Female": 1, 'Binary': 2, "Other": 3};
 
-const OPPORTUNITY_TYPES = ['Shelter', 'Counselling', 'Food'];
-const OPPORTUNITY_TYPES_VALUES = {"Shelter": 0, "Counselling": 1, "Food": 2};
+const OPPORTUNITY_TYPES = [
+  'Shelter',
+  'Counselling',
+  'Food',
+  'Forms',
+  'Jobs',
+  'Health',
+  'Mental health',
+  'Therapy',
+  'Mentorship',
+  'Youth activities',
+  'General resources(housing)'
+];
+const OPPORTUNITY_TYPES_VALUES = {
+  "Shelter": 0,
+  "Counselling": 1,
+  "Food": 2,
+  "Forms": 3,
+  "Jobs": 4,
+  "Health": 5,
+  "Mental health": 6,
+  "Therapy": 7,
+  "Mentorship": 8,
+  "Youth activities": 9,
+  "General resources(housing)": 10
+};
 const OPPORTUNITY_STATUS = [
   "Drafted",
   "Published",
@@ -93,6 +117,14 @@ const OPPORTUNITY_STATUS_ACTIONS_TEXT = {
   "Rewarding": "Verify",
   "Finished": "Archived"
 };
+
+const ORGANIZATION_SIZE = ['below 10', '10 - 40', '40+'];
+const ORGANIZATION_SIZE_VALUES = {
+  "below 10": true,
+  "10 - 40": true,
+  "40+": false,
+};
+
 const userProfileImagePath = 'uploads/images/profiles/';
 const String kNavigationExamplePage = '''
 <!DOCTYPE html><html>
@@ -114,7 +146,7 @@ const kParticipated = "Participated";
 const kPlanModes = {0: "Basic", 1: "Pro"};
 const kSomethingWentWrong = "Something went wrong";
 const kNoInternetAvailable = "No Internet Available";
-
+const kSubscriptionExists = "User is already subscribed to this plan";
 // final List<BarChartModel> data = [
 //   BarChartModel(
 //     year: "2014",

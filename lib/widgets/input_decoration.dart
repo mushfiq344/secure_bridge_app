@@ -15,7 +15,9 @@ InputDecoration customInputDecoration(String hintText,
     VoidCallback suffixIconCallback}) {
   return InputDecoration(
       hintText: hintText,
-      hintStyle: TextStyle(color: kBorderColor),
+      hintStyle: TextStyle(
+        color: kBorderColor,
+      ),
       fillColor: fillColor,
       filled: true,
       focusedBorder: OutlineInputBorder(
