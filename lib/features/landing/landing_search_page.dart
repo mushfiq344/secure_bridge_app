@@ -353,8 +353,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                           child: Image(
                                             width: 16,
                                             height: 16,
-                                            image:
-                                                AssetImage(kIconLoveWhitePath),
+                                            image: AssetImage(kIconLovePath),
                                           ),
                                         )
                                       : Padding(
@@ -362,7 +361,8 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                           child: Image(
                                             width: 16,
                                             height: 16,
-                                            image: AssetImage(kIconLovePath),
+                                            image:
+                                                AssetImage(kIconLoveWhitePath),
                                           ),
                                         ),
                                 ),
@@ -499,8 +499,8 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                           child: Image(
                                             width: 16,
                                             height: 16,
-                                            image: AssetImage(
-                                                kIconAdditionWhitePath),
+                                            image:
+                                                AssetImage(kIconAdditionPath),
                                           ),
                                         )
                                       : Padding(
@@ -508,8 +508,8 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                           child: Image(
                                             width: 16,
                                             height: 16,
-                                            image:
-                                                AssetImage(kIconAdditionPath),
+                                            image: AssetImage(
+                                                kIconAdditionWhitePath),
                                           ),
                                         ),
                                 ),

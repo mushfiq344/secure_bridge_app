@@ -466,7 +466,7 @@ class _UserHomeState extends State<UserHome> {
                                     child: Image(
                                       width: 16,
                                       height: 16,
-                                      image: AssetImage(kIconLoveWhitePath),
+                                      image: AssetImage(kIconLovePath),
                                     ),
                                   )
                                 : Padding(
@@ -474,7 +474,7 @@ class _UserHomeState extends State<UserHome> {
                                     child: Image(
                                       width: 16,
                                       height: 16,
-                                      image: AssetImage(kIconLovePath),
+                                      image: AssetImage(kIconLoveWhitePath),
                                     ),
                                   ),
                           ),
@@ -482,7 +482,16 @@ class _UserHomeState extends State<UserHome> {
                             bool callApi = await shouldMakeApiCall(context);
                             if (!callApi) return;
                             if (userWishes.contains(item.id)) {
-                              loadUserOpportunitiesData();
+                              _opportunityViewModel
+                                  .removeFromWithList(context, item, (success) {
+                                loadUserOpportunitiesData();
+                              }, (error) {
+                                // EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
+                              });
                             } else {
                               _opportunityViewModel.addToWishList(context, item,
                                   () {
@@ -590,8 +599,8 @@ class _UserHomeState extends State<UserHome> {
                                           child: Image(
                                             width: 16,
                                             height: 16,
-                                            image: AssetImage(
-                                                kIconAdditionWhitePath),
+                                            image:
+                                                AssetImage(kIconAdditionPath),
                                           ),
                                         )
                                       : Padding(
@@ -599,8 +608,8 @@ class _UserHomeState extends State<UserHome> {
                                           child: Image(
                                             width: 16,
                                             height: 16,
-                                            image:
-                                                AssetImage(kIconAdditionPath),
+                                            image: AssetImage(
+                                                kIconAdditionWhitePath),
                                           ),
                                         ),
                                 ),
