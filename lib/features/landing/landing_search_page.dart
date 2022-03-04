@@ -54,6 +54,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
   User currentUser;
   int opportunityTypeSelected = -1; // -1 means all
   List<String> imgList = [];
+  List<Opportunity> featuredOpportunities = [];
 
   @override
   void initState() {
@@ -127,14 +128,15 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
           List<Opportunity> _opportunities = List<Opportunity>.from(body['data']
                   ['opportunities']
               .map((i) => Opportunity.fromJson(i)));
+          List<Opportunity> _featuredOpportunities = _opportunities
+              .where((element) => element.isFeatured == 1)
+              .toList();
           setState(() {
-            List<Opportunity> _featuredOpportunities = _opportunities
-                .where((element) => element.isFeatured == 1)
-                .toList();
-            imgList = _featuredOpportunities
-                .map<String>((e) =>
-                    "${BASE_URL}${body["data"]["upload_path"]}${e.coverImage}")
-                .toList();
+            // imgList = _featuredOpportunities
+            //     .map<String>((e) =>
+            //         "${BASE_URL}${body["data"]["upload_path"]}${e.coverImage}")
+            //     .toList();
+            featuredOpportunities = _featuredOpportunities;
 
             opportunities = _opportunities;
             allOpportunities = _opportunities;
@@ -762,37 +764,13 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
             },
             child: Column(
               children: [
-                // Container(
-                //   decoration: BoxDecoration(
-                //       color: kPinkBackground,
-                //       borderRadius: BorderRadius.all(Radius.circular(29))),
-                //   child: Padding(
-                //     padding: const EdgeInsets.symmetric(
-                //         vertical: kMargin48, horizontal: kMargin32),
-                //     child: Column(
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       children: [
-                //         Text(
-                //           "AWARENESS TOGETHER",
-                //           style: TextStyle(
-                //               fontSize: 36,
-                //               color: kPurpleColor,
-                //               fontWeight: FontWeight.w400),
-                //         ),
-                //         Text(
-                //           "Find what fascinates you as you explore these habit courses.",
-                //           style: TextStyle(
-                //               fontSize: 10,
-                //               color: kPurpleColor,
-                //               fontWeight: FontWeight.w700),
-                //         )
-                //       ],
-                //     ),
-                //   ),
-                // ),
                 Container(
-                  child: SliderDemo(
-                    imgList: imgList,
+                  child: OpportunitySlider(
+                    featuredOpportunities: featuredOpportunities,
+                    uploadPath: opportunityUploadPath,
+                    currentUser: currentUser,
+                    loadUserData: _loadUserData,
+                    loadOpportunitiesStats: _loadOpportunitiesStats,
                   ),
                 ),
                 _setUpSearchBar(),
