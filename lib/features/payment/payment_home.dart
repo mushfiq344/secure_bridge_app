@@ -11,7 +11,10 @@ class PaymentHome extends StatefulWidget {
   final String amount;
   final int userId;
   final int planId;
-  PaymentHome({this.amount, this.userId, this.planId});
+  final int type;
+  final int opportunityId;
+  PaymentHome(
+      {this.amount, this.type, this.userId, this.planId, this.opportunityId});
 
   @override
   PaymentHomeState createState() => PaymentHomeState();
@@ -35,10 +38,13 @@ class PaymentHomeState extends State<PaymentHome> {
     dialog.style(message: 'Please wait...');
     await dialog.show();
     var response = await StripeService.payWithNewCard(
-        amount: widget.amount,
-        currency: 'USD',
-        userId: widget.userId,
-        planId: widget.planId);
+      amount: widget.amount,
+      type: widget.type,
+      currency: 'USD',
+      opportunityId: widget.opportunityId,
+      userId: widget.userId,
+      planId: widget.planId,
+    );
     print(response.message);
     await dialog.hide();
     Scaffold.of(context).showSnackBar(SnackBar(

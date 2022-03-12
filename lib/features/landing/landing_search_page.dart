@@ -656,12 +656,14 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                       ),
                                       onTap: () {
                                         Navigator.push(
-                                                context,
-                                                new MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OpportunityForm(item,
-                                                            opportunityUploadPath)))
-                                            .then((value) {
+                                            context,
+                                            new MaterialPageRoute(
+                                                builder: (context) =>
+                                                    OpportunityForm(
+                                                        item,
+                                                        opportunityUploadPath,
+                                                        currentUser))).then(
+                                            (value) {
                                           if (value) {
                                             _loadOpportunitiesStats();
                                           }

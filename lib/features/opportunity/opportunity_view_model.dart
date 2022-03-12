@@ -191,4 +191,27 @@ class OpportunityViewModel {
       _onError(e.toString());
     }
   }
+
+  void createOpportunity(
+      Map<String, dynamic> data, _onSuccess, _onError) async {
+    try {
+      var res = await Network().postData(data, ORG_ADMIN_OPPORTUNITIES_URL);
+      var body = json.decode(res.body);
+      log("res ${res.statusCode}");
+      print(body);
+      if (res.statusCode == 201) {
+        EasyLoading.dismiss();
+        Opportunity cretedOpportunity =
+            Opportunity.fromJson(body["data"]["opportunity"]);
+        _onSuccess(cretedOpportunity, body["message"]);
+      } else {
+        EasyLoading.dismiss();
+        _onError(body["message"]);
+      }
+    } catch (e) {
+      print(e);
+      EasyLoading.dismiss();
+      _onError(e.toString());
+    }
+  }
 }

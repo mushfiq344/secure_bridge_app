@@ -10,7 +10,8 @@ class Opportunity {
   String description;
   String opportunityDate;
   int duration;
-  String reward;
+  int reward;
+  int maxParticipants;
 
   int type;
   String coverImage;
@@ -33,6 +34,7 @@ class Opportunity {
       this.opportunityDate,
       this.duration,
       this.reward,
+      this.maxParticipants,
       this.type,
       this.coverImage,
       this.iconImage,
@@ -53,6 +55,7 @@ class Opportunity {
     opportunityDate = json['opportunity_date'];
     duration = json['duration'];
     reward = json["reward"];
+    maxParticipants = json["max_participants"];
     type = json['type'];
     coverImage = json['cover_image'];
     iconImage = json['icon_image'];

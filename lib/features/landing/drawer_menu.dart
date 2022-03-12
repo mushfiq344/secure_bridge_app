@@ -226,11 +226,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                       fontWeight: FontWeight.w400)),
                               onTap: () {
                                 Navigator.push(
-                                        context,
-                                        new MaterialPageRoute(
-                                            builder: (context) =>
-                                                OpportunityForm(null, null)))
-                                    .then((value) {
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) => OpportunityForm(
+                                            null,
+                                            null,
+                                            widget.currentUser))).then((value) {
                                   if (value != null) {
                                     if (value) {
                                       Observable.instance.notifyObservers([

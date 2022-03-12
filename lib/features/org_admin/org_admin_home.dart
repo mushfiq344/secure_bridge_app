@@ -635,9 +635,9 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                                         new MaterialPageRoute(
                                                             builder: (context) =>
                                                                 OpportunityForm(
-                                                                  opportunity,
-                                                                  opportunityUploadPath,
-                                                                ))).then(
+                                                                    opportunity,
+                                                                    opportunityUploadPath,
+                                                                    currentUser))).then(
                                                         (value) {
                                                       getOpportunities();
                                                     });

@@ -35,7 +35,7 @@ class _MyOpportunityState extends State<MyOpportunity> {
   OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
   List<Opportunity> opportunities = <Opportunity>[];
   String opportunityUploadPath;
-  int totalReward = 0;
+
   int totalEnrolledUser = 0;
   int totalPendingApproval = 0;
   TextEditingController _searchController = TextEditingController();
@@ -59,7 +59,7 @@ class _MyOpportunityState extends State<MyOpportunity> {
           setState(() {
             opportunities = _opportunities;
             opportunityUploadPath = body["data"]["upload_path"];
-            totalReward = body["data"]["total_reward"];
+
             totalEnrolledUser = body["data"]["total_enrolled_users"];
             totalPendingApproval = body["data"]["total_pending_approval"];
           });
@@ -305,9 +305,9 @@ class _MyOpportunityState extends State<MyOpportunity> {
                                                         new MaterialPageRoute(
                                                             builder: (context) =>
                                                                 OpportunityForm(
-                                                                  opportunity,
-                                                                  opportunityUploadPath,
-                                                                ))).then(
+                                                                    opportunity,
+                                                                    opportunityUploadPath,
+                                                                    currentUser))).then(
                                                         (value) {
                                                       getOpportunities();
                                                     });

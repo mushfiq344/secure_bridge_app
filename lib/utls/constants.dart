@@ -190,3 +190,8 @@ const kErrorALert = "Error!";
 const kViewRequests = "View requests";
 const kSaveDraft = "save draft";
 const kHighlights = "Highlights";
+
+const PAYMENT_TYPES = {
+  "subscription": 0,
+  "opportunity": 1,
+};

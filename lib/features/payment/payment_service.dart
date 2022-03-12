@@ -37,7 +37,7 @@ class StripeService {
       var paymentMethod = await StripePayment.createPaymentMethod(
           PaymentMethodRequest(card: card));
       var paymentIntent = await StripeService.createPaymentIntent(
-          amount, currency, userId, planId);
+          amount: amount, currency: currency, userId: userId, planId: planId);
       print('payment intent $paymentIntent');
       var response = await StripePayment.confirmPaymentIntent(PaymentIntent(
           clientSecret: paymentIntent['client_secret'],
@@ -58,12 +58,22 @@ class StripeService {
   }
 
   static Future<StripeTransactionResponse> payWithNewCard(
-      {String amount, String currency, int userId, int planId}) async {
+      {String amount,
+      String currency,
+      int type,
+      int opportunityId,
+      int userId,
+      int planId}) async {
     try {
       var paymentMethod = await StripePayment.paymentRequestWithCardForm(
           CardFormPaymentRequest());
       var paymentIntent = await StripeService.createPaymentIntent(
-          amount, currency, userId, planId);
+          amount: amount,
+          currency: currency,
+          type: type,
+          opportunityId: opportunityId,
+          userId: userId,
+          planId: planId);
       var response = await StripePayment.confirmPaymentIntent(PaymentIntent(
           clientSecret: paymentIntent['client_secret'],
           paymentMethodId: paymentMethod.id));
@@ -94,11 +104,18 @@ class StripeService {
   }
 
   static Future<Map<String, dynamic>> createPaymentIntent(
-      String amount, String currency, int userId, int planId) async {
+      {String amount,
+      String currency,
+      int type,
+      int opportunityId,
+      int userId,
+      int planId}) async {
     try {
       Map<String, dynamic> body = {
         'amount': amount,
         'currency': currency,
+        'metadata[type]': type.toString(),
+        'metadata[opportunity_id]': opportunityId.toString(),
         'metadata[user_id]': userId.toString(),
         'metadata[plan_id]': planId.toString(),
         'payment_method_types[]': 'card'

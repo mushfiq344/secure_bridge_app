@@ -14,9 +14,12 @@ import 'package:intl/intl.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 import 'package:secure_bridges_app/Models/Opportunity.dart';
 import 'package:secure_bridges_app/Models/Tag.dart';
+import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
 import 'package:secure_bridges_app/features/org_admin/my_opportunity.dart';
 import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
+import 'package:secure_bridges_app/features/payment/payment_home.dart';
+
 import 'package:secure_bridges_app/network_utils/api.dart';
 import 'package:secure_bridges_app/network_utils/global_utility.dart';
 import 'package:secure_bridges_app/utility/urls.dart';
@@ -31,7 +34,8 @@ import 'package:secure_bridges_app/widgets/input_decoration.dart';
 class OpportunityForm extends StatefulWidget {
   final Opportunity oppotunity;
   final String uploadPath;
-  OpportunityForm(this.oppotunity, this.uploadPath);
+  final User currentUser;
+  OpportunityForm(this.oppotunity, this.uploadPath, this.currentUser);
   @override
   _OpportunityFormState createState() => _OpportunityFormState();
 }
@@ -72,6 +76,8 @@ class _OpportunityFormState extends State<OpportunityForm> {
       TextEditingController();
   final TextEditingController durationController = TextEditingController();
   final TextEditingController rewardController = TextEditingController();
+  final TextEditingController maxParticipantsController =
+      TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final _opportunityTypeKey = GlobalKey<FormBuilderFieldState>();
   Map<String, dynamic> _coverImageAreaMap = Map();
@@ -147,8 +153,9 @@ class _OpportunityFormState extends State<OpportunityForm> {
 
   @override
   void initState() {
-    if (widget.oppotunity != null)
+    if (widget.oppotunity != null) {
       getOpportunityFormDetails(widget.oppotunity.id);
+    }
 
     super.initState();
   }
@@ -169,7 +176,9 @@ class _OpportunityFormState extends State<OpportunityForm> {
           descriptionController.text = _opprtunity.description;
           opportunityDateController.text = _opprtunity.opportunityDate;
           durationController.text = _opprtunity.duration.toString();
-          rewardController.text = _opprtunity.reward;
+          rewardController.text = _opprtunity.reward.toString();
+          maxParticipantsController.text =
+              _opprtunity.maxParticipants.toString();
           _opportunityTypeKey.currentState
               .setValue(OPPORTUNITY_TYPES[_opprtunity.type]);
           locationController.text = _opprtunity.location;
@@ -447,7 +456,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                     SizedBox(height: 10),
                                     RichText(
                                       text: TextSpan(
-                                        text: "Reward",
+                                        text: "Reward per participant",
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: kMargin14),
@@ -462,7 +471,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                     SizedBox(height: 10),
                                     FormBuilderTextField(
                                       decoration: customInputDecoration(
-                                          'Reward',
+                                          'Reward per participant',
                                           fillColor:
                                               kLightPurpleBackgroundColor,
                                           borderColor: kBorderColor),
@@ -470,8 +479,55 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                       name: 'reward',
                                       validator: FormBuilderValidators.compose([
                                         /*FormBuilderValidators.required(context),*/
-                                        FormBuilderValidators.integer(context)
+                                        FormBuilderValidators.integer(context),
+                                        FormBuilderValidators.min(context, 0),
                                       ]),
+                                      keyboardType: TextInputType.number,
+                                    ),
+                                    SizedBox(height: 10),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "Max participants",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: kMargin14),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: '',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    FormBuilderTextField(
+                                      decoration: customInputDecoration(
+                                          'Max participants',
+                                          fillColor:
+                                              kLightPurpleBackgroundColor,
+                                          borderColor: kBorderColor),
+                                      controller: maxParticipantsController,
+                                      name: 'participants',
+                                      validator: rewardController
+                                                  .text.isEmpty ||
+                                              int.parse(
+                                                      rewardController.text) <=
+                                                  0
+                                          ? FormBuilderValidators.compose([
+                                              /*FormBuilderValidators.required(context),*/
+                                              FormBuilderValidators.integer(
+                                                  context),
+                                              // FormBuilderValidators.min(
+                                              //     context, 1),
+                                            ])
+                                          : FormBuilderValidators.compose([
+                                              FormBuilderValidators.required(
+                                                  context),
+                                              FormBuilderValidators.integer(
+                                                  context),
+                                              FormBuilderValidators.min(
+                                                  context, 1),
+                                            ]),
                                       keyboardType: TextInputType.number,
                                     ),
                                     SizedBox(height: 10),
@@ -540,151 +596,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                           .toList(),
                                     ),
                                     SizedBox(height: 10),
-                                    // SizedBox(height: kMargin16),
-                                    // Row(
-                                    //   children: [
-                                    //     Expanded(
-                                    //       flex: 1,
-                                    //       child: Container(
-                                    //         padding: EdgeInsets.all(kMargin14),
-                                    //         decoration: BoxDecoration(
-                                    //           border: Border.all(
-                                    //             color: kBorderColor,
-                                    //             width: 1.0,
-                                    //           ),
-                                    //           borderRadius:
-                                    //               BorderRadius.circular(
-                                    //                   kRadius10),
-                                    //         ),
-                                    //         child: GestureDetector(
-                                    //           onTap: () {
-                                    //             _showCoverPicker(context);
-                                    //           },
-                                    //           child: _coverImage != null
-                                    //               ? AspectRatio(
-                                    //                   aspectRatio: 16 / 9,
-                                    //                   child: Image.file(
-                                    //                       File(
-                                    //                           _coverImage.path),
-                                    //                       fit: BoxFit.cover),
-                                    //                 )
-                                    //               : Container(
-                                    //                   child: opportunity == null
-                                    //                       ? AspectRatio(
-                                    //                           aspectRatio:
-                                    //                               16 / 9,
-                                    //                           child: Image(
-                                    //                             image: AssetImage(
-                                    //                                 kAvatarIconPath),
-                                    //                             fit: BoxFit
-                                    //                                 .fitHeight, // use this
-                                    //                           ),
-                                    //                         )
-                                    //                       : CachedNetworkImage(
-                                    //                           imageUrl:
-                                    //                               "${BASE_URL}${widget.uploadPath}${opportunity.coverImage}",
-                                    //                           placeholder: (context,
-                                    //                                   url) =>
-                                    //                               Image(
-                                    //                                   image: AssetImage(
-                                    //                                       kPlaceholderImagePath)),
-                                    //                           errorWidget: (context,
-                                    //                                   url,
-                                    //                                   error) =>
-                                    //                               Image(
-                                    //                                   image: AssetImage(
-                                    //                                       kPlaceholderImagePath)),
-                                    //                           fit: BoxFit.fill,
-                                    //                           height: 100,
-                                    //                           width: 100,
-                                    //                         ),
-                                    //                 ),
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //     Expanded(
-                                    //       flex: 1,
-                                    //       child: Padding(
-                                    //         padding: const EdgeInsets.only(
-                                    //             left: kMargin10),
-                                    //         child: Text(
-                                    //           kUploadCover,
-                                    //           style: TextStyle(
-                                    //             color: kLabelColor,
-                                    //             fontSize: kMargin14,
-                                    //           ),
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
-                                    // SizedBox(height: kMargin16),
-                                    // Row(
-                                    //   children: [
-                                    //     Container(
-                                    //       padding: EdgeInsets.all(kMargin14),
-                                    //       decoration: BoxDecoration(
-                                    //         border: Border.all(
-                                    //           color: kBorderColor,
-                                    //           width: 1.0,
-                                    //         ),
-                                    //         borderRadius: BorderRadius.circular(
-                                    //             kRadius10),
-                                    //       ),
-                                    //       child: GestureDetector(
-                                    //         onTap: () {
-                                    //           _showIconPicker(context);
-                                    //         },
-                                    //         child: _iconImage != null
-                                    //             ? Image.file(
-                                    //                 File(_iconImage.path),
-                                    //                 height: 100,
-                                    //                 width: 100,
-                                    //                 fit: BoxFit.fitHeight,
-                                    //               )
-                                    //             : Container(
-                                    //                 child: opportunity == null
-                                    //                     ? Image(
-                                    //                         image: AssetImage(
-                                    //                             kAvatarIconPath),
-                                    //                         width: 100,
-                                    //                         height: 100,
-                                    //                       )
-                                    //                     : CachedNetworkImage(
-                                    //                         imageUrl:
-                                    //                             "${BASE_URL}${widget.uploadPath}${opportunity.iconImage}",
-                                    //                         placeholder: (context,
-                                    //                                 url) =>
-                                    //                             Image(
-                                    //                                 image: AssetImage(
-                                    //                                     kPlaceholderImagePath)),
-                                    //                         errorWidget: (context,
-                                    //                                 url,
-                                    //                                 error) =>
-                                    //                             Image(
-                                    //                                 image: AssetImage(
-                                    //                                     kPlaceholderImagePath)),
-                                    //                         fit: BoxFit.fill,
-                                    //                         height: 100,
-                                    //                         width: 100,
-                                    //                       ),
-                                    //               ),
-                                    //       ),
-                                    //     ),
-                                    //     SizedBox(width: kMargin24),
-                                    //     Expanded(
-                                    //       flex: 1,
-                                    //       child: Text(
-                                    //         kUploadIcon,
-                                    //         style: TextStyle(
-                                    //           color: kLabelColor,
-                                    //           fontSize: kMargin14,
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
-                                    // SizedBox(height: kMargin16),
+
                                     Container(
                                       child: Padding(
                                         padding: const EdgeInsets.all(16.0),
@@ -748,7 +660,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                                     print(_formKey
                                                         .currentState.value);
 
-                                                    _createOpportunity(
+                                                    createOpportunity(
                                                         OPPORTUNITY_STATUS_VALUES[
                                                             "Drafted"]);
                                                   } else {
@@ -781,7 +693,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                                     print(_formKey
                                                         .currentState.value);
 
-                                                    _createOpportunity(
+                                                    createOpportunity(
                                                         OPPORTUNITY_STATUS_VALUES[
                                                             "Published"]);
                                                   } else {
@@ -837,11 +749,79 @@ class _OpportunityFormState extends State<OpportunityForm> {
                                                       .validate()) {
                                                     print(_formKey
                                                         .currentState.value);
-
-                                                    _updateOpportunity(
-                                                        status:
-                                                            OPPORTUNITY_STATUS_VALUES[
-                                                                'Published']);
+                                                    if (rewardController
+                                                            .text.isEmpty ||
+                                                        int.parse(
+                                                                rewardController
+                                                                    .text) <=
+                                                            0) {
+                                                      _updateOpportunity(
+                                                          status:
+                                                              OPPORTUNITY_STATUS_VALUES[
+                                                                  'Published']);
+                                                    } else {
+                                                      int amount = int.parse(
+                                                              rewardController
+                                                                  .text) *
+                                                          int.parse(
+                                                              maxParticipantsController
+                                                                  .text) *
+                                                          100;
+                                                      Navigator.push(
+                                                          context,
+                                                          new MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      PaymentHome(
+                                                                        amount:
+                                                                            amount.toString(),
+                                                                        opportunityId: widget
+                                                                            .oppotunity
+                                                                            .id,
+                                                                        type: 1,
+                                                                        userId: widget
+                                                                            .currentUser
+                                                                            .id,
+                                                                      ))).then(
+                                                          (value) async {
+                                                        if (value != null) {
+                                                          if (value) {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder: (_) =>
+                                                                    CustomAlertDialogue(
+                                                                        "Success!",
+                                                                        'You Have completed payment for this opportunity')).then(
+                                                                (value) {
+                                                              _updateOpportunity(
+                                                                  status: OPPORTUNITY_STATUS_VALUES[
+                                                                      'Published']);
+                                                            });
+                                                          } else {
+                                                            await Navigator
+                                                                .pushAndRemoveUntil(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          OrgAdminHome()),
+                                                              (route) => false,
+                                                            );
+                                                          }
+                                                        } else {
+                                                          await Navigator
+                                                              .pushAndRemoveUntil(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        OrgAdminHome()),
+                                                            (route) => false,
+                                                          );
+                                                        }
+                                                      });
+                                                    }
                                                   } else {
                                                     // EasyLoading.showError(
                                                     //     "validation failed");
@@ -1000,7 +980,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         });
   }
 
-  void _createOpportunity(int status) async {
+  void createOpportunity(int status) async {
     String description = await _descriptionKeyEditor.currentState?.getText();
     // getText() is buggy and doesn't work first time when it's called
     await Future.delayed(Duration(milliseconds: 500));
@@ -1032,38 +1012,85 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
+        'max_participants': maxParticipantsController.text,
         'type':
             OPPORTUNITY_TYPES_VALUES[_opportunityTypeKey.currentState.value],
-        'status': status,
         'location': locationController.text,
         'tag_values': tagValues
       };
       EasyLoading.show(status: kLoading);
-      var res = await Network().postData(data, ORG_ADMIN_OPPORTUNITIES_URL);
-      var body = json.decode(res.body);
-      log("res ${res.statusCode}");
-      log("body : ${body}");
-      if (res.statusCode == 201) {
-        print("success");
-        EasyLoading.dismiss();
-        showDialog(
-            context: context,
-            builder: (_) => CustomAlertDialogue("Success!", body['message']));
-        // EasyLoading.showSuccess(body["message"]);
-        await Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => OrgAdminHome()),
-          (route) => false,
-        );
+
+      if (rewardController.text.isEmpty ||
+          int.parse(rewardController.text) <= 0 ||
+          status == OPPORTUNITY_STATUS_VALUES["Drafted"]) {
+        //if no reward or a draft, user can draft or publish as he pleases
+        data["status"] = status;
+        _opportunityViewModel.createOpportunity(data,
+            (Opportunity createdOpportunity, String success) async {
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Success!", success));
+          await Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => OrgAdminHome()),
+            (route) => false,
+          );
+        }, (String error) {
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error", error));
+        });
       } else {
-        EasyLoading.dismiss();
-        showDialog(
-            context: context,
-            builder: (_) => CustomAlertDialogue("Error!", body['message']));
-        // EasyLoading.showError(body['message']);
+        data["status"] = OPPORTUNITY_STATUS_VALUES["Drafted"];
+        _opportunityViewModel.createOpportunity(data,
+            (Opportunity createdOpportunity, String success) async {
+          int amount = int.parse(rewardController.text) *
+              int.parse(maxParticipantsController.text) *
+              100;
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => PaymentHome(
+                        amount: amount.toString(),
+                        opportunityId: createdOpportunity.id,
+                        type: 1,
+                        userId: widget.currentUser.id,
+                      ))).then((value) async {
+            if (value != null) {
+              if (value) {
+                showDialog(
+                        context: context,
+                        builder: (_) => CustomAlertDialogue("Success!",
+                            'You Have completed payment for this opportunity'))
+                    .then((value) async {
+                  await Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => OrgAdminHome()),
+                    (route) => false,
+                  );
+                });
+              } else {
+                await Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => OrgAdminHome()),
+                  (route) => false,
+                );
+              }
+            } else {
+              await Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => OrgAdminHome()),
+                (route) => false,
+              );
+            }
+          });
+        }, (String error) {
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error", error));
+        });
       }
     } catch (e) {
-      print(e);
       EasyLoading.dismiss();
       // EasyLoading.showError(e.toString());
       showDialog(
@@ -1087,6 +1114,7 @@ class _OpportunityFormState extends State<OpportunityForm> {
         'opportunity_date': opportunityDateController.text,
         'duration': durationController.text,
         'reward': rewardController.text,
+        'max_participants': maxParticipantsController.text,
         'type':
             OPPORTUNITY_TYPES_VALUES[_opportunityTypeKey.currentState.value],
         'status': status,
