@@ -13,6 +13,7 @@ import 'package:secure_bridges_app/features/org_admin/org_admin_home.dart';
 
 import 'package:secure_bridges_app/features/payment/payment_home.dart';
 import 'package:secure_bridges_app/features/profile/profile_form.dart';
+import 'package:secure_bridges_app/features/rewards/rewards_list.dart';
 import 'package:secure_bridges_app/features/subscriptions/plans_list.dart';
 import 'package:secure_bridges_app/features/user/user_home.dart';
 import 'package:secure_bridges_app/features/user/user_view_model.dart';
@@ -184,29 +185,61 @@ class _CustomDrawerState extends State<CustomDrawer> {
               },
             ),
             widget.currentUser.userType == 0
-                ? ListTile(
-                    leading: Image(
-                      height: 25,
-                      width: 25,
-                      image: AssetImage(kHomeIconPath),
-                    ),
-                    title: Text('My Opportunity',
-                        style: TextStyle(
-                            fontSize: kMargin22, fontWeight: FontWeight.w400)),
-                    onTap: () async {
-                      bool callApi = await shouldMakeApiCall(context);
-                      if (!callApi) return;
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) =>
-                                  UserHome(widget.currentUser))).then((value) {
-                        Observable.instance.notifyObservers([
-                          "_LandingSearchPageState",
-                        ], notifyName: "可以通过notifyName判断通知");
-                      });
-                      // Here you can give your route to navigate
-                    },
+                ? Column(
+                    children: [
+                      ListTile(
+                        leading: Image(
+                          height: 25,
+                          width: 25,
+                          image: AssetImage(kHomeIconPath),
+                        ),
+                        title: Text('My Opportunity',
+                            style: TextStyle(
+                                fontSize: kMargin22,
+                                fontWeight: FontWeight.w400)),
+                        onTap: () async {
+                          bool callApi = await shouldMakeApiCall(context);
+                          if (!callApi) return;
+                          Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) =>
+                                          UserHome(widget.currentUser)))
+                              .then((value) {
+                            Observable.instance.notifyObservers([
+                              "_LandingSearchPageState",
+                            ], notifyName: "可以通过notifyName判断通知");
+                          });
+                          // Here you can give your route to navigate
+                        },
+                      ),
+                      ListTile(
+                        leading: Image(
+                          height: 25,
+                          width: 25,
+                          image: AssetImage(kHomeIconPath),
+                        ),
+                        title: Text('Rewards',
+                            style: TextStyle(
+                                fontSize: kMargin22,
+                                fontWeight: FontWeight.w400)),
+                        onTap: () async {
+                          bool callApi = await shouldMakeApiCall(context);
+                          if (!callApi) return;
+                          Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) =>
+                                          RewardList(widget.currentUser)))
+                              .then((value) {
+                            Observable.instance.notifyObservers([
+                              "_LandingSearchPageState",
+                            ], notifyName: "可以通过notifyName判断通知");
+                          });
+                          // Here you can give your route to navigate
+                        },
+                      ),
+                    ],
                   )
                 : SizedBox(),
 
