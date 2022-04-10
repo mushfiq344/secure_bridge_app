@@ -92,7 +92,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
     await Utils.checkInternetAvailability().then((value) {
       if (value) {
         _orgAdminViewModel.getOpportunities((Map<dynamic, dynamic> body) {
-          log("body in class ${body}");
+          log("body in class ${body["data"]["total_reward"]}");
           List<Opportunity> _opportunities = List<Opportunity>.from(body['data']
                   ['opportunities']
               .map((i) => Opportunity.fromJson(i)));
@@ -117,7 +117,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                       element.status == OPPORTUNITY_STATUS_VALUES['Published'])
                   .toList();
               opportunityUploadPath = body["data"]["upload_path"];
-              totalReward = body["data"]["total_reward"];
+              totalReward = int.parse(body["data"]["total_reward"]);
               totalEnrolledUser = body["data"]["total_enrolled_users"];
               totalPendingApproval = body["data"]["total_pending_approval"];
               totalRewardRequests = body["data"]["total_reward_request"];
