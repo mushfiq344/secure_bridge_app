@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:secure_bridges_app/Models/User.dart';
 import 'package:secure_bridges_app/features/authentication/authentication_view_model.dart';
+import 'package:secure_bridges_app/features/forum/threads.dart';
 import 'package:secure_bridges_app/features/landing/landing_view_model.dart';
 import 'package:secure_bridges_app/features/opportunity/opportunity_form.dart';
 import 'package:secure_bridges_app/features/authentication/login.dart';
@@ -365,8 +366,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => SecureBridgeWebView(
-                            widget.currentUser.email, 'forum')));
+                        // builder: (context) => SecureBridgeWebView(
+                        //     widget.currentUser.email, 'forum')
+                        builder: (context) => Threads(
+                              currentUser: widget.currentUser,
+                            )));
               },
             ),
             // ListTile(

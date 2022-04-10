@@ -1,4 +1,4 @@
-const BASE_URL = "https://7eec-103-98-106-1.ngrok.io/";
+const BASE_URL = "https://86fd-103-98-106-1.ngrok.io/";
 // const BASE_URL = "https://656c-103-98-106-1.ngrok.io/";
 const SIGN_IN_URL = "api/login";
 const OPPORTUNITIES_URL = "api/opportunities";
@@ -20,3 +20,8 @@ const NOTIFICATIONS_URL = "api/notifications";
 const PLANS_URL = "api/org-admin/plans";
 const COMPLETE_REGISTRATION_URL = "api/complete-registration";
 const PROFILE_URL = "api/profile";
+const USER_REWARDS_URL = "api/user/rewards";
+const FORUM_THREADS_URL = "api/forum/category/1/thread";
+const FORUM_THREAD_URL = "api/forum/thread";
+
+const FORUM_POST_URL = "api/forum/post";
