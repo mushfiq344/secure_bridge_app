@@ -175,9 +175,9 @@ class _ProfileFormState extends State<ProfileForm> {
                                   imageUrl:
                                       "${BASE_URL}${userProfileImagePath}${profile.photo}",
                                   placeholder: (context, url) => Image(
-                                      image: AssetImage(kPlaceholderImagePath)),
+                                      image: AssetImage(kAddUserImagePath)),
                                   errorWidget: (context, url, error) => Image(
-                                      image: AssetImage(kPlaceholderImagePath)),
+                                      image: AssetImage(kAddUserImagePath)),
                                   fit: BoxFit.fill,
                                   height:
                                       MediaQuery.of(context).size.height / 2,
@@ -332,58 +332,56 @@ class _ProfileFormState extends State<ProfileForm> {
                                             .currentState.value['gender']],
                                       };
                                       if (profile == null) {
-                                        if (_profileImageAreaMap[kImage] ==
-                                            null) {
-                                          // EasyLoading.showError(
-                                          //     "please add profile image");
+                                        // if (_profileImageAreaMap[kImage] ==
+                                        //     null) {
+                                        //   // EasyLoading.showError(
+                                        //   //     "please add profile image");
+                                        //   showDialog(
+                                        //       context: context,
+                                        //       builder: (_) => CustomAlertDialogue(
+                                        //           "Error!",
+                                        //           "please add profile image"));
+                                        //   return;
+                                        // } else {
+                                        data['profile_image'] =
+                                            _profileImageAreaMap[kImage];
+
+                                        _profileViewModel.createProfile(data,
+                                            (success) async {
+                                          // await EasyLoading.showSuccess(
+                                          //     success);
                                           showDialog(
                                               context: context,
-                                              builder: (_) => CustomAlertDialogue(
-                                                  "Error!",
-                                                  "please add profile image"));
-                                          return;
-                                        } else {
-                                          data['profile_image'] =
-                                              _profileImageAreaMap[kImage];
-
-                                          _profileViewModel.createProfile(data,
-                                              (success) async {
-                                            // await EasyLoading.showSuccess(
-                                            //     success);
-                                            showDialog(
-                                                context: context,
-                                                builder: (_) =>
-                                                    CustomAlertDialogue(
-                                                        "Success!", success));
-                                            if (currentUser.userType == 0) {
-                                              await Navigator
-                                                  .pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LandingSearchPage()),
-                                                (route) => false,
-                                              );
-                                            } else if (currentUser.userType ==
-                                                1) {
-                                              await Navigator
-                                                  .pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrgAdminHome()),
-                                                (route) => false,
-                                              );
-                                            }
-                                          }, (error) {
-                                            // EasyLoading.showError(error);
-                                            showDialog(
-                                                context: context,
-                                                builder: (_) =>
-                                                    CustomAlertDialogue(
-                                                        "Error!", error));
-                                          });
-                                        }
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Success!", success));
+                                          if (currentUser.userType == 0) {
+                                            await Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LandingSearchPage()),
+                                              (route) => false,
+                                            );
+                                          } else if (currentUser.userType ==
+                                              1) {
+                                            await Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrgAdminHome()),
+                                              (route) => false,
+                                            );
+                                          }
+                                        }, (error) {
+                                          // EasyLoading.showError(error);
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  CustomAlertDialogue(
+                                                      "Error!", error));
+                                        });
+                                        // }
                                       } else {
                                         data['id'] = profile.id;
                                         data['user_id'] = currentUser.id;
@@ -490,11 +488,11 @@ class _ProfileFormState extends State<ProfileForm> {
                                               "${BASE_URL}${userProfileImagePath}${profile.photo}",
                                           placeholder: (context, url) => Image(
                                               image: AssetImage(
-                                                  kPlaceholderImagePath)),
+                                                  kAddUserImagePath)),
                                           errorWidget: (context, url, error) =>
                                               Image(
                                                   image: AssetImage(
-                                                      kPlaceholderImagePath)),
+                                                      kAddUserImagePath)),
                                           fit: BoxFit.fill,
                                           height: MediaQuery.of(context)
                                                   .size
