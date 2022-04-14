@@ -532,7 +532,7 @@ class _UserHomeState extends State<UserHome> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        "ADDED TO FAVOURITES",
+                                                        "ADDED TO FAVORITE",
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -546,7 +546,7 @@ class _UserHomeState extends State<UserHome> {
                                                         height: 33,
                                                       ),
                                                       Text(
-                                                        "Opportunity has been added to your favourties",
+                                                        "Opportunity has been added to your favorite",
                                                         textAlign:
                                                             TextAlign.center,
                                                       ),

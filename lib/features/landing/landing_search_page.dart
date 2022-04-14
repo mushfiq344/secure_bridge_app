@@ -429,7 +429,7 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                                                   .center,
                                                           children: [
                                                             Text(
-                                                              "ADDED TO FAVOURITES",
+                                                              "ADDED TO FAVORITE",
                                                               textAlign:
                                                                   TextAlign
                                                                       .center,

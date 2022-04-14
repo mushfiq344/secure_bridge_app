@@ -558,7 +558,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        "ADDED TO FAVOURITES",
+                                                        "ADDED TO FAVORITE",
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -572,7 +572,7 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                         height: 33,
                                                       ),
                                                       Text(
-                                                        "Opportunity has been added to your favourties",
+                                                        "Opportunity has been added to your favorite",
                                                         textAlign:
                                                             TextAlign.center,
                                                       ),
