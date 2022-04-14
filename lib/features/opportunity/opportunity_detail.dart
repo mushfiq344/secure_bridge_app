@@ -506,8 +506,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                         ),
                                         Text(
                                           inUserWithList
-                                              ? "remove from favourites"
-                                              : "add to favourite",
+                                              ? "remove from favorite"
+                                              : "add to favorite",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: kMargin14),
