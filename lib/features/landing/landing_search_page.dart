@@ -588,7 +588,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                                                       kPurpleColor),
                                                             ),
                                                             SizedBox(
-                                                              height: 33,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  33,
                                                             ),
                                                             Text(
                                                               "Your request to enroll to the oppoertunity is pending for admin review. You’ll get notification once the request is approved",
@@ -597,7 +601,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                                                       .center,
                                                             ),
                                                             SizedBox(
-                                                              height: 33,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  33,
                                                             ),
                                                             PAButton(
                                                               "Ok",
