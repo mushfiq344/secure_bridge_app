@@ -92,7 +92,6 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
     await Utils.checkInternetAvailability().then((value) {
       if (value) {
         _orgAdminViewModel.getOpportunities((Map<dynamic, dynamic> body) {
-          log("body in class ${body["data"]["total_reward"]}");
           List<Opportunity> _opportunities = List<Opportunity>.from(body['data']
                   ['opportunities']
               .map((i) => Opportunity.fromJson(i)));
@@ -117,7 +116,25 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                       element.status == OPPORTUNITY_STATUS_VALUES['Published'])
                   .toList();
               opportunityUploadPath = body["data"]["upload_path"];
-              totalReward = int.parse(body["data"]["total_reward"]);
+
+              switch (body["data"]["total_reward"].runtimeType) {
+                case int:
+                  {
+                    totalReward = body["data"]["total_reward"];
+                  }
+                  break;
+                case String:
+                  {
+                    totalReward = int.parse(body["data"]["total_reward"]);
+                  }
+                  break;
+                default:
+                  {
+                    totalReward = 0;
+                  }
+                  break;
+              }
+
               totalEnrolledUser = body["data"]["total_enrolled_users"];
               totalPendingApproval = body["data"]["total_pending_approval"];
               totalRewardRequests = body["data"]["total_reward_request"];
@@ -399,7 +416,7 @@ class _OrgAdminHomeState extends State<OrgAdminHome> {
                                               vertical: kMargin8,
                                               horizontal: kMargin24),
                                           child: Text(
-                                            "reward request [10]",
+                                            "reward request [${totalRewardRequests}]",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: kInactiveColor),
