@@ -263,8 +263,8 @@ class _ProfileFormState extends State<ProfileForm> {
                                         name: 'address',
                                         validator:
                                             FormBuilderValidators.compose([
-                                          FormBuilderValidators.required(
-                                              context),
+                                          // FormBuilderValidators.required(
+                                          //     context),
                                         ]),
                                         keyboardType: TextInputType.text,
                                       ),
