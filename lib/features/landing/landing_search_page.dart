@@ -443,7 +443,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                                                       kPurpleColor),
                                                             ),
                                                             SizedBox(
-                                                              height: 33,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  33,
                                                             ),
                                                             Text(
                                                               "Opportunity has been added to your favourties",
@@ -452,7 +456,11 @@ class _LandingSearchPageState extends State<LandingSearchPage> with Observer {
                                                                       .center,
                                                             ),
                                                             SizedBox(
-                                                              height: 33,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  33,
                                                             ),
                                                             PAButton(
                                                               "Ok",

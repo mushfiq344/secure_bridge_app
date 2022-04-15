@@ -569,7 +569,11 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                                 kPurpleColor),
                                                       ),
                                                       SizedBox(
-                                                        height: 33,
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height /
+                                                            33,
                                                       ),
                                                       Text(
                                                         "Opportunity has been added to your favorite",
@@ -577,7 +581,11 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                             TextAlign.center,
                                                       ),
                                                       SizedBox(
-                                                        height: 33,
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height /
+                                                            33,
                                                       ),
                                                       PAButton(
                                                         "Ok",
@@ -729,7 +737,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                                             kPurpleColor),
                                                                   ),
                                                                   SizedBox(
-                                                                    height: 33,
+                                                                    height: MediaQuery.of(context)
+                                                                            .size
+                                                                            .height /
+                                                                        33,
                                                                   ),
                                                                   Text(
                                                                     "Your request to enroll to the oppoertunity is pending for admin review. You’ll get notification once the request is approved",
@@ -738,7 +749,10 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                                                             .center,
                                                                   ),
                                                                   SizedBox(
-                                                                    height: 33,
+                                                                    height: MediaQuery.of(context)
+                                                                            .size
+                                                                            .height /
+                                                                        33,
                                                                   ),
                                                                   PAButton(
                                                                     "Ok",

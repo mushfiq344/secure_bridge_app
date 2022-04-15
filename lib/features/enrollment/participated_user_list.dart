@@ -202,7 +202,11 @@ class _ParticipatedUserListState extends State<ParticipatedUserList> {
                                                                   kPurpleColor),
                                                         ),
                                                         SizedBox(
-                                                          height: 33,
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height /
+                                                              33,
                                                         ),
                                                         Text(
                                                           "User has been Rewarded",
@@ -210,7 +214,11 @@ class _ParticipatedUserListState extends State<ParticipatedUserList> {
                                                               TextAlign.center,
                                                         ),
                                                         SizedBox(
-                                                          height: 33,
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height /
+                                                              33,
                                                         ),
                                                         PAButton(
                                                           "Ok",

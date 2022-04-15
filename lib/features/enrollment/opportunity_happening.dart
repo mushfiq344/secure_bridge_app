@@ -308,7 +308,11 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                                                                 kPurpleColor),
                                                       ),
                                                       SizedBox(
-                                                        height: 33,
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height /
+                                                            33,
                                                       ),
                                                       Text(
                                                         "User participated in the event",
@@ -316,7 +320,11 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                                                             TextAlign.center,
                                                       ),
                                                       SizedBox(
-                                                        height: 33,
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height /
+                                                            33,
                                                       ),
                                                       PAButton(
                                                         "Ok",

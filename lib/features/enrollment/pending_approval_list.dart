@@ -204,7 +204,11 @@ class _PendingEnrolledOpportunityUserState
                                                                   kPurpleColor),
                                                         ),
                                                         SizedBox(
-                                                          height: 33,
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height /
+                                                              33,
                                                         ),
                                                         Text(
                                                           "User has been approved",
@@ -212,7 +216,11 @@ class _PendingEnrolledOpportunityUserState
                                                               TextAlign.center,
                                                         ),
                                                         SizedBox(
-                                                          height: 33,
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height /
+                                                              33,
                                                         ),
                                                         PAButton(
                                                           "Ok",

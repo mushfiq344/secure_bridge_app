@@ -543,7 +543,11 @@ class _UserHomeState extends State<UserHome> {
                                                                 kPurpleColor),
                                                       ),
                                                       SizedBox(
-                                                        height: 33,
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height /
+                                                            33,
                                                       ),
                                                       Text(
                                                         "Opportunity has been added to your favorite",
@@ -551,7 +555,11 @@ class _UserHomeState extends State<UserHome> {
                                                             TextAlign.center,
                                                       ),
                                                       SizedBox(
-                                                        height: 33,
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height /
+                                                            33,
                                                       ),
                                                       PAButton(
                                                         "Ok",
@@ -686,7 +694,11 @@ class _UserHomeState extends State<UserHome> {
                                                                       kPurpleColor),
                                                             ),
                                                             SizedBox(
-                                                              height: 33,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  33,
                                                             ),
                                                             Text(
                                                               "Your request to enroll to the oppoertunity is pending for admin review. You’ll get notification once the request is approved",
@@ -695,7 +707,11 @@ class _UserHomeState extends State<UserHome> {
                                                                       .center,
                                                             ),
                                                             SizedBox(
-                                                              height: 33,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  33,
                                                             ),
                                                             PAButton(
                                                               "Ok",
