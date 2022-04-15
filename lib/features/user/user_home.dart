@@ -175,8 +175,20 @@ class _UserHomeState extends State<UserHome> {
                               color: kPurpleBackGround,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(26)),
-                              child: Image(
-                                image: AssetImage(kStarconPath),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage(kStarconPath),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "All",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
@@ -214,8 +226,20 @@ class _UserHomeState extends State<UserHome> {
                               color: kPurpleBackGround,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(26)),
-                              child: Image(
-                                image: AssetImage(kHomeWhiteIconPath),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage(kHomeWhiteIconPath),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "Shelter",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
@@ -257,8 +281,20 @@ class _UserHomeState extends State<UserHome> {
                               color: kPurpleBackGround,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(26)),
-                              child: Image(
-                                image: AssetImage(kMultipleUsersIconPath),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage(kMultipleUsersIconPath),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "Counselling",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
@@ -300,8 +336,20 @@ class _UserHomeState extends State<UserHome> {
                               color: kPurpleBackGround,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(26)),
-                              child: Image(
-                                image: AssetImage(kPizzaIconPath),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage(kPizzaIconPath),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "Food",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
