@@ -25,6 +25,24 @@ class UserViewModel {
     }
   }
 
+  getRewards(_success, _error) async {
+    try {
+      EasyLoading.show(status: kLoading);
+      var res = await Network().getData(USER_REWARDS_URL);
+      var body = json.decode(res.body);
+      if (res.statusCode == 200) {
+        EasyLoading.dismiss();
+        _success(body);
+      } else {
+        EasyLoading.dismiss();
+        _error(body["message"]);
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      _error(e.toString());
+    }
+  }
+
   loadUserData(_success, _error) async {
     try {
       SharedPreferences localStorage = await SharedPreferences.getInstance();

@@ -281,7 +281,6 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                               TextFormField(
-                                initialValue: 'user@itsolutionstuff.com',
                                 style: TextStyle(color: kPurpleColor),
                                 cursorColor: kPurpleColor,
                                 keyboardType: TextInputType.text,
@@ -301,7 +300,6 @@ class _LoginState extends State<Login> {
                                 height: kMargin10,
                               ),
                               TextFormField(
-                                initialValue: '12345678',
                                 style: TextStyle(color: kPurpleColor),
                                 cursorColor: kPurpleColor,
                                 keyboardType: TextInputType.text,

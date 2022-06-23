@@ -20,7 +20,8 @@ import 'package:secure_bridges_app/widgets/input_decoration.dart';
 
 class OpportunityHappening extends StatefulWidget {
   final Opportunity opportunity;
-  OpportunityHappening(this.opportunity);
+  final String opportunityUploadPath;
+  OpportunityHappening(this.opportunity, this.opportunityUploadPath);
   @override
   _OpportunityHappeningState createState() => _OpportunityHappeningState();
 }
@@ -100,6 +101,8 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
 
   @override
   Widget build(BuildContext context) {
+    String coverUrl =
+        "${BASE_URL}${widget.opportunityUploadPath}${widget.opportunity.coverImage}";
     return Scaffold(
       backgroundColor: kGreyBackgroundColor,
       appBar: AppBar(
@@ -124,7 +127,7 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                   child: Column(
                     children: [
                       Text(
-                        "30 Day Activity - Establish a Habit of Daily Journaling",
+                        "${widget.opportunity.duration} Day Activity - ${widget.opportunity.title}",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: kMargin24, fontWeight: FontWeight.w700),
@@ -132,7 +135,19 @@ class _OpportunityHappeningState extends State<OpportunityHappening> {
                       SizedBox(
                         height: kMargin10,
                       ),
-                      Image(image: AssetImage(kQrCodeImagePath)),
+                      AspectRatio(
+                        aspectRatio: 1 / .5,
+                        child: ClipRRect(
+                          child: CachedNetworkImage(
+                            imageUrl: coverUrl,
+                            placeholder: (context, url) =>
+                                Image(image: AssetImage(kPlaceholderImagePath)),
+                            errorWidget: (context, url, error) =>
+                                Image(image: AssetImage(kPlaceholderImagePath)),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         height: kMargin20,
                       ),

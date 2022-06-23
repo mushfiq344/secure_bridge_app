@@ -1,4 +1,4 @@
-const BASE_URL = "https://86fd-103-98-106-1.ngrok.io/";
+const BASE_URL = "https://app.securebridgesmke.com/";
 // const BASE_URL = "https://656c-103-98-106-1.ngrok.io/";
 const SIGN_IN_URL = "api/login";
 const OPPORTUNITIES_URL = "api/opportunities";

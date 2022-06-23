@@ -44,6 +44,7 @@ dependencies:
   stripe_payment: ^1.0.7
 
   progress_dialog: ^1.2.2
+  socket_io_client: ^0.9.12
 
 
   # The following adds the Cupertino Icons font to your application.

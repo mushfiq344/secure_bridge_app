@@ -195,3 +195,8 @@ const PAYMENT_TYPES = {
   "subscription": 0,
   "opportunity": 1,
 };
+
+const STRIPE_PUBLISHED_KEY =
+    "pk_test_51HyxgrJXOJT1uONrLkDSIxUMPMSmZS0tWGyGYwMaCYmSars3GLF5Qv4NHSpa6SVD4ANIi3svzM0kh1wrGqBX1TeX00JztXeM3n";
+const STRIPE_SECRET_KEY =
+    "sk_test_51HyxgrJXOJT1uONrYGBLDpC4PDePMgMZ2CnBEOQJIKttBlNKUvu42ypD2ExG4tV5XMvpKayAd9W3ucy62B060tV100JeNQFLCm";

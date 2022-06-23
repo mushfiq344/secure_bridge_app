@@ -1,0 +1,687 @@
+import 'dart:developer';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:secure_bridges_app/Models/Opportunity.dart';
+import 'package:secure_bridges_app/Models/User.dart';
+import 'package:secure_bridges_app/features/opportunity/opportunity_detail.dart';
+
+import 'package:secure_bridges_app/features/opportunity/opportunity_view_model.dart';
+import 'package:secure_bridges_app/features/user/user_view_model.dart';
+import 'package:secure_bridges_app/network_utils/global_utility.dart';
+import 'package:secure_bridges_app/utility/urls.dart';
+import 'package:secure_bridges_app/utls/color_codes.dart';
+import 'package:secure_bridges_app/utls/constants.dart';
+import 'package:secure_bridges_app/utls/dimens.dart';
+import 'package:secure_bridges_app/widgets/PAButton.dart';
+import 'package:secure_bridges_app/widgets/custom_alert_dialogue.dart';
+import 'package:secure_bridges_app/widgets/input_decoration.dart';
+
+class RewardList extends StatefulWidget {
+  final User currentUser;
+  RewardList(this.currentUser);
+  @override
+  _RewardListState createState() => _RewardListState();
+}
+
+class _RewardListState extends State<RewardList> {
+  String name;
+  String email;
+  int userId;
+  String profilePictureUrl;
+  int userType = 0;
+  UserViewModel _userViewModel = UserViewModel();
+  OpportunityViewModel _opportunityViewModel = OpportunityViewModel();
+  List<Opportunity> allOpportunities = <Opportunity>[];
+  List<Opportunity> opportunities = <Opportunity>[];
+  String opportunityUploadPath;
+  List<int> userWishes = [];
+  List<int> userEnrollments = [];
+  int credits = 0;
+  final TextEditingController creditController = TextEditingController();
+  final _formKey = GlobalKey<FormBuilderState>();
+  @override
+  void initState() {
+    loadUserData();
+    loadUserOpportunitiesData();
+    super.initState();
+  }
+
+  void loadUserData() {
+    _userViewModel.loadUserData((Map<dynamic, dynamic> user) {
+      setState(() {
+        userId = user['id'];
+        name = user['name'];
+        email = user['email'];
+        profilePictureUrl = user['profile_image'];
+        print("user type ${user['user_type']}");
+        userType = user['user_type'];
+      });
+    }, (error) {
+      showDialog(
+          context: context,
+          builder: (_) => CustomAlertDialogue("Error!", error));
+      // EasyLoading.showError(error);
+    });
+  }
+
+  void loadUserOpportunitiesData() {
+    Utils.checkInternetAvailability().then((value) {
+      if (value) {
+        _userViewModel.getRewards((Map<dynamic, dynamic> body) {
+          log("body in class ${body}");
+          List<Opportunity> _opportunities = List<Opportunity>.from(body['data']
+                  ['opportunities']
+              .map((i) => Opportunity.fromJson(i)));
+          setState(() {
+            allOpportunities = _opportunities;
+            opportunities = _opportunities;
+            opportunityUploadPath = body["data"]["upload_path"];
+            userWishes = body['data']['user_wishes'].cast<int>();
+            userEnrollments = body['data']['user_enrollments'].cast<int>();
+            credits = body['data']['total_credits'];
+          });
+        }, (error) {
+          showDialog(
+              context: context,
+              builder: (_) => CustomAlertDialogue("Error!", error));
+          // EasyLoading.showError(error);
+        });
+      } else {
+        EasyLoading.dismiss();
+        // EasyLoading.showInfo(kNoInternetAvailable);
+        showDialog(
+            context: context,
+            builder: (_) =>
+                CustomAlertDialogue("Error!", kNoInternetAvailable));
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Rewards",
+          style: TextStyle(color: kPurpleColor),
+        ),
+        backgroundColor: kAppBarBackgroundColor,
+        iconTheme: IconThemeData(color: kPurpleColor),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: kMargin16, vertical: kMargin16),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: kPinkBackground,
+                      borderRadius: BorderRadius.all(Radius.circular(29))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: kMargin48, horizontal: kMargin32),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "REWARD LIST",
+                          style: TextStyle(
+                              fontSize: 36,
+                              color: kPurpleColor,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        Text(
+                          "Total Credits Earned: ${credits.toString()}",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: kPurpleColor,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FormBuilder(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              FormBuilderTextField(
+                                decoration: customInputDecoration(
+                                    'Redeem credit',
+                                    fillColor: kLightPurpleBackgroundColor,
+                                    borderColor: kBorderColor),
+                                controller: creditController,
+                                name: 'credit',
+                                validator: FormBuilderValidators.compose([
+                                  /*FormBuilderValidators.required(context),*/
+                                  FormBuilderValidators.integer(context),
+                                  FormBuilderValidators.min(context, 0),
+                                ]),
+                                keyboardType: TextInputType.number,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              PAButton("Redeem", true, () {
+                                _formKey.currentState.save();
+                                if (_formKey.currentState.validate()) {
+                                  if (int.parse(creditController.text) >
+                                      credits) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => CustomAlertDialogue(
+                                            kErrorALert,
+                                            "You can not redeem more than your credit"));
+                                  }
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => CustomAlertDialogue(
+                                          kErrorALert, "validation failed"));
+                                }
+                              })
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: kMargin20,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(26),
+                                  topRight: Radius.circular(26),
+                                  bottomLeft: Radius.circular(26),
+                                  bottomRight: Radius.circular(26)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(1),
+                                  spreadRadius: -3,
+                                  blurRadius: 5,
+                                  offset: Offset(
+                                      1, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Card(
+                              color: kPurpleBackGround,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(26)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage(kStarconPath),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "All",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            opportunities = allOpportunities;
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(26),
+                                  topRight: Radius.circular(26),
+                                  bottomLeft: Radius.circular(26),
+                                  bottomRight: Radius.circular(26)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(1),
+                                  spreadRadius: -3,
+                                  blurRadius: 5,
+                                  offset: Offset(
+                                      1, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Card(
+                              color: kPurpleBackGround,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(26)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage(kHomeWhiteIconPath),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "Shelter",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          List<Opportunity> filteredOpportunities =
+                              allOpportunities.where((element) {
+                            return element.type == 0;
+                          }).toList();
+                          setState(() {
+                            opportunities = filteredOpportunities;
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(26),
+                                  topRight: Radius.circular(26),
+                                  bottomLeft: Radius.circular(26),
+                                  bottomRight: Radius.circular(26)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(1),
+                                  spreadRadius: -3,
+                                  blurRadius: 5,
+                                  offset: Offset(
+                                      1, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Card(
+                              color: kPurpleBackGround,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(26)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage(kMultipleUsersIconPath),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "Counselling",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          List<Opportunity> filteredOpportunities =
+                              allOpportunities.where((element) {
+                            return element.type == 1;
+                          }).toList();
+                          setState(() {
+                            opportunities = filteredOpportunities;
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(26),
+                                  topRight: Radius.circular(26),
+                                  bottomLeft: Radius.circular(26),
+                                  bottomRight: Radius.circular(26)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(1),
+                                  spreadRadius: -3,
+                                  blurRadius: 5,
+                                  offset: Offset(
+                                      1, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Card(
+                              color: kPurpleBackGround,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(26)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage(kPizzaIconPath),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "Food",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          List<Opportunity> filteredOpportunities =
+                              allOpportunities.where((element) {
+                            return element.type == 2;
+                          }).toList();
+                          setState(() {
+                            opportunities = filteredOpportunities;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: kMargin20,
+                ),
+                _buildOpportunityList(context)
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildListItem(Opportunity item) {
+    String coverUrl = "${BASE_URL}${opportunityUploadPath}${item.coverImage}";
+
+    return GestureDetector(
+      onTap: () async {
+        bool callApi = await shouldMakeApiCall(context);
+        if (!callApi) return;
+        Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => OpportunityDetail(
+                        item, opportunityUploadPath, widget.currentUser)))
+            .then((value) {
+          loadUserOpportunitiesData();
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: kMargin20),
+        child: Card(
+          elevation: 4.0,
+          color: Colors.white,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: [
+                  Expanded(
+                      child: AspectRatio(
+                    aspectRatio: 1 / .5,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(kRadius10),
+                        topRight: Radius.circular(kRadius10),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: coverUrl,
+                        placeholder: (context, url) =>
+                            Image(image: AssetImage(kPlaceholderImagePath)),
+                        errorWidget: (context, url, error) =>
+                            Image(image: AssetImage(kPlaceholderImagePath)),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ))
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(item.title,
+                        style: TextStyle(
+                            fontSize: kMargin18,
+                            fontWeight: FontWeight.w400,
+                            color: kPurpleColor)),
+                    Text("${item.reward.toString()}\$",
+                        style: TextStyle(
+                            fontSize: kMargin18,
+                            fontWeight: FontWeight.w400,
+                            color: kPurpleColor)),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Offered By ${item.createdBy.name}",
+                          style: TextStyle(
+                              color: kPurpleColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: kMargin12),
+                        ),
+                        Text("Start on ${item.opportunityDate}",
+                            style: TextStyle(
+                                color: kInactiveColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: kMargin12))
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(kIconBackgroundPath),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: userWishes.contains(item.id)
+                                ? Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image(
+                                      width: 16,
+                                      height: 16,
+                                      image: AssetImage(kIconLovePath),
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image(
+                                      width: 16,
+                                      height: 16,
+                                      image: AssetImage(kIconLoveWhitePath),
+                                    ),
+                                  ),
+                          ),
+                          onTap: () async {
+                            bool callApi = await shouldMakeApiCall(context);
+                            if (!callApi) return;
+                            if (userWishes.contains(item.id)) {
+                              _opportunityViewModel
+                                  .removeFromWithList(context, item, (success) {
+                                loadUserOpportunitiesData();
+                              }, (error) {
+                                // EasyLoading.showError(error);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
+                              });
+                            } else {
+                              _opportunityViewModel.addToWishList(context, item,
+                                  () {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => new AlertDialog(
+                                          backgroundColor: Colors.transparent,
+                                          contentPadding: EdgeInsets.zero,
+                                          content: Builder(
+                                            builder: (context) {
+                                              // Get available height and width of the build area of this widget. Make a choice depending on the size.
+                                              var height =
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .height;
+                                              var width = MediaQuery.of(context)
+                                                  .size
+                                                  .width;
+
+                                              return Container(
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        kAlertDialogBackgroundColor,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0))),
+                                                height: height * .5,
+                                                width: width * .75,
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 50,
+                                                      horizontal: 30),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "ADDED TO FAVORITE",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: kMargin24,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                kPurpleColor),
+                                                      ),
+                                                      SizedBox(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height /
+                                                            33,
+                                                      ),
+                                                      Text(
+                                                        "Opportunity has been added to your favourties",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      SizedBox(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height /
+                                                            33,
+                                                      ),
+                                                      PAButton(
+                                                        "Ok",
+                                                        true,
+                                                        () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        fillColor: kPurpleColor,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        )).then((value) {
+                                  loadUserOpportunitiesData();
+                                });
+                              }, (error) {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertDialogue("Error!", error));
+                                // EasyLoading.showError(error);
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildOpportunityList(BuildContext context) {
+    return opportunities.length > 0
+        ? ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: opportunities.length,
+            itemBuilder: (_, index) {
+              final item = opportunities[index];
+              return _buildListItem(item);
+            },
+          )
+        : Center(child: Text("No Item Found"));
+  }
+}

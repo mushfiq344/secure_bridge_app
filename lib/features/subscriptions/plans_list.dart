@@ -349,7 +349,7 @@ class _PlansListState extends State<PlansList> {
                                           fontWeight: FontWeight.bold),
                                     )
                                   : Text(
-                                      "${!isForProfit || discountForOrgSize ? (e.amount * .8).toStringAsFixed(1) : e.amount}/ ${e.type == 0 ? "month" : "year"}",
+                                      "${!isForProfit || discountForOrgSize ? (e.amount * .8).toStringAsFixed(1) : e.amount}\$ / ${e.type == 0 ? "month" : "year"}",
                                       style: TextStyle(
                                           fontSize: kMargin30,
                                           fontWeight: FontWeight.bold),

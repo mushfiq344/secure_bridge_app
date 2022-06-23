@@ -465,8 +465,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child:
-                              Html(data: "${widget.opportunity.description}"),
+                          child: Html(
+                              data: "${widget.opportunity.description ?? ''}"),
                           // child: Text(
                           //   "${widget.opportunity.description}",
                           //   textAlign: TextAlign.start,
@@ -829,7 +829,8 @@ class _OpportunityDetailState extends State<OpportunityDetail> {
                                     new MaterialPageRoute(
                                         builder: (context) =>
                                             OpportunityHappening(
-                                                this.widget.opportunity)));
+                                                this.widget.opportunity,
+                                                widget.uploadPath)));
                               },
                                   fillColor: kGreyBackgroundColor,
                                   textColor: kPurpleColor,
